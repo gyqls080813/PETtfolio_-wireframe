@@ -56,6 +56,8 @@ export default function MyPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<"account" | "pets" | "group">("account");
   const [selectedPet, setSelectedPet] = useState<number | null>(null);
+  const [showAddPet, setShowAddPet] = useState(false);
+  const [showEditPet, setShowEditPet] = useState(false);
 
   return (
     <div className="space-y-5">
@@ -151,10 +153,83 @@ export default function MyPage() {
               <ChevronRight className="w-5 h-5 text-[#D9C8B4]" strokeWidth={1.5} />
             </div>
           ))}
-          <button className="w-full bg-white rounded-2xl border-2 border-dashed border-[#E8D5C0] p-4 flex items-center justify-center gap-2 text-[14px] text-[#B4A08A] hover:border-[#D4A574] hover:text-[#6B4F3A] transition-colors">
+          <button 
+            className="w-full bg-white rounded-2xl border-2 border-dashed border-[#E8D5C0] p-4 flex items-center justify-center gap-2 text-[14px] text-[#B4A08A] hover:border-[#D4A574] hover:text-[#6B4F3A] transition-colors"
+            onClick={() => setShowAddPet(true)}
+          >
             <Plus className="w-5 h-5" strokeWidth={1.5} />
             반려동물 추가
           </button>
+        </div>
+      )}
+
+      {/* Add Pet Modal */}
+      {showAddPet && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md relative shadow-xl">
+            <button 
+              className="absolute top-4 right-4 text-[#AAA] hover:text-[#333] transition-colors" 
+              onClick={() => setShowAddPet(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            <h3 className="text-[18px] text-[#3D3229] mb-5" style={{ fontWeight: 700 }}>반려동물 추가</h3>
+            <div className="space-y-4">
+              <div className="flex justify-center mb-6">
+                <div className="w-24 h-24 rounded-full bg-[#F5EDDF] flex items-center justify-center relative cursor-pointer hover:bg-[#E8D5C0] transition-colors">
+                  <Camera className="w-8 h-8 text-[#B4A08A]" strokeWidth={1.5} />
+                  <div className="absolute bottom-0 right-0 w-8 h-8 bg-white border border-[#E8D5C0] rounded-full flex items-center justify-center shadow-sm">
+                    <Plus className="w-4 h-4 text-[#6B4F3A]" strokeWidth={2} />
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2">
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>이름</label>
+                  <input placeholder="반려동물 이름" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                </div>
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>종류</label>
+                  <select className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[#D4A574]">
+                    <option>강아지</option>
+                    <option>고양이</option>
+                    <option>기타</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>품종</label>
+                  <input placeholder="예: 말티즈" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                </div>
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>생년월일</label>
+                  <input type="date" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[#D4A574] text-[#333]" />
+                </div>
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>몸무게 (kg)</label>
+                  <input type="number" step="0.1" placeholder="0.0" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>특이사항 (선택)</label>
+                  <textarea placeholder="보유 질환 등 건강 특이사항을 적어주세요" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574] h-20 resize-none"></textarea>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button 
+                className="flex-1 py-3 border border-[#E8E8E8] rounded-xl text-[14px] text-[#666] hover:bg-[#F9F9F9] transition-colors" 
+                onClick={() => setShowAddPet(false)}
+              >
+                취소
+              </button>
+              <button 
+                className="flex-1 py-3 text-white rounded-xl text-[14px] hover:opacity-90 active:scale-95 transition-all" 
+                style={{ background: "#E8A365", fontWeight: 600 }} 
+                onClick={() => setShowAddPet(false)}
+              >
+                저장
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -183,10 +258,13 @@ export default function MyPage() {
                 <div className="text-[13px] text-[#B4A08A]">{pet.breed}</div>
               </div>
               <div className="ml-auto flex gap-2">
-                <button className="flex items-center gap-1 px-3 py-1.5 border border-[#E8D5C0] rounded-xl text-[12px] text-[#8B7355]">
+                <button 
+                  className="flex items-center gap-1 px-3 py-1.5 border border-[#E8D5C0] rounded-xl text-[12px] text-[#8B7355] hover:bg-[#F5EDDF] transition-colors"
+                  onClick={() => setShowEditPet(true)}
+                >
                   <Edit3 className="w-3.5 h-3.5" strokeWidth={1.5} /> 수정
                 </button>
-                <button className="flex items-center gap-1 px-3 py-1.5 border border-[#EF4444]/30 rounded-xl text-[12px] text-[#EF4444]">
+                <button className="flex items-center gap-1 px-3 py-1.5 border border-[#EF4444]/30 rounded-xl text-[12px] text-[#EF4444] hover:bg-[#FFF0F0] transition-colors">
                   <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} /> 삭제
                 </button>
               </div>
@@ -233,6 +311,84 @@ export default function MyPage() {
                     <span className="text-[12px] text-[#B4A08A]">등록된 질환 없음</span>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Edit Pet Modal */}
+      {showEditPet && selectedPet !== null && (() => {
+        const pet = pets.find((p) => p.id === selectedPet);
+        if (!pet) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl p-6 w-full max-w-md relative shadow-xl">
+              <button 
+                className="absolute top-4 right-4 text-[#AAA] hover:text-[#333] transition-colors" 
+                onClick={() => setShowEditPet(false)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+              <h3 className="text-[18px] text-[#3D3229] mb-5" style={{ fontWeight: 700 }}>반려동물 수정</h3>
+              <div className="space-y-4">
+                <div className="flex justify-center mb-6">
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center relative cursor-pointer hover:opacity-90 transition-opacity ${pet.type === "dog" ? "bg-[#E17055]/10" : "bg-[#FDCB6E]/10"}`}>
+                    {pet.type === "dog" ? (
+                      <Dog className="w-10 h-10 text-[#E17055]" strokeWidth={1.5} />
+                    ) : (
+                      <Cat className="w-10 h-10 text-[#FDCB6E]" strokeWidth={1.5} />
+                    )}
+                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-white border border-[#E8D5C0] rounded-full flex items-center justify-center shadow-sm">
+                      <Camera className="w-4 h-4 text-[#6B4F3A]" strokeWidth={1.5} />
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>이름</label>
+                    <input defaultValue={pet.name} placeholder="반려동물 이름" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                  </div>
+                  <div>
+                    <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>종류</label>
+                    <select defaultValue={pet.type === "dog" ? "강아지" : pet.type === "cat" ? "고양이" : "기타"} className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[#D4A574]">
+                      <option>강아지</option>
+                      <option>고양이</option>
+                      <option>기타</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>품종</label>
+                    <input defaultValue={pet.breed} placeholder="예: 말티즈" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                  </div>
+                  <div>
+                    <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>생년월일</label>
+                    <input type="date" defaultValue={pet.birth} className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[#D4A574] text-[#333]" />
+                  </div>
+                  <div>
+                    <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>몸무게 (kg)</label>
+                    <input type="number" step="0.1" defaultValue={pet.weight} placeholder="0.0" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>특이사항 (선택)</label>
+                    <textarea defaultValue={pet.diseases.join(", ")} placeholder="보유 질환 등 건강 특이사항을 적어주세요" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574] h-20 resize-none"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-6">
+                <button 
+                  className="flex-1 py-3 border border-[#E8E8E8] rounded-xl text-[14px] text-[#666] hover:bg-[#F9F9F9] transition-colors" 
+                  onClick={() => setShowEditPet(false)}
+                >
+                  취소
+                </button>
+                <button 
+                  className="flex-1 py-3 text-white rounded-xl text-[14px] hover:opacity-90 active:scale-95 transition-all" 
+                  style={{ background: "#E8A365", fontWeight: 600 }} 
+                  onClick={() => setShowEditPet(false)}
+                >
+                  수정 완료
+                </button>
               </div>
             </div>
           </div>

@@ -78,9 +78,6 @@ const supplies = [
 export default function SuppliesPage() {
   const [showAdd, setShowAdd] = useState(false);
 
-  const overdue = supplies.filter((s) => s.daysLeft <= 0);
-  const upcoming = supplies.filter((s) => s.daysLeft > 0 && s.daysLeft <= 7);
-
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-end">
@@ -94,82 +91,73 @@ export default function SuppliesPage() {
         </button>
       </div>
 
-      {/* Alerts */}
-      {(overdue.length > 0 || upcoming.length > 0) && (
-        <div className="space-y-2">
-          {overdue.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-3 bg-[#FF6B6B]/5 border border-[#FF6B6B]/20 rounded-lg">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-[#FF6B6B]" />
-                <span className="text-[13px] text-[#FF6B6B]" style={{ fontWeight: 500 }}>
-                  {s.name} 구매 기한이 {Math.abs(s.daysLeft)}일 지났어요!
-                </span>
-              </div>
-              <button className="flex items-center gap-1 px-2.5 py-1 bg-[#FF6B6B] text-white rounded text-[11px]">
-                <ShoppingCart className="w-3 h-3" /> 구매
-              </button>
-            </div>
-          ))}
-          {upcoming.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-3 bg-[#FDCB6E]/10 border border-[#FDCB6E]/30 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Bell className="w-4 h-4 text-[#E17055]" />
-                <span className="text-[13px] text-[#E17055]" style={{ fontWeight: 500 }}>
-                  {s.name} 구매까지 {s.daysLeft}일 남았어요
-                </span>
-              </div>
-              <button className="flex items-center gap-1 px-2.5 py-1 bg-[#E17055] text-white rounded text-[11px]">
-                <ShoppingCart className="w-3 h-3" /> 구매
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* Add Form */}
+
+      {/* Add Form Modal */}
       {showAdd && (
-        <div className="bg-white rounded-2xl border border-[#E8D5C0] p-5 space-y-3">
-          <h3 className="text-[16px] text-[#3D3229]" style={{ fontWeight: 600 }}>품목 추가</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div>
-              <label className="text-[13px] text-[#666] mb-1 block">카테고리</label>
-              <select className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none appearance-none focus:border-[#D4A574]">
-                <option>사료</option>
-                <option>간식</option>
-                <option>위생/소모품</option>
-                <option>약/영양제</option>
-                <option>용품</option>
-                <option>기타</option>
-              </select>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md relative shadow-xl">
+            <button 
+              className="absolute top-4 right-4 text-[#AAA] hover:text-[#333] transition-colors" 
+              onClick={() => setShowAdd(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            <h3 className="text-[18px] text-[#3D3229] mb-5" style={{ fontWeight: 700 }}>품목 추가</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>품목 이름</label>
+                <input placeholder="예: Royal Canin 사료" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>카테고리</label>
+                  <select className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[#D4A574]">
+                    <option>사료</option>
+                    <option>간식</option>
+                    <option>위생/소모품</option>
+                    <option>약/영양제</option>
+                    <option>용품</option>
+                    <option>기타</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>반려동물</label>
+                  <select className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[#D4A574]">
+                    <option>초코</option>
+                    <option>나비</option>
+                    <option>전체</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>금액</label>
+                <div className="relative">
+                  <input placeholder="0" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-[14px]">원</span>
+                </div>
+              </div>
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>구매 주기 (일)</label>
+                <div className="relative">
+                  <input type="number" placeholder="30" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-[14px]">일마다</span>
+                </div>
+              </div>
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block" style={{ fontWeight: 600 }}>구매 URL (선택)</label>
+                <input placeholder="https://..." className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[#D4A574]" />
+              </div>
             </div>
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">품목명</label>
-              <input placeholder="품목 이름" className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none placeholder:text-[#D9C8B4] focus:border-[#D4A574]" />
+            <div className="mt-6">
+              <button 
+                className="w-full py-3 text-white rounded-xl text-[14px] hover:opacity-90 active:scale-95 transition-all" 
+                style={{ background: "#E8A365", fontWeight: 600 }} 
+                onClick={() => setShowAdd(false)}
+              >
+                품목 추가하기
+              </button>
             </div>
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">금액</label>
-              <input placeholder="₩ 0" className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none placeholder:text-[#D9C8B4] focus:border-[#D4A574]" />
-            </div>
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">대상 (태그)</label>
-              <select className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none appearance-none focus:border-[#D4A574]">
-                <option>초코</option>
-                <option>나비</option>
-                <option>전체</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">구매 URL</label>
-              <input placeholder="https://" className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none placeholder:text-[#D9C8B4] focus:border-[#D4A574]" />
-            </div>
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">구매 주기 (일)</label>
-              <input type="number" placeholder="30" className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none placeholder:text-[#D9C8B4] focus:border-[#D4A574]" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-2">
-            <button className="px-4 py-2 border border-[#E8D5C0] rounded-xl text-[13px] text-[#8B7355]" onClick={() => setShowAdd(false)}>취소</button>
-            <button className="px-4 py-2 text-white rounded-xl text-[13px] hover:opacity-90 active:scale-95 transition-all" style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", fontWeight: 600 }} onClick={() => setShowAdd(false)}>추가</button>
           </div>
         </div>
       )}
@@ -196,6 +184,17 @@ export default function SuppliesPage() {
                     <div className="flex items-center gap-2">
                       <Package className="w-4 h-4 text-[#AAA]" />
                       <span className="text-[#333]">{s.name}</span>
+                      <div className="relative w-3.5 h-3.5 flex-shrink-0 ml-1" title={`소진율: ${Math.round(Math.min(100, Math.max(0, ((s.cycle - s.daysLeft) / s.cycle) * 100)))}%`}>
+                        <svg viewBox="0 0 16 16" className="w-full h-full transform -rotate-90 rounded-full bg-[#F5F0E6]">
+                          <circle
+                            cx="8" cy="8" r="4"
+                            fill="transparent"
+                            stroke={s.daysLeft <= 0 ? "#FF6B6B" : s.daysLeft <= 7 ? "#E17055" : "#D4A574"}
+                            strokeWidth="8"
+                            strokeDasharray={`${(Math.min(100, Math.max(0, ((s.cycle - s.daysLeft) / s.cycle) * 100)) / 100) * 25.1327} 25.1327`}
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-[#666]">{s.category}</td>
@@ -222,6 +221,15 @@ export default function SuppliesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-center gap-1.5">
+                      {s.daysLeft <= 7 && (
+                        <button 
+                          className="flex items-center gap-1 px-2.5 py-1 text-white rounded text-[11px] transition-colors shadow-sm" 
+                          style={{ backgroundColor: s.daysLeft <= 0 ? "#FF6B6B" : "#E17055" }} 
+                          title="바로 구매"
+                        >
+                          <ShoppingCart className="w-3 h-3" /> 구매
+                        </button>
+                      )}
                       <button className="p-1.5 rounded hover:bg-[#F5E6D0] transition-colors" title="구매 링크">
                         <ExternalLink className="w-3.5 h-3.5 text-[#6B4F3A]" strokeWidth={1.5} />
                       </button>
