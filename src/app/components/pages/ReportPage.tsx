@@ -13,6 +13,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+// 펫 커스텀 스티커 이미지
+import pomeImg from "../../../assets/pome.png";
+import catImg from "../../../assets/cat-character.png";
+import stickerThumbsup from "../../../assets/pome_thumbsup.png";
+import stickerSad from "../../../assets/pome_sad.png";
+
 // ─── Per-pet expense data ───
 const petExpenseData: Record<
   string,
@@ -155,8 +161,8 @@ const budgetMap: Record<string, number> = {
 
 const pets = [
   { key: "전체", icon: PawPrint, color: "#D4A574", type: "모든 반려동물" },
-  { key: "초코", icon: Dog, color: "#E17055", type: "강아지" },
-  { key: "나비", icon: Cat, color: "#FDCB6E", type: "고양이" },
+  { key: "초코", img: pomeImg, color: "#E17055", type: "강아지" },
+  { key: "나비", img: catImg, color: "#FDCB6E", type: "고양이" },
 ];
 
 export default function ReportPage() {
@@ -220,38 +226,51 @@ export default function ReportPage() {
         </div>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center pt-3 mt-2 border-t border-[#E8D5C0]">
-        <div className="relative">
-          <PieChart width={180} height={180}>
-            <Pie data={donutData} cx="50%" cy="50%" innerRadius={50} outerRadius={82} dataKey="value" stroke="none">
+        <div className="relative w-full flex justify-center mt-2 overflow-visible">
+          <PieChart width={280} height={230}>
+            <Pie
+              data={donutData}
+              cx="50%"
+              cy="50%"
+              innerRadius={45}
+              outerRadius={70}
+              dataKey="value"
+              stroke="none"
+              labelLine={false}
+              label={({ cx, cy, midAngle, outerRadius, percent, name, fill }) => {
+                const RADIAN = Math.PI / 180;
+                const radius = outerRadius + 22; // push label outward
+                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                return percent > 0.05 ? (
+                  <text
+                    x={x}
+                    y={y}
+                    fill={fill} // use slice color
+                    textAnchor={x > cx ? 'start' : 'end'}
+                    dominantBaseline="central"
+                    fontSize="11"
+                    fontWeight="600"
+                  >
+                    {`${name} ${(percent * 100).toFixed(0)}%`}
+                  </text>
+                ) : null;
+              }}
+            >
               {donutData.map((d, i) => (
                 <Cell key={i} fill={d.color} />
               ))}
             </Pie>
           </PieChart>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             {selectedPet === "전체" ? (
-              <PawPrint className="w-6 h-6 text-[#D4A574] mb-0.5" strokeWidth={1.5} />
+              <PawPrint className="w-8 h-8 text-[#D4A574]" strokeWidth={1.5} />
             ) : selectedPet === "초코" ? (
-              <Dog className="w-6 h-6 text-[#E17055] mb-0.5" strokeWidth={1.5} />
+              <img src={pomeImg} alt="초코" className="w-10 h-10 object-contain drop-shadow-sm" />
             ) : (
-              <Cat className="w-6 h-6 text-[#FDCB6E] mb-0.5" strokeWidth={1.5} />
+              <img src={catImg} alt="나비" className="w-10 h-10 object-contain drop-shadow-sm" />
             )}
-            <span className="text-[11px] text-[#B4A08A]">카테고리</span>
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-x-5 gap-y-1 mt-2 w-full max-w-[260px]">
-          {donutData.map((d, i) => {
-            const pct = totalExpense > 0 ? Math.round((d.value / totalExpense) * 100) : 0;
-            return (
-              <div key={i} className="flex items-center justify-between text-[12px]">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: d.color }} />
-                  <span className="text-[#8B7355]">{d.name}</span>
-                </div>
-                <span className="text-[#5C4A3A]" style={{ fontWeight: 500 }}>{pct}%</span>
-              </div>
-            );
-          })}
         </div>
       </div>
     </div>
@@ -268,7 +287,9 @@ export default function ReportPage() {
           <div className="flex flex-col items-center z-10" style={{ marginRight: -6 }}>
             <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
             <span className="text-[10px] text-[#B4A08A] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
-            <div className="w-[90px] h-[56px] bg-[#F5E6D0] rounded-t-xl flex flex-col items-center justify-center gap-0.5">
+            <div className="w-[90px] h-[56px] bg-[#F5E6D0] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
+              <img src={pomeImg} alt="평범" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
+              <div className="mt-2" />
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-[#5C4A3A]" style={{ fontWeight: 600 }}>{memberRank[1].expense.toLocaleString()}</span>
@@ -285,10 +306,12 @@ export default function ReportPage() {
             <span className="text-[13px] text-[#6B4F3A]" style={{ fontWeight: 700 }}>{memberRank[0].name}</span>
             <span className="text-[10px] text-[#B4A08A] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[0].expense + memberRank[0].savings).toLocaleString()}원</span>
             <div
-              className="w-[110px] h-[82px] rounded-t-xl flex flex-col items-center justify-center"
+              className="w-[110px] h-[95px] rounded-t-xl flex flex-col items-center justify-center relative mt-7"
               style={{ background: "linear-gradient(to top, #D4A574, #C4956A)" }}
             >
-              <span className="px-2 py-0.5 bg-white/20 text-white rounded-full text-[8px] mb-0.5" style={{ fontWeight: 600 }}>MASTER PAYER</span>
+              <img src={stickerThumbsup} alt="최고" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-md z-10" />
+              <div className="mt-2" />
+              <span className="px-2 py-0.5 bg-white/20 text-white rounded-full text-[8px] mb-1" style={{ fontWeight: 600 }}>MASTER PAYER</span>
               <div className="flex items-center gap-1 text-[9px] mb-0.5">
                 <span className="text-white/80" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-white" style={{ fontWeight: 600 }}>{memberRank[0].expense.toLocaleString()}</span>
@@ -304,7 +327,9 @@ export default function ReportPage() {
           <div className="flex flex-col items-center z-10" style={{ marginLeft: -6 }}>
             <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
             <span className="text-[10px] text-[#B4A08A] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
-            <div className="w-[80px] h-[38px] bg-[#F5E6D0] rounded-t-xl flex flex-col items-center justify-center gap-0.5">
+            <div className="w-[80px] h-[38px] bg-[#F5E6D0] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
+              <img src={stickerSad} alt="슬픔" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
+              <div className="mt-2" />
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-[#5C4A3A]" style={{ fontWeight: 600 }}>{memberRank[2].expense.toLocaleString()}</span>
@@ -343,11 +368,15 @@ export default function ReportPage() {
                 }`}
               style={{ fontWeight: selectedPet === p.key ? 600 : 400 }}
             >
-              <p.icon
-                className="w-4 h-4"
-                strokeWidth={1.5}
-                style={{ color: selectedPet === p.key ? p.color : "#D9C8B4" }}
-              />
+              {p.img ? (
+                <img src={p.img} alt={p.key} className="w-5 h-5 object-contain opacity-90 grayscale-0 transition-all" style={{ filter: selectedPet === p.key ? 'none' : 'grayscale(100%) opacity(50%)' }} />
+              ) : p.icon ? (
+                <p.icon
+                  className="w-4 h-4"
+                  strokeWidth={1.5}
+                  style={{ color: selectedPet === p.key ? p.color : "#D9C8B4" }}
+                />
+              ) : null}
               {p.key}
             </button>
           ))}

@@ -12,15 +12,35 @@
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
+// 펫 스티커 이미지
+import pomeImg from "../../../assets/pome.png";
+import catImg from "../../../assets/cat-character.png";
+import stickerThumbsup from "../../../assets/pome_thumbsup.png";
+import stickerSad from "../../../assets/pome_sad.png";
+import stickerEating from "../../../assets/pome_eating.png";
+import stickerGrooming from "../../../assets/pome_grooming.png";
+import stickerHospital from "../../../assets/pome_hospital.png";
+import stickerSnack from "../../../assets/pome_snack.png";
+
 const txHistoryData = [
-  { id: 1, date: "03/04", desc: "사료 구매 - 오리젠", amount: "-89,000", type: "out", account: "shared" },
-  { id: 2, date: "03/03", desc: "공동 페이 충전", amount: "+200,000", type: "in", account: "shared" },
-  { id: 3, date: "03/02", desc: "간식 구매", amount: "-12,500", type: "out", account: "shared" },
-  { id: 4, date: "03/01", desc: "비상금 페이 이체", amount: "-100,000", type: "out", account: "shared" },
-  { id: 5, date: "03/01", desc: "메인 페이 이체 수신", amount: "+100,000", type: "in", account: "emergency" },
-  { id: 6, date: "02/28", desc: "김집사 송금", amount: "+150,000", type: "in", account: "shared" },
-  { id: 7, date: "02/27", desc: "영양제 구매", amount: "-35,000", type: "out", account: "shared" },
+  { id: 1, date: "03/04", desc: "사료 구매 - 오리젠", amount: "-89,000", type: "out", account: "shared", cat: "사료" },
+  { id: 2, date: "03/03", desc: "공동 페이 충전", amount: "+200,000", type: "in", account: "shared", cat: "충전" },
+  { id: 3, date: "03/02", desc: "간식 구매", amount: "-12,500", type: "out", account: "shared", cat: "간식" },
+  { id: 4, date: "03/01", desc: "비상금 페이 이체", amount: "-100,000", type: "out", account: "shared", cat: "이체" },
+  { id: 5, date: "03/01", desc: "메인 페이 이체 수신", amount: "+100,000", type: "in", account: "emergency", cat: "충전" },
+  { id: 6, date: "02/28", desc: "김집사 송금", amount: "+150,000", type: "in", account: "shared", cat: "충전" },
+  { id: 7, date: "02/27", desc: "영양제 구매", amount: "-35,000", type: "out", account: "shared", cat: "병원" },
 ];
+
+// 카테고리별 스티커 매핑
+const catStickerMap: Record<string, string> = {
+  "사료": stickerEating,
+  "간식": stickerSnack,
+  "미용": stickerGrooming,
+  "병원": stickerHospital,
+  "충전": stickerThumbsup,
+  "이체": stickerSad,
+};
 
 export default function AccountPage() {
   const [showCreate, setShowCreate] = useState(false);
@@ -73,52 +93,17 @@ export default function AccountPage() {
   const filteredHistory = txHistoryData.filter(tx => selectedAccount === "all" || tx.account === selectedAccount);
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-end">
-        <button
-          className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
-          style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", fontWeight: 600 }}
-          onClick={() => setShowCreate(!showCreate)}
-        >
-          <Plus className="w-4 h-4" />
-          계좌 생성
-        </button>
-      </div>
-
-      {showCreate && (
-        <div className="bg-white rounded-2xl border border-[#E8D5C0] p-5 space-y-3">
-          <h3 className="text-[16px] text-[#3D3229]" style={{ fontWeight: 600 }}>새 계좌 생성</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">계좌 이름</label>
-              <input placeholder="예: 초코 비상금 계좌" className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none placeholder:text-[#D9C8B4] focus:border-[#D4A574]" />
-            </div>
-            <div>
-              <label className="text-[13px] text-[#8B7355] mb-1 block">계좌 유형</label>
-              <select className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none appearance-none focus:border-[#D4A574]">
-                <option>비상금 계좌</option>
-                <option>공동 관리 계좌</option>
-              </select>
-            </div>
-          </div>
-          <div className="flex justify-end gap-2">
-            <button className="px-4 py-2 border border-[#E8D5C0] rounded-xl text-[13px] text-[#8B7355]" onClick={() => setShowCreate(false)}>취소</button>
-            <button
-              className="px-4 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
-              style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", fontWeight: 600 }}
-              onClick={() => setShowCreate(false)}
-            >생성</button>
-          </div>
-        </div>
-      )}
-
+    <div className="pt-2">
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* Left Column: Account Cards */}
         <div className="lg:col-span-5 flex flex-col gap-2 lg:gap-4 h-full">
-          <div className="px-1 pt-1 mb-2">
-            <h2 className="text-[20px] font-extrabold text-[#3D3229] mb-1 tracking-tight">내 페이 관리</h2>
-            <p className="text-[13px] text-[#B4A08A] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
+          <div className="px-1 pt-1 mb-2 flex items-center gap-3">
+            <img src={pomeImg} alt="pet" className="w-[48px] h-[48px] object-contain drop-shadow-md" />
+            <div>
+              <h2 className="text-[20px] font-extrabold text-[#3D3229] mb-1 tracking-tight">내 페이 관리</h2>
+              <p className="text-[13px] text-[#B4A08A] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
+            </div>
           </div>
 
           <style>{`
@@ -196,74 +181,74 @@ export default function AccountPage() {
         </div>
 
         {/* Right Column: Transaction History */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E8D5C0] p-6 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-1 -ml-2">
-              <button
-                onClick={() => setSelectedAccount("shared")}
-                disabled={selectedAccount === "shared"}
-                className={`p-1 rounded-full transition-colors ${selectedAccount === "shared" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
-              >
-                <ChevronLeft className="w-6 h-6 text-[#3D3229]" />
-              </button>
+        <div className="lg:col-span-7 relative flex flex-col h-[550px] lg:h-auto lg:min-h-[100%]">
+          <div className="lg:absolute lg:inset-0 bg-white rounded-2xl border border-[#E8D5C0] p-6 flex flex-col h-full">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-1 -ml-2">
+                <button
+                  onClick={() => setSelectedAccount("shared")}
+                  disabled={selectedAccount === "shared"}
+                  className={`p-1 rounded-full transition-colors ${selectedAccount === "shared" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
+                >
+                  <ChevronLeft className="w-6 h-6 text-[#3D3229]" />
+                </button>
 
-              <span className="text-[19px] text-[#3D3229] font-bold min-w-[85px] text-center select-none">
-                {selectedAccount === "emergency" ? "비상금 페이" : "공동 페이"}
-              </span>
+                <span className="text-[19px] text-[#3D3229] font-bold min-w-[85px] text-center select-none">
+                  {selectedAccount === "emergency" ? "비상금 페이" : "공동 페이"}
+                </span>
 
-              <button
-                onClick={() => setSelectedAccount("emergency")}
-                disabled={selectedAccount === "emergency"}
-                className={`p-1 rounded-full transition-colors ${selectedAccount === "emergency" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
-              >
-                <ChevronRight className="w-6 h-6 text-[#3D3229]" />
+                <button
+                  onClick={() => setSelectedAccount("emergency")}
+                  disabled={selectedAccount === "emergency"}
+                  className={`p-1 rounded-full transition-colors ${selectedAccount === "emergency" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
+                >
+                  <ChevronRight className="w-6 h-6 text-[#3D3229]" />
+                </button>
+              </div>
+
+              <button className="flex items-center gap-1.5 text-[14px] text-[#B4A08A] font-medium hover:text-[#5C4A3A] transition-colors">
+                5분 전 <RefreshCcw className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
 
-            <button className="flex items-center gap-1.5 text-[14px] text-[#B4A08A] font-medium hover:text-[#5C4A3A] transition-colors">
-              5분 전 <RefreshCcw className="w-4 h-4" strokeWidth={1.5} />
-            </button>
-          </div>
-
-          <div className="space-y-1 overflow-y-auto pr-2 flex-1" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-            <div className="text-[14px] text-[#B4A08A] font-medium mb-3 pl-1">최근 내역</div>
-            {filteredHistory.length > 0 ? (
-              filteredHistory.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between py-3.5 px-2 hover:bg-[#FFF8EE] rounded-2xl transition-colors cursor-pointer group -mx-2">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                      {tx.type === "in" ? (
-                        <div className="w-full h-full bg-[#A8C5A0] flex items-center justify-center">
-                          <span className="text-white font-bold text-[16px]">₩</span>
+            <div className="space-y-1 overflow-y-auto pr-2 flex-1 min-h-0">
+              <div className="text-[14px] text-[#B4A08A] font-medium mb-3 pl-1">최근 내역</div>
+              {filteredHistory.length > 0 ? (
+                filteredHistory.map((tx) => (
+                  <div key={tx.id} className="flex items-center justify-between py-3.5 px-2 hover:bg-[#FFF8EE] rounded-2xl transition-colors cursor-pointer group -mx-2">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                        <div className={`w-full h-full ${tx.type === "in" ? "bg-[#E8F5E4]" : "bg-[#FFF8EE]"} flex items-center justify-center`}>
+                          <img
+                            src={catStickerMap[tx.cat] || (tx.type === "in" ? stickerThumbsup : stickerSad)}
+                            alt={tx.cat}
+                            className="w-9 h-9 object-contain"
+                          />
                         </div>
-                      ) : (
-                        <div className="w-full h-full bg-[#F5EDDF] flex items-center justify-center text-[#B4A08A]">
-                          <User className="w-6 h-6" fill="currentColor" />
+                      </div>
+                      <div>
+                        <div className="text-[16px] text-[#3D3229] font-semibold mb-0.5">{tx.desc}</div>
+                        <div className="flex items-center gap-1.5 text-[14px] text-[#B4A08A]">
+                          <span>{tx.date}</span>
+                          <span>12:00</span>
                         </div>
-                      )}
-                    </div>
-                    <div>
-                      <div className="text-[16px] text-[#3D3229] font-semibold mb-0.5">{tx.desc}</div>
-                      <div className="flex items-center gap-1.5 text-[14px] text-[#B4A08A]">
-                        <span>{tx.date}</span>
-                        <span>12:00</span>
                       </div>
                     </div>
+                    <div className="text-right flex flex-col items-end justify-center">
+                      <span className={`text-[16px] font-bold ${tx.type === "in" ? "text-[#A8C5A0]" : "text-[#3D3229]"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
+                        {tx.type === "out" ? tx.amount.replace('-', '') : tx.amount.replace('+', '')} 원
+                      </span>
+                      <span className="text-[14px] text-[#B4A08A] mt-0.5">잔액 0 원</span>
+                    </div>
                   </div>
-                  <div className="text-right flex flex-col items-end justify-center">
-                    <span className={`text-[16px] font-bold ${tx.type === "in" ? "text-[#A8C5A0]" : "text-[#3D3229]"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
-                      {tx.type === "out" ? tx.amount.replace('-', '') : tx.amount.replace('+', '')} 원
-                    </span>
-                    <span className="text-[14px] text-[#B4A08A] mt-0.5">잔액 0 원</span>
-                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-[#D9C8B4]">
+                  <img src={stickerSad} alt="없음" className="w-16 h-16 object-contain mb-4 opacity-60" />
+                  <p className="text-[15px] font-medium">해당 페이의 거래 내역이 없습니다.</p>
                 </div>
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-[#D9C8B4]">
-                <History className="w-10 h-10 mb-4 opacity-50" strokeWidth={1.5} />
-                <p className="text-[15px] font-medium">해당 페이의 거래 내역이 없습니다.</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
