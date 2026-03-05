@@ -22,6 +22,8 @@ import stickerGrooming from "../../assets/pome_grooming.png";
 import stickerHospital from "../../assets/pome_hospital.png";
 import stickerSnack from "../../assets/pome_snack.png";
 
+const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
+
 const txHistoryData = [
   { id: 1, date: "03/04", desc: "사료 구매 - 오리젠", amount: "-89,000", type: "out", account: "shared", cat: "사료" },
   { id: 2, date: "03/03", desc: "공동 페이 충전", amount: "+200,000", type: "in", account: "shared", cat: "충전" },
@@ -33,7 +35,7 @@ const txHistoryData = [
 ];
 
 // 카테고리별 스티커 매핑
-const catStickerMap: Record<string, string> = {
+const catStickerMap: Record<string, any> = {
   "사료": stickerEating,
   "간식": stickerSnack,
   "미용": stickerGrooming,
@@ -99,7 +101,7 @@ export default function AccountPage() {
         {/* Left Column: Account Cards */}
         <div className="lg:col-span-5 flex flex-col gap-2 lg:gap-4 h-full">
           <div className="px-1 pt-1 mb-2 flex items-center gap-3">
-            <img src={pomeImg} alt="pet" className="w-[48px] h-[48px] object-contain drop-shadow-md" />
+            <img src={getImgSrc(pomeImg)} alt="pet" className="w-[48px] h-[48px] object-contain drop-shadow-md" />
             <div>
               <h2 className="text-[20px] font-extrabold text-[#3D3229] mb-1 tracking-tight">내 페이 관리</h2>
               <p className="text-[13px] text-[#B4A08A] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
@@ -220,7 +222,7 @@ export default function AccountPage() {
                       <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
                         <div className={`w-full h-full ${tx.type === "in" ? "bg-[#E8F5E4]" : "bg-[#FFF8EE]"} flex items-center justify-center`}>
                           <img
-                            src={catStickerMap[tx.cat] || (tx.type === "in" ? stickerThumbsup : stickerSad)}
+                            src={getImgSrc(catStickerMap[tx.cat] || (tx.type === "in" ? stickerThumbsup : stickerSad))}
                             alt={tx.cat}
                             className="w-9 h-9 object-contain"
                           />
@@ -244,7 +246,7 @@ export default function AccountPage() {
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-[#D9C8B4]">
-                  <img src={stickerSad} alt="없음" className="w-16 h-16 object-contain mb-4 opacity-60" />
+                  <img src={getImgSrc(stickerSad)} alt="없음" className="w-16 h-16 object-contain mb-4 opacity-60" />
                   <p className="text-[15px] font-medium">해당 페이의 거래 내역이 없습니다.</p>
                 </div>
               )}

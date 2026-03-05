@@ -14,10 +14,12 @@ import {
 } from "lucide-react";
 
 // 펫 커스텀 스티커 이미지
-import pomeImg from "../../../assets/pome.png";
-import catImg from "../../../assets/cat-character.png";
-import stickerThumbsup from "../../../assets/pome_thumbsup.png";
-import stickerSad from "../../../assets/pome_sad.png";
+import pomeImg from "../../assets/pome.png";
+import catImg from "../../assets/cat-character.png";
+import stickerThumbsup from "../../assets/pome_thumbsup.png";
+import stickerSad from "../../assets/pome_sad.png";
+
+const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
 
 // ─── Per-pet expense data ───
 const petExpenseData: Record<
@@ -266,9 +268,9 @@ export default function ReportPage() {
             {selectedPet === "전체" ? (
               <PawPrint className="w-8 h-8 text-[#D4A574]" strokeWidth={1.5} />
             ) : selectedPet === "초코" ? (
-              <img src={pomeImg} alt="초코" className="w-10 h-10 object-contain drop-shadow-sm" />
+              <img src={getImgSrc(pomeImg)} alt="초코" className="w-10 h-10 object-contain drop-shadow-sm" />
             ) : (
-              <img src={catImg} alt="나비" className="w-10 h-10 object-contain drop-shadow-sm" />
+              <img src={getImgSrc(catImg)} alt="나비" className="w-10 h-10 object-contain drop-shadow-sm" />
             )}
           </div>
         </div>
@@ -288,7 +290,7 @@ export default function ReportPage() {
             <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
             <span className="text-[10px] text-[#B4A08A] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
             <div className="w-[90px] h-[56px] bg-[#F5E6D0] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
-              <img src={pomeImg} alt="평범" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
+              <img src={getImgSrc(pomeImg)} alt="평범" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
               <div className="mt-2" />
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
@@ -309,7 +311,7 @@ export default function ReportPage() {
               className="w-[110px] h-[95px] rounded-t-xl flex flex-col items-center justify-center relative mt-7"
               style={{ background: "linear-gradient(to top, #D4A574, #C4956A)" }}
             >
-              <img src={stickerThumbsup} alt="최고" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-md z-10" />
+              <img src={getImgSrc(stickerThumbsup)} alt="최고" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-md z-10" />
               <div className="mt-2" />
               <span className="px-2 py-0.5 bg-white/20 text-white rounded-full text-[8px] mb-1" style={{ fontWeight: 600 }}>MASTER PAYER</span>
               <div className="flex items-center gap-1 text-[9px] mb-0.5">
@@ -328,7 +330,7 @@ export default function ReportPage() {
             <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
             <span className="text-[10px] text-[#B4A08A] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
             <div className="w-[80px] h-[38px] bg-[#F5E6D0] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
-              <img src={stickerSad} alt="슬픔" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
+              <img src={getImgSrc(stickerSad)} alt="슬픔" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
               <div className="mt-2" />
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
@@ -369,7 +371,7 @@ export default function ReportPage() {
               style={{ fontWeight: selectedPet === p.key ? 600 : 400 }}
             >
               {p.img ? (
-                <img src={p.img} alt={p.key} className="w-5 h-5 object-contain opacity-90 grayscale-0 transition-all" style={{ filter: selectedPet === p.key ? 'none' : 'grayscale(100%) opacity(50%)' }} />
+                <img src={getImgSrc(p.img)} alt={p.key} className="w-5 h-5 object-contain opacity-90 grayscale-0 transition-all" style={{ filter: selectedPet === p.key ? 'none' : 'grayscale(100%) opacity(50%)' }} />
               ) : p.icon ? (
                 <p.icon
                   className="w-4 h-4"

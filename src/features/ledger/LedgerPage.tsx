@@ -26,13 +26,13 @@ import {
 } from "recharts";
 
 // 펫 스티커 이미지
-import stickerThumbsup from "../../../assets/pome_thumbsup.png";
-import stickerSad from "../../../assets/pome_sad.png";
-import stickerEating from "../../../assets/pome_eating.png";
-import stickerGrooming from "../../../assets/pome_grooming.png";
-import stickerHospital from "../../../assets/pome_hospital.png";
-import stickerSnack from "../../../assets/pome_snack.png";
-import stickerToys from "../../../assets/pome_toys.png";
+import stickerThumbsup from "../../assets/pome_thumbsup.png";
+import stickerSad from "../../assets/pome_sad.png";
+import stickerEating from "../../assets/pome_eating.png";
+import stickerGrooming from "../../assets/pome_grooming.png";
+import stickerHospital from "../../assets/pome_hospital.png";
+import stickerSnack from "../../assets/pome_snack.png";
+import stickerToys from "../../assets/pome_toys.png";
 
 const categories = [
   { name: "사료", color: "#D4A574" },
@@ -67,6 +67,8 @@ const cashFlowData = [
 const daysInMonth = 31;
 const startDay = 6;
 
+const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
+
 export default function LedgerPage() {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -94,7 +96,7 @@ export default function LedgerPage() {
   };
 
   // 날짜별 펫 스티커 매핑 (활동 유형에 따라 다른 스티커)
-  const calendarStickers: Record<number, { img: string; label: string }> = {
+  const calendarStickers: Record<number, { img: any; label: string }> = {
     1: { img: stickerGrooming, label: "미용" },
     2: { img: stickerThumbsup, label: "저축" },
     3: { img: stickerHospital, label: "검진" },
@@ -160,7 +162,7 @@ export default function LedgerPage() {
                       {/* 펫 스티커 (날짜 위에 반투명하게) */}
                       {calendarStickers[day] && (
                         <img
-                          src={calendarStickers[day].img}
+                          src={getImgSrc(calendarStickers[day].img)}
                           alt={calendarStickers[day].label}
                           className="w-[32px] h-[32px] object-contain absolute -top-1 -right-1 drop-shadow-sm z-10 pointer-events-none"
                           style={{ opacity: 0.9 }}
@@ -207,7 +209,7 @@ export default function LedgerPage() {
                     {/* 해당 날짜의 스티커가 있으면 크게 표시 */}
                     {calendarStickers[selectedDay as number] && (
                       <img
-                        src={calendarStickers[selectedDay as number].img}
+                        src={getImgSrc(calendarStickers[selectedDay as number].img)}
                         alt={calendarStickers[selectedDay as number].label}
                         className="w-[64px] h-[64px] object-contain drop-shadow-md"
                       />
@@ -242,7 +244,7 @@ export default function LedgerPage() {
                         <div className="flex justify-between items-center bg-[#FFF8EE] p-3 rounded-xl border border-[#E8D5C0]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={stickerSad} alt="지출" className="w-8 h-8 object-contain" />
+                              <img src={getImgSrc(stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[#3D3229]">지출</div>
@@ -272,7 +274,7 @@ export default function LedgerPage() {
                         <div className="flex justify-between items-center bg-[#FFF8EE] p-3 rounded-xl border border-[#E8D5C0]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={stickerThumbsup} alt="저금" className="w-8 h-8 object-contain" />
+                              <img src={getImgSrc(stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[#3D3229]">수입/저축</div>
@@ -369,7 +371,7 @@ export default function LedgerPage() {
                 >
                   {/* 스티커 이미지 */}
                   <img
-                    src={cat.img}
+                    src={getImgSrc(cat.img)}
                     alt={cat.name}
                     className="object-contain drop-shadow-sm"
                     style={{ width: cat.size * 0.55, height: cat.size * 0.55 }}

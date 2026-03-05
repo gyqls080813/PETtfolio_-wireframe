@@ -17,8 +17,10 @@ import {
 } from "lucide-react";
 import PetCharacter from "../figma/PetCharacter";
 import PetAvatar from "../figma/PetAvatar";
-import pomeImg from "../../../assets/pome.png";
-import catImg from "../../../assets/cat-character.png";
+import pomeImg from "../../assets/pome.png";
+import catImg from "../../assets/cat-character.png";
+
+const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
 
 const upcomingExpenses = [
   { label: "사료 (오리젠)", date: "03/10", amount: "89,000", pet: "초코", petId: "choco", icon: Dog },
@@ -232,7 +234,7 @@ export default function HomePage() {
                       {/* Pet character sticker inside the ring */}
                       <div className="relative z-10 w-[80px] h-[80px]">
                         <img
-                          src={item.img}
+                          src={getImgSrc(item.img)}
                           alt={item.pet}
                           className="w-full h-full object-contain drop-shadow-md"
                         />
@@ -294,20 +296,20 @@ export default function HomePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => setIsQrModalOpen(false)} />
           <div className="relative bg-white rounded-[32px] w-full max-w-[360px] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
-            
+
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 pt-6 pb-4">
               <div className="flex items-center gap-3">
-                <div 
-                  className="w-10 h-10 rounded-full flex items-center justify-center" 
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
                   style={{ background: "linear-gradient(135deg, #E8A365, #D48C45)" }}
                 >
                   <Send className="w-5 h-5 text-white -mt-0.5 -ml-0.5" strokeWidth={2} />
                 </div>
                 <span className="text-[20px] text-[#1F2937]" style={{ fontWeight: 700 }}>QR 결제</span>
               </div>
-              <button 
-                onClick={() => setIsQrModalOpen(false)} 
+              <button
+                onClick={() => setIsQrModalOpen(false)}
                 className="w-8 h-8 flex items-center justify-center bg-[#F3F4F6] rounded-full hover:bg-[#E5E7EB] transition-colors border-none cursor-pointer"
               >
                 <X className="w-4 h-4 text-[#9CA3AF]" strokeWidth={2} />
@@ -316,7 +318,7 @@ export default function HomePage() {
 
             {/* Modal Body */}
             <div className="px-6 pb-6 flex flex-col items-stretch">
-              
+
               {/* Wallet Info Box */}
               <div className="bg-[#FFFDF5] rounded-[20px] p-4 flex items-center justify-between mb-8 border border-[#F3EAD5]">
                 <div className="flex items-center gap-3">
@@ -339,7 +341,7 @@ export default function HomePage() {
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=250&data=example" alt="QR" className="w-[140px] h-[140px] mix-blend-multiply" />
                   </div>
                 </div>
-                
+
                 <span className="text-[15px] text-[#374151] mb-1.5" style={{ fontWeight: 700 }}>QR을 스캔하여 결제하세요</span>
                 <span className="text-[13px] text-[#9CA3AF]">이 QR은 5분 후 만료됩니다</span>
               </div>

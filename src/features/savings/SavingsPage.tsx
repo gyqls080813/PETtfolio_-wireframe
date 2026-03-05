@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import pome from "../../assets/pome.png";
 
+const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
+
 /* ───────────── 반려동물 데이터 ───────────── */
 const pets = [
   { id: "choco", name: "초코", icon: Dog, color: "#D4A574", breed: "말티즈", age: 3 },
@@ -279,7 +281,7 @@ export default function SavingsPage() {
             {/* 강아지 이미지 */}
             <div className="relative z-10 flex items-end justify-center flex-1">
               <img
-                src={pome}
+                src={getImgSrc(pome)}
                 alt="반려동물 캐릭터"
                 className="object-contain drop-shadow-md"
                 style={{ height: "350px", maxHeight: "100%" }}
