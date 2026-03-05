@@ -13,6 +13,7 @@ import {
   Cat,
   QrCode,
   X,
+  Send,
 } from "lucide-react";
 import PetCharacter from "../figma/PetCharacter";
 import PetAvatar from "../figma/PetAvatar";
@@ -100,7 +101,7 @@ export default function HomePage() {
                 <button
                   className="w-full py-2.5 rounded-2xl flex items-center justify-center gap-2 transition-colors border border-white/20"
                   style={{ background: "rgba(255,255,255,0.22)", backdropFilter: "blur(8px)" }}
-                  onClick={() => navigate("/accounts")}
+                  onClick={() => setIsQrModalOpen(true)}
                 >
                   <span className="text-[13px] font-semibold text-white">결제하기</span>
                 </button>
@@ -282,47 +283,77 @@ export default function HomePage() {
       {/* Floating Action Button for QR Payment */}
       <button
         onClick={() => setIsQrModalOpen(true)}
-        className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 w-14 h-14 text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 lg:bottom-10 lg:left-[280px] lg:translate-x-0 w-14 h-14 text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group shadow-lg"
         style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", boxShadow: "0 8px 20px rgba(212,165,116,0.4)" }}
       >
-        <QrCode className="w-6 h-6 group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
+        <QrCode className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
       </button>
 
       {/* QR Payment Modal */}
       {isQrModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsQrModalOpen(false)} />
-          <div className="relative bg-[#FFFDF8] rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => setIsQrModalOpen(false)} />
+          <div className="relative bg-white rounded-[32px] w-full max-w-[360px] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+            
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-[#E8D5C0]">
-              <span className="text-[16px] font-bold text-[#3D3229]">QR 결제</span>
-              <button onClick={() => setIsQrModalOpen(false)} className="p-1 hover:bg-[#F9F0E4] border-none bg-transparent rounded-full transition-colors cursor-pointer">
-                <X className="w-5 h-5 text-[#8B7355]" />
+            <div className="flex items-center justify-between px-6 pt-6 pb-4">
+              <div className="flex items-center gap-3">
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center" 
+                  style={{ background: "linear-gradient(135deg, #E8A365, #D48C45)" }}
+                >
+                  <Send className="w-5 h-5 text-white -mt-0.5 -ml-0.5" strokeWidth={2} />
+                </div>
+                <span className="text-[20px] text-[#1F2937]" style={{ fontWeight: 700 }}>QR 결제</span>
+              </div>
+              <button 
+                onClick={() => setIsQrModalOpen(false)} 
+                className="w-8 h-8 flex items-center justify-center bg-[#F3F4F6] rounded-full hover:bg-[#E5E7EB] transition-colors border-none cursor-pointer"
+              >
+                <X className="w-4 h-4 text-[#9CA3AF]" strokeWidth={2} />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="p-8 flex flex-col items-center justify-center">
-              <span className="text-[14px] text-[#8B7355] mb-6">매장 QR 리더기에 스캔해주세요</span>
-
-              {/* Fake QR Code Box */}
-              <div className="w-48 h-48 bg-white border-2 border-[#E8D5C0] rounded-2xl flex items-center justify-center relative shadow-inner">
-                <div className="absolute top-3 left-3 w-8 h-8 border-4 border-[#3D3229]" />
-                <div className="absolute top-3 right-3 w-8 h-8 border-4 border-[#3D3229]" />
-                <div className="absolute bottom-3 left-3 w-8 h-8 border-4 border-[#3D3229]" />
-                <QrCode className="w-24 h-24 text-[#3D3229]" strokeWidth={1.5} />
+            <div className="px-6 pb-6 flex flex-col items-stretch">
+              
+              {/* Wallet Info Box */}
+              <div className="bg-[#FFFDF5] rounded-[20px] p-4 flex items-center justify-between mb-8 border border-[#F3EAD5]">
+                <div className="flex items-center gap-3">
+                  <Wallet className="w-5 h-5 text-[#D4A574]" strokeWidth={2} />
+                  <div className="flex flex-col">
+                    <span className="text-[12px] text-[#9CA3AF]" style={{ fontWeight: 500 }}>공동 관리 지갑</span>
+                    <span className="text-[16px] text-[#1F2937] leading-tight mt-0.5" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>1,250,000원</span>
+                  </div>
+                </div>
+                <div className="bg-[#FDF2E3] px-3 py-1.5 rounded-full">
+                  <span className="text-[12px] text-[#D4A574]" style={{ fontWeight: 600 }}>결제용</span>
+                </div>
               </div>
 
-              <div className="mt-6 space-y-1 text-center">
-                <span className="block text-[13px] text-[#B4A08A]">결제 가능 금액</span>
-                <span className="block text-[20px] font-bold text-[#D4A574]" style={{ fontFamily: "'Nunito', sans-serif" }}>₩ 2,730,000</span>
+              {/* QR Code Container */}
+              <div className="flex flex-col items-center mb-6">
+                <div className="w-[200px] h-[200px] bg-[#F9FAFB] rounded-[32px] p-4 flex items-center justify-center mb-5">
+                  <div className="w-full h-full bg-white rounded-[20px] p-2 flex items-center justify-center relative overlow-hidden">
+                    {/* Simulated QR Pattern for design fidelity */}
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250&data=example" alt="QR" className="w-[140px] h-[140px] mix-blend-multiply" />
+                  </div>
+                </div>
+                
+                <span className="text-[15px] text-[#374151] mb-1.5" style={{ fontWeight: 700 }}>QR을 스캔하여 결제하세요</span>
+                <span className="text-[13px] text-[#9CA3AF]">이 QR은 5분 후 만료됩니다</span>
               </div>
-            </div>
 
-            {/* Modal Footer */}
-            <div className="bg-[#F9F0E4] p-4 flex justify-between items-center text-[13px]">
-              <span className="text-[#8B7355]">결제 바코드</span>
-              <span className="font-semibold tracking-widest text-[#3D3229]">||| || ||| | ||</span>
+              {/* Divider */}
+              <div className="relative flex items-center justify-center mb-6">
+                <div className="absolute inset-x-0 h-px bg-[#F3F4F6]" />
+                <span className="relative bg-white px-3 text-[12px] text-[#9CA3AF]">또는</span>
+              </div>
+
+              {/* Direct Input Button */}
+              <button className="w-full py-4 rounded-[20px] border border-[#FDE6C8] flex items-center justify-center bg-white hover:bg-[#FFFDF5] transition-colors cursor-pointer">
+                <span className="text-[14px] text-[#B87A3E]" style={{ fontWeight: 600 }}>금액 직접 입력하기</span>
+              </button>
             </div>
           </div>
         </div>
