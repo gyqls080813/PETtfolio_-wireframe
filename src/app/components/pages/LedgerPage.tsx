@@ -148,11 +148,11 @@ export default function LedgerPage() {
               ))}
             </div>
 
-            <div className="grid grid-cols-7 text-center gap-y-1.5 flex-1 content-start">
+            <div className="grid grid-cols-7 text-center gap-y-0.5 flex-1">
               {calendarDays.map((day, i) => (
                 <div
                   key={i}
-                  className={`min-h-[46px] flex flex-col items-center rounded-xl transition-colors relative ${day ? "cursor-pointer hover:bg-[#F9F0E4]" : ""}`}
+                  className={`min-h-[72px] flex flex-col items-center rounded-xl transition-colors relative pt-1 ${day ? "cursor-pointer hover:bg-[#F9F0E4]" : ""}`}
                   onClick={() => day && setSelectedDay(day)}
                 >
                   {day && (
@@ -162,8 +162,8 @@ export default function LedgerPage() {
                         <img
                           src={calendarStickers[day].img}
                           alt={calendarStickers[day].label}
-                          className="w-[22px] h-[22px] object-contain absolute -top-1 -right-0 drop-shadow-sm z-10 pointer-events-none"
-                          style={{ opacity: 0.85 }}
+                          className="w-[32px] h-[32px] object-contain absolute -top-1 -right-1 drop-shadow-sm z-10 pointer-events-none"
+                          style={{ opacity: 0.9 }}
                         />
                       )}
 
@@ -192,13 +192,6 @@ export default function LedgerPage() {
                 </div>
               ))}
             </div>
-
-            {/* Bottom Button */}
-            <div className="mt-2 text-center">
-              <button className="px-5 py-2 bg-[#F5E6D0] text-[#6B4F3A] rounded-xl text-[13px] font-medium hover:bg-[#E8D5C0] transition-colors">
-                11월 달력 확인하기
-              </button>
-            </div>
           </div>
 
           {/* Daily Details Modal */}
@@ -210,9 +203,26 @@ export default function LedgerPage() {
                 className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
               >
                 <div className="flex justify-between items-center p-5 border-b border-[#E8D5C0]">
-                  <h3 className="text-[18px] font-bold text-[#3D3229]">
-                    12월 {selectedDay}일 상세 내역
-                  </h3>
+                  <div className="flex items-center gap-3">
+                    {/* 해당 날짜의 스티커가 있으면 크게 표시 */}
+                    {calendarStickers[selectedDay as number] && (
+                      <img
+                        src={calendarStickers[selectedDay as number].img}
+                        alt={calendarStickers[selectedDay as number].label}
+                        className="w-[64px] h-[64px] object-contain drop-shadow-md"
+                      />
+                    )}
+                    <div>
+                      <h3 className="text-[18px] font-bold text-[#3D3229]">
+                        12월 {selectedDay}일 상세 내역
+                      </h3>
+                      {calendarStickers[selectedDay as number] && (
+                        <span className="text-[12px] text-[#B4A08A] mt-0.5 inline-block">
+                          오늘의 활동: <span className="text-[#D4A574] font-semibold">{calendarStickers[selectedDay as number].label}</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
                   <button onClick={() => setSelectedDay(null)} className="text-[#B4A08A] hover:text-[#5C4A3A]">
                     <X className="w-6 h-6" strokeWidth={1.5} />
                   </button>
@@ -231,8 +241,8 @@ export default function LedgerPage() {
                       <div className="space-y-3">
                         <div className="flex justify-between items-center bg-[#FFF8EE] p-3 rounded-xl border border-[#E8D5C0]">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[18px] shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
-                              🛒
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                              <img src={stickerSad} alt="지출" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[#3D3229]">지출</div>
@@ -261,8 +271,8 @@ export default function LedgerPage() {
                       <div className="space-y-3">
                         <div className="flex justify-between items-center bg-[#FFF8EE] p-3 rounded-xl border border-[#E8D5C0]">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[18px] shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
-                              💰
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                              <img src={stickerThumbsup} alt="저금" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[#3D3229]">수입/저축</div>
