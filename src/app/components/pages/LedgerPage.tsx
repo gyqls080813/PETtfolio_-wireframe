@@ -25,6 +25,15 @@ import {
   LabelList,
 } from "recharts";
 
+// 펫 스티커 이미지
+import stickerThumbsup from "../../../assets/pome_thumbsup.png";
+import stickerSad from "../../../assets/pome_sad.png";
+import stickerEating from "../../../assets/pome_eating.png";
+import stickerGrooming from "../../../assets/pome_grooming.png";
+import stickerHospital from "../../../assets/pome_hospital.png";
+import stickerSnack from "../../../assets/pome_snack.png";
+import stickerToys from "../../../assets/pome_toys.png";
+
 const categories = [
   { name: "사료", color: "#D4A574" },
   { name: "간식", color: "#E17055" },
@@ -64,11 +73,11 @@ export default function LedgerPage() {
   const constraintsRef = useRef<HTMLDivElement>(null);
 
   const topCategories = [
-    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "#D4A574", sizeText: 20 },
-    { id: 2, name: "병원/의료", size: 95, top: "52%", left: "62%", color: "#EF4444", sizeText: 17 },
-    { id: 3, name: "간식", size: 85, top: "75%", left: "38%", color: "#E17055", sizeText: 16 },
-    { id: 4, name: "용품", size: 80, top: "60%", left: "15%", color: "#74B9FF", sizeText: 15 },
-    { id: 5, name: "미용", size: 75, top: "22%", left: "68%", color: "#FD79A8", sizeText: 14 },
+    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "#D4A574", sizeText: 14, img: stickerEating },
+    { id: 2, name: "병원/의료", size: 95, top: "52%", left: "62%", color: "#EF4444", sizeText: 12, img: stickerHospital },
+    { id: 3, name: "간식", size: 85, top: "75%", left: "38%", color: "#E17055", sizeText: 12, img: stickerSnack },
+    { id: 4, name: "용품", size: 80, top: "60%", left: "15%", color: "#74B9FF", sizeText: 11, img: stickerToys },
+    { id: 5, name: "미용", size: 75, top: "22%", left: "68%", color: "#FD79A8", sizeText: 11, img: stickerGrooming },
   ];
 
   const calendarDays: (number | null)[] = [];
@@ -82,6 +91,25 @@ export default function LedgerPage() {
     15: { exp: 14200 }, 16: { exp: 30000 }, 17: { inc: 103507 }, 18: { inc: 2 }, 19: { exp: 54842, inc: 5400 }, 20: { exp: 126484 }, 21: { exp: 10000 },
     22: { exp: 14000 }, 23: { exp: 14000 }, 24: { inc: 50460 }, 25: { exp: 6500 }, 26: { exp: 110000 }, 27: { exp: 49390, inc: 24500 }, 28: { inc: 9500 },
     29: { exp: 2900 }, 31: { exp: 5300, inc: 1000 },
+  };
+
+  // 날짜별 펫 스티커 매핑 (활동 유형에 따라 다른 스티커)
+  const calendarStickers: Record<number, { img: string; label: string }> = {
+    1: { img: stickerGrooming, label: "미용" },
+    2: { img: stickerThumbsup, label: "저축" },
+    3: { img: stickerHospital, label: "검진" },
+    5: { img: stickerEating, label: "간식" },
+    6: { img: stickerSad, label: "과소비" },
+    8: { img: stickerSad, label: "과소비" },
+    9: { img: stickerThumbsup, label: "저축" },
+    12: { img: stickerThumbsup, label: "저축" },
+    14: { img: stickerEating, label: "사료" },
+    17: { img: stickerThumbsup, label: "저축" },
+    20: { img: stickerSad, label: "과소비" },
+    24: { img: stickerThumbsup, label: "저축" },
+    26: { img: stickerHospital, label: "병원" },
+    27: { img: stickerEating, label: "간식" },
+    31: { img: stickerGrooming, label: "미용" },
   };
 
   return (
@@ -124,11 +152,21 @@ export default function LedgerPage() {
               {calendarDays.map((day, i) => (
                 <div
                   key={i}
-                  className={`min-h-[46px] flex flex-col items-center rounded-xl transition-colors ${day ? "cursor-pointer hover:bg-[#F9F0E4]" : ""}`}
+                  className={`min-h-[46px] flex flex-col items-center rounded-xl transition-colors relative ${day ? "cursor-pointer hover:bg-[#F9F0E4]" : ""}`}
                   onClick={() => day && setSelectedDay(day)}
                 >
                   {day && (
                     <>
+                      {/* 펫 스티커 (날짜 위에 반투명하게) */}
+                      {calendarStickers[day] && (
+                        <img
+                          src={calendarStickers[day].img}
+                          alt={calendarStickers[day].label}
+                          className="w-[22px] h-[22px] object-contain absolute -top-1 -right-0 drop-shadow-sm z-10 pointer-events-none"
+                          style={{ opacity: 0.85 }}
+                        />
+                      )}
+
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[13px] ${day === 31
                         ? "bg-[#F5E6D0] text-[#6B4F3A] font-bold"
                         : "text-[#5C4A3A]"
@@ -309,7 +347,7 @@ export default function LedgerPage() {
                   dragConstraints={constraintsRef}
                   whileDrag={{ scale: 1.1, zIndex: 50, cursor: "grabbing" }}
                   whileHover={{ scale: 1.05 }}
-                  className="absolute bg-white rounded-full flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.06)] cursor-grab"
+                  className="absolute bg-white rounded-full flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.06)] cursor-grab overflow-hidden"
                   style={{
                     width: cat.size,
                     height: cat.size,
@@ -319,8 +357,16 @@ export default function LedgerPage() {
                     zIndex: 10 + i,
                   }}
                 >
+                  {/* 스티커 이미지 */}
+                  <img
+                    src={cat.img}
+                    alt={cat.name}
+                    className="object-contain drop-shadow-sm"
+                    style={{ width: cat.size * 0.55, height: cat.size * 0.55 }}
+                  />
+                  {/* 카테고리 라벨 */}
                   <span
-                    className="font-bold tracking-tight"
+                    className="font-bold tracking-tight leading-none -mt-0.5"
                     style={{ color: cat.color, fontSize: cat.sizeText }}
                   >
                     {cat.name}
@@ -339,23 +385,23 @@ export default function LedgerPage() {
    새 지출 추가 모달
 ════════════════════════════════════════════ */
 const MODAL_CATEGORIES = [
-  { name: "사료",        emoji: "🥣" },
-  { name: "병원/의료",   emoji: "🏥" },
-  { name: "미용",        emoji: "✂️" },
+  { name: "사료", emoji: "🥣" },
+  { name: "병원/의료", emoji: "🏥" },
+  { name: "미용", emoji: "✂️" },
   { name: "위생/소모품", emoji: "🪥" },
-  { name: "간식",        emoji: "🍖" },
-  { name: "약/영양제",   emoji: "💊" },
-  { name: "용품",        emoji: "🛒" },
+  { name: "간식", emoji: "🍖" },
+  { name: "약/영양제", emoji: "💊" },
+  { name: "용품", emoji: "🛒" },
   { name: "돌봄/서비스", emoji: "🏠" },
 ];
 
 function AddModal({ onClose }: { onClose: () => void }) {
-  const [selCat, setSelCat]   = useState("사료");
-  const [amount, setAmount]   = useState(0);
+  const [selCat, setSelCat] = useState("사료");
+  const [amount, setAmount] = useState(0);
   const [content, setContent] = useState("");
-  const [pet, setPet]         = useState("초코");
+  const [pet, setPet] = useState("초코");
   const today = new Date().toISOString().split("T")[0];
-  const [date, setDate]       = useState(today);
+  const [date, setDate] = useState(today);
 
   const addAmount = (n: number) => setAmount((v) => v + n);
 
@@ -391,10 +437,10 @@ function AddModal({ onClose }: { onClose: () => void }) {
                     onClick={() => setSelCat(c.name)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] border transition-all"
                     style={{
-                      background:  active ? "#D4A574" : "#FFF8EE",
+                      background: active ? "#D4A574" : "#FFF8EE",
                       borderColor: active ? "#D4A574" : "#E8D5C0",
-                      color:       active ? "#fff"    : "#5C4A3A",
-                      fontWeight:  active ? 600       : 400,
+                      color: active ? "#fff" : "#5C4A3A",
+                      fontWeight: active ? 600 : 400,
                     }}
                   >
                     <span>{c.emoji}</span>

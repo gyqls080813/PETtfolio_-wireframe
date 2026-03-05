@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import PetCharacter from "../figma/PetCharacter";
 import PetAvatar from "../figma/PetAvatar";
+import pomeImg from "../../../assets/pome.png";
+import catImg from "../../../assets/cat-character.png";
 
 const upcomingExpenses = [
   { label: "사료 (오리젠)", date: "03/10", amount: "89,000", pet: "초코", petId: "choco", icon: Dog },
@@ -194,8 +196,8 @@ export default function HomePage() {
 
             <div className="flex items-center justify-center gap-4 flex-1">
               {[
-                { pet: "초코", pct: 64, color: "#D4A574", trackColor: "#F5EDDF", goal: "5,000,000", current: "3,200,000", petId: "choco" },
-                { pet: "나비", pct: 45, color: "#E8C5A0", trackColor: "#F5EDDF", goal: "3,000,000", current: "1,350,000", petId: "nabi" },
+                { pet: "초코", pct: 64, color: "#D4A574", trackColor: "#F5EDDF", goal: "5,000,000", current: "3,200,000", petId: "choco", img: pomeImg },
+                { pet: "나비", pct: 45, color: "#E8C5A0", trackColor: "#F5EDDF", goal: "3,000,000", current: "1,350,000", petId: "nabi", img: catImg },
               ].filter(item => selectedPet === "전체" || item.pet === selectedPet).map((item, i) => {
                 const radius = 58;
                 const circumference = 2 * Math.PI * radius;
@@ -226,14 +228,12 @@ export default function HomePage() {
                         />
                       </svg>
 
-                      {/* Pet Image inside the ring */}
-                      <div className="relative z-10">
-                        <PetAvatar
-                          pet={item.petId}
-                          mood={isHigh ? "happy" : "sleepy"}
-                          fullBody={true}
-                          border={false}
-                          size="lg"
+                      {/* Pet character sticker inside the ring */}
+                      <div className="relative z-10 w-[80px] h-[80px]">
+                        <img
+                          src={item.img}
+                          alt={item.pet}
+                          className="w-full h-full object-contain drop-shadow-md"
                         />
                       </div>
 
