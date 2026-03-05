@@ -1,4 +1,4 @@
-import {
+﻿import {
   Plus,
   ArrowUpRight,
   ArrowDownLeft,
@@ -77,7 +77,7 @@ export default function AccountPage() {
       <div className="flex items-center justify-end">
         <button
           className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
-          style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)", fontWeight: 600 }}
+          style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", fontWeight: 600 }}
           onClick={() => setShowCreate(!showCreate)}
         >
           <Plus className="w-4 h-4" />
@@ -86,26 +86,26 @@ export default function AccountPage() {
       </div>
 
       {showCreate && (
-        <div className="bg-white rounded-2xl border border-[#E8E0D5] p-5 space-y-3">
-          <h3 className="text-[16px] text-[#111827]" style={{ fontWeight: 600 }}>새 계좌 생성</h3>
+        <div className="bg-white rounded-2xl border border-[#E8D5C0] p-5 space-y-3">
+          <h3 className="text-[16px] text-[#3D3229]" style={{ fontWeight: 600 }}>새 계좌 생성</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="text-[13px] text-[#6B7280] mb-1 block">계좌 이름</label>
-              <input placeholder="예: 초코 비상금 계좌" className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none placeholder:text-[#D1C4B0] focus:border-[#F59E0B]" />
+              <label className="text-[13px] text-[#8B7355] mb-1 block">계좌 이름</label>
+              <input placeholder="예: 초코 비상금 계좌" className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none placeholder:text-[#D9C8B4] focus:border-[#D4A574]" />
             </div>
             <div>
-              <label className="text-[13px] text-[#6B7280] mb-1 block">계좌 유형</label>
-              <select className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none appearance-none focus:border-[#F59E0B]">
+              <label className="text-[13px] text-[#8B7355] mb-1 block">계좌 유형</label>
+              <select className="w-full border border-[#E8D5C0] rounded-xl px-3 py-2.5 bg-[#FFF8EE] text-[14px] outline-none appearance-none focus:border-[#D4A574]">
                 <option>비상금 계좌</option>
                 <option>공동 관리 계좌</option>
               </select>
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <button className="px-4 py-2 border border-[#E8E0D5] rounded-xl text-[13px] text-[#6B7280]" onClick={() => setShowCreate(false)}>취소</button>
+            <button className="px-4 py-2 border border-[#E8D5C0] rounded-xl text-[13px] text-[#8B7355]" onClick={() => setShowCreate(false)}>취소</button>
             <button
               className="px-4 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
-              style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)", fontWeight: 600 }}
+              style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", fontWeight: 600 }}
               onClick={() => setShowCreate(false)}
             >생성</button>
           </div>
@@ -117,8 +117,8 @@ export default function AccountPage() {
         {/* Left Column: Account Cards */}
         <div className="lg:col-span-5 flex flex-col gap-2 lg:gap-4 h-full">
           <div className="px-1 pt-1 mb-2">
-            <h2 className="text-[20px] font-extrabold text-[#111827] mb-1 tracking-tight">내 페이 관리</h2>
-            <p className="text-[13px] text-[#9CA3AF] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
+            <h2 className="text-[20px] font-extrabold text-[#3D3229] mb-1 tracking-tight">내 페이 관리</h2>
+            <p className="text-[13px] text-[#B4A08A] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
           </div>
 
           <style>{`
@@ -133,26 +133,26 @@ export default function AccountPage() {
           >
             {/* Shared Pay Card */}
             <div
-              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "shared" || selectedAccount === "all" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[#F59E0B] lg:scale-[1.02] z-10" : "border border-[#F0EBE3] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[#E8E0D5]"}`}
+              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "shared" || selectedAccount === "all" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[#D4A574] lg:scale-[1.02] z-10" : "border border-[#E8D5C0] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[#E8D5C0]"}`}
               onClick={() => setSelectedAccount("shared")}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex flex-col">
-                  <span className="text-[12px] text-[#374151] font-semibold mb-0.5">초코네 가족</span>
-                  <span className="text-[13px] text-[#9CA3AF] font-medium underline decoration-1 underline-offset-4 decoration-[#E8E0D5]">공동 페이 가상계좌 110-123-456789</span>
+                  <span className="text-[12px] text-[#5C4A3A] font-semibold mb-0.5">초코네 가족</span>
+                  <span className="text-[13px] text-[#B4A08A] font-medium underline decoration-1 underline-offset-4 decoration-[#E8D5C0]">공동 페이 가상계좌 110-123-456789</span>
                 </div>
               </div>
               <div className="flex items-end gap-1 mb-5">
-                <div className="text-[28px] text-[#111827] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>580,000</div>
-                <div className="text-[18px] text-[#111827] font-bold pb-0.5">원</div>
+                <div className="text-[28px] text-[#3D3229] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>580,000</div>
+                <div className="text-[18px] text-[#3D3229] font-bold pb-0.5">원</div>
               </div>
               <div className="flex gap-2.5">
-                <button className="flex-1 py-3 bg-[#FEF3C7] text-[#D97706] rounded-[12px] text-[14px] font-bold hover:bg-[#FDE68A] transition-colors">
+                <button className="flex-1 py-3 bg-[#F5E6D0] text-[#6B4F3A] rounded-[12px] text-[14px] font-bold hover:bg-[#E8D5C0] transition-colors">
                   채우기
                 </button>
                 <button
                   className="flex-1 py-3 text-white rounded-[12px] text-[14px] font-bold hover:opacity-90 shadow-[0_2px_6px_rgba(245,158,11,0.3)] transition-all active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)" }}
+                  style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}
                 >
                   보내기
                 </button>
@@ -161,26 +161,26 @@ export default function AccountPage() {
 
             {/* Emergency Pay Card */}
             <div
-              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "emergency" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[#F59E0B] lg:scale-[1.02] z-10" : "border border-[#F0EBE3] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[#E8E0D5]"}`}
+              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "emergency" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[#D4A574] lg:scale-[1.02] z-10" : "border border-[#E8D5C0] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[#E8D5C0]"}`}
               onClick={() => setSelectedAccount("emergency")}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex flex-col">
-                  <span className="text-[12px] text-[#374151] font-semibold mb-0.5">예비 자금</span>
-                  <span className="text-[13px] text-[#9CA3AF] font-medium underline decoration-1 underline-offset-4 decoration-[#E8E0D5]">비상금 페이 가상계좌 110-987-654321</span>
+                  <span className="text-[12px] text-[#5C4A3A] font-semibold mb-0.5">예비 자금</span>
+                  <span className="text-[13px] text-[#B4A08A] font-medium underline decoration-1 underline-offset-4 decoration-[#E8D5C0]">비상금 페이 가상계좌 110-987-654321</span>
                 </div>
               </div>
               <div className="flex items-end gap-1 mb-5">
-                <div className="text-[28px] text-[#111827] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>2,150,000</div>
-                <div className="text-[18px] text-[#111827] font-bold pb-0.5">원</div>
+                <div className="text-[28px] text-[#3D3229] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>2,150,000</div>
+                <div className="text-[18px] text-[#3D3229] font-bold pb-0.5">원</div>
               </div>
               <div className="flex gap-2.5">
-                <button className="flex-1 py-3 bg-[#FEF3C7] text-[#D97706] rounded-[12px] text-[14px] font-bold hover:bg-[#FDE68A] transition-colors">
+                <button className="flex-1 py-3 bg-[#F5E6D0] text-[#6B4F3A] rounded-[12px] text-[14px] font-bold hover:bg-[#E8D5C0] transition-colors">
                   채우기
                 </button>
                 <button
                   className="flex-1 py-3 text-white rounded-[12px] text-[14px] font-bold hover:opacity-90 shadow-[0_2px_6px_rgba(245,158,11,0.3)] transition-all active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)" }}
+                  style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}
                 >
                   보내기
                 </button>
@@ -190,76 +190,76 @@ export default function AccountPage() {
 
           {/* Mobile Carousel Indicators */}
           <div className="flex lg:hidden justify-center gap-2 mb-2">
-            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "shared" || selectedAccount === "all" ? "bg-[#F59E0B]" : "bg-[#E8E0D5]"}`} />
-            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "emergency" ? "bg-[#F59E0B]" : "bg-[#E8E0D5]"}`} />
+            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "shared" || selectedAccount === "all" ? "bg-[#D4A574]" : "bg-[#E8D5C0]"}`} />
+            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "emergency" ? "bg-[#D4A574]" : "bg-[#E8D5C0]"}`} />
           </div>
         </div>
 
         {/* Right Column: Transaction History */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-[#F0EBE3] p-6 flex flex-col h-full">
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E8D5C0] p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-1 -ml-2">
               <button
                 onClick={() => setSelectedAccount("shared")}
                 disabled={selectedAccount === "shared"}
-                className={`p-1 rounded-full transition-colors ${selectedAccount === "shared" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FAF8F5] active:bg-[#FEF3C7]"}`}
+                className={`p-1 rounded-full transition-colors ${selectedAccount === "shared" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
               >
-                <ChevronLeft className="w-6 h-6 text-[#111827]" />
+                <ChevronLeft className="w-6 h-6 text-[#3D3229]" />
               </button>
 
-              <span className="text-[19px] text-[#111827] font-bold min-w-[85px] text-center select-none">
+              <span className="text-[19px] text-[#3D3229] font-bold min-w-[85px] text-center select-none">
                 {selectedAccount === "emergency" ? "비상금 페이" : "공동 페이"}
               </span>
 
               <button
                 onClick={() => setSelectedAccount("emergency")}
                 disabled={selectedAccount === "emergency"}
-                className={`p-1 rounded-full transition-colors ${selectedAccount === "emergency" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FAF8F5] active:bg-[#FEF3C7]"}`}
+                className={`p-1 rounded-full transition-colors ${selectedAccount === "emergency" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
               >
-                <ChevronRight className="w-6 h-6 text-[#111827]" />
+                <ChevronRight className="w-6 h-6 text-[#3D3229]" />
               </button>
             </div>
 
-            <button className="flex items-center gap-1.5 text-[14px] text-[#9CA3AF] font-medium hover:text-[#374151] transition-colors">
+            <button className="flex items-center gap-1.5 text-[14px] text-[#B4A08A] font-medium hover:text-[#5C4A3A] transition-colors">
               5분 전 <RefreshCcw className="w-4 h-4" strokeWidth={1.5} />
             </button>
           </div>
 
           <div className="space-y-1 overflow-y-auto pr-2 flex-1" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-            <div className="text-[14px] text-[#9CA3AF] font-medium mb-3 pl-1">최근 내역</div>
+            <div className="text-[14px] text-[#B4A08A] font-medium mb-3 pl-1">최근 내역</div>
             {filteredHistory.length > 0 ? (
               filteredHistory.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between py-3.5 px-2 hover:bg-[#FAF8F5] rounded-2xl transition-colors cursor-pointer group -mx-2">
+                <div key={tx.id} className="flex items-center justify-between py-3.5 px-2 hover:bg-[#FFF8EE] rounded-2xl transition-colors cursor-pointer group -mx-2">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
                       {tx.type === "in" ? (
-                        <div className="w-full h-full bg-[#14B8A6] flex items-center justify-center">
+                        <div className="w-full h-full bg-[#A8C5A0] flex items-center justify-center">
                           <span className="text-white font-bold text-[16px]">₩</span>
                         </div>
                       ) : (
-                        <div className="w-full h-full bg-[#F1F5F9] flex items-center justify-center text-[#9CA3AF]">
+                        <div className="w-full h-full bg-[#F5EDDF] flex items-center justify-center text-[#B4A08A]">
                           <User className="w-6 h-6" fill="currentColor" />
                         </div>
                       )}
                     </div>
                     <div>
-                      <div className="text-[16px] text-[#111827] font-semibold mb-0.5">{tx.desc}</div>
-                      <div className="flex items-center gap-1.5 text-[14px] text-[#9CA3AF]">
+                      <div className="text-[16px] text-[#3D3229] font-semibold mb-0.5">{tx.desc}</div>
+                      <div className="flex items-center gap-1.5 text-[14px] text-[#B4A08A]">
                         <span>{tx.date}</span>
                         <span>12:00</span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end justify-center">
-                    <span className={`text-[16px] font-bold ${tx.type === "in" ? "text-[#14B8A6]" : "text-[#111827]"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
+                    <span className={`text-[16px] font-bold ${tx.type === "in" ? "text-[#A8C5A0]" : "text-[#3D3229]"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
                       {tx.type === "out" ? tx.amount.replace('-', '') : tx.amount.replace('+', '')} 원
                     </span>
-                    <span className="text-[14px] text-[#9CA3AF] mt-0.5">잔액 0 원</span>
+                    <span className="text-[14px] text-[#B4A08A] mt-0.5">잔액 0 원</span>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-[#D1C4B0]">
+              <div className="flex flex-col items-center justify-center py-16 text-[#D9C8B4]">
                 <History className="w-10 h-10 mb-4 opacity-50" strokeWidth={1.5} />
                 <p className="text-[15px] font-medium">해당 페이의 거래 내역이 없습니다.</p>
               </div>

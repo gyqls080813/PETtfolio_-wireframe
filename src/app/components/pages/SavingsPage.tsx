@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   AlertTriangle,
   Sparkles,
@@ -10,8 +10,8 @@ import {
 
 /* ───────────── 반려동물 데이터 ───────────── */
 const pets = [
-  { id: "choco", name: "초코", icon: Dog, color: "#F59E0B", breed: "말티즈",       age: 3 },
-  { id: "nabi",  name: "나비", icon: Cat, color: "#00B894", breed: "코리안숏헤어", age: 7 },
+  { id: "choco", name: "초코", icon: Dog, color: "#D4A574", breed: "말티즈",       age: 3 },
+  { id: "nabi",  name: "나비", icon: Cat, color: "#A8C5A0", breed: "코리안숏헤어", age: 7 },
 ];
 
 /* ───────────── 반려동물별 비상금 현황 ───────────── */
@@ -96,7 +96,7 @@ const diseaseGuideByPet: Record<string, {
   ],
 };
 
-const stageColors = ["#F59E0B", "#00B894", "#E17055", "#A29BFE"];
+const stageColors = ["#D4A574", "#A8C5A0", "#E17055", "#A29BFE"];
 
 const aiSuggestionByPet: Record<string, { text: string; disease: string; amount: string }> = {
   choco: { text: "초코(말티즈, 3세) 연령대에서",        disease: "아토피성 피부염",  amount: "월 ₩30,000" },
@@ -130,7 +130,7 @@ export default function SavingsPage() {
               onClick={() => setActivePet(p.id)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-[14px] transition-all"
               style={{
-                background: isActive ? p.color : "#F5F5F8",
+                background: isActive ? p.color : "#FFF8EE",
                 color:      isActive ? "#fff"  : "#888",
                 fontWeight: isActive ? 600     : 400,
                 boxShadow:  isActive ? `0 2px 8px ${p.color}40` : "none",
@@ -144,9 +144,9 @@ export default function SavingsPage() {
       </div>
 
       {/* ── AI 제안 배너 (한 줄 compact) ── */}
-      <div className="bg-gradient-to-r from-[#F59E0B]/10 to-[#F97316]/10 border border-[#F59E0B]/20 rounded-xl px-4 py-3 flex items-center gap-3 shrink-0">
-        <div className="w-8 h-8 rounded-lg bg-[#F59E0B]/15 flex items-center justify-center shrink-0">
-          <Sparkles className="w-4 h-4 text-[#F59E0B]" />
+      <div className="bg-gradient-to-r from-[#D4A574]/10 to-[#C4956A]/10 border border-[#D4A574]/20 rounded-xl px-4 py-3 flex items-center gap-3 shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-[#D4A574]/15 flex items-center justify-center shrink-0">
+          <Sparkles className="w-4 h-4 text-[#D4A574]" />
         </div>
         <p className="text-[13px] text-[#555] flex-1">
           <span style={{ fontWeight: 600, color: "#333" }}>{pet.name} 추천 </span>
@@ -156,7 +156,7 @@ export default function SavingsPage() {
           <span style={{ fontWeight: 600 }}>{suggestion.amount}</span> 저축 권장
         </p>
         <div className="flex gap-2 shrink-0">
-          <button className="px-3 py-1.5 text-white rounded-lg text-[12px]" style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)" }}>저축 시작</button>
+          <button className="px-3 py-1.5 text-white rounded-lg text-[12px]" style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}>저축 시작</button>
           <button className="px-3 py-1.5 border border-[#DDD] text-[#666] rounded-lg text-[12px]">나중에</button>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function SavingsPage() {
       <div className="flex gap-3 flex-1 min-h-0">
 
         {/* 왼쪽: 비상금 카드 */}
-        <div className="bg-white rounded-xl border border-[#E0E0E0] p-5 flex flex-col justify-between w-72 shrink-0">
+        <div className="bg-white rounded-xl border border-[#E8D5C0] p-5 flex flex-col justify-between w-72 shrink-0">
           {/* 헤더 */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -197,7 +197,7 @@ export default function SavingsPage() {
 
           {/* 진행 바 */}
           <div className="mt-3">
-            <div className="w-full bg-[#F0F0F5] rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-[#F5EDDF] rounded-full h-3 overflow-hidden">
               <div
                 className="h-3 rounded-full transition-all"
                 style={{ width: `${Math.min(pct, 100)}%`, background: `linear-gradient(90deg, ${pet.color}, ${pet.color}AA)` }}
@@ -211,13 +211,13 @@ export default function SavingsPage() {
 
           {/* 하단 정보 */}
           <div className="mt-4 flex gap-3">
-            <div className="flex-1 bg-[#F8F8FC] rounded-lg p-3 text-center">
+            <div className="flex-1 bg-[#F9F0E4] rounded-lg p-3 text-center">
               <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>
                 {pct}%
               </div>
               <div className="text-[11px] text-[#999] mt-0.5">달성률</div>
             </div>
-            <div className="flex-1 bg-[#F8F8FC] rounded-lg p-3 text-center">
+            <div className="flex-1 bg-[#F9F0E4] rounded-lg p-3 text-center">
               <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>
                 {monthsLeft}개월
               </div>
@@ -227,7 +227,7 @@ export default function SavingsPage() {
         </div>
 
         {/* 오른쪽: 생애주기별 질병 가이드 */}
-        <div className="bg-white rounded-xl border border-[#E0E0E0] p-5 flex-1 flex flex-col min-h-0">
+        <div className="bg-white rounded-xl border border-[#E8D5C0] p-5 flex-1 flex flex-col min-h-0">
           <div className="flex items-baseline gap-2 mb-3 shrink-0">
             <h3 className="text-[14px] text-[#222]" style={{ fontWeight: 600 }}>
               <AlertTriangle className="w-4 h-4 inline mr-1.5 text-[#E17055]" />
