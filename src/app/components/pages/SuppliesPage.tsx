@@ -85,7 +85,8 @@ export default function SuppliesPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-end">
         <button
-          className="flex items-center gap-1.5 px-3 py-2 bg-[#6C5CE7] text-white rounded-lg text-[13px] hover:bg-[#5A4BD1] transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
+          style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)", fontWeight: 600 }}
           onClick={() => setShowAdd(!showAdd)}
         >
           <Plus className="w-4 h-4" />
@@ -127,12 +128,12 @@ export default function SuppliesPage() {
 
       {/* Add Form */}
       {showAdd && (
-        <div className="bg-white rounded-xl border border-[#E0E0E0] p-5 space-y-3">
-          <h3 className="text-[16px] text-[#222]" style={{ fontWeight: 600 }}>품목 추가</h3>
+        <div className="bg-white rounded-2xl border border-[#E8E0D5] p-5 space-y-3">
+          <h3 className="text-[16px] text-[#111827]" style={{ fontWeight: 600 }}>품목 추가</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
               <label className="text-[13px] text-[#666] mb-1 block">카테고리</label>
-              <select className="w-full border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA] text-[14px] outline-none appearance-none">
+              <select className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none appearance-none focus:border-[#F59E0B]">
                 <option>사료</option>
                 <option>간식</option>
                 <option>위생/소모품</option>
@@ -142,55 +143,55 @@ export default function SuppliesPage() {
               </select>
             </div>
             <div>
-              <label className="text-[13px] text-[#666] mb-1 block">품목명</label>
-              <input placeholder="품목 이름" className="w-full border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA] text-[14px] outline-none placeholder:text-[#CCC]" />
+              <label className="text-[13px] text-[#6B7280] mb-1 block">품목명</label>
+              <input placeholder="품목 이름" className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none placeholder:text-[#D1C4B0] focus:border-[#F59E0B]" />
             </div>
             <div>
-              <label className="text-[13px] text-[#666] mb-1 block">금액</label>
-              <input placeholder="₩ 0" className="w-full border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA] text-[14px] outline-none placeholder:text-[#CCC]" />
+              <label className="text-[13px] text-[#6B7280] mb-1 block">금액</label>
+              <input placeholder="₩ 0" className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none placeholder:text-[#D1C4B0] focus:border-[#F59E0B]" />
             </div>
             <div>
-              <label className="text-[13px] text-[#666] mb-1 block">대상 (태그)</label>
-              <select className="w-full border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA] text-[14px] outline-none appearance-none">
+              <label className="text-[13px] text-[#6B7280] mb-1 block">대상 (태그)</label>
+              <select className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none appearance-none focus:border-[#F59E0B]">
                 <option>초코</option>
                 <option>나비</option>
                 <option>전체</option>
               </select>
             </div>
             <div>
-              <label className="text-[13px] text-[#666] mb-1 block">구매 URL</label>
-              <input placeholder="https://" className="w-full border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA] text-[14px] outline-none placeholder:text-[#CCC]" />
+              <label className="text-[13px] text-[#6B7280] mb-1 block">구매 URL</label>
+              <input placeholder="https://" className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none placeholder:text-[#D1C4B0] focus:border-[#F59E0B]" />
             </div>
             <div>
-              <label className="text-[13px] text-[#666] mb-1 block">구매 주기 (일)</label>
-              <input type="number" placeholder="30" className="w-full border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA] text-[14px] outline-none placeholder:text-[#CCC]" />
+              <label className="text-[13px] text-[#6B7280] mb-1 block">구매 주기 (일)</label>
+              <input type="number" placeholder="30" className="w-full border border-[#E8E0D5] rounded-xl px-3 py-2.5 bg-[#FAF8F5] text-[14px] outline-none placeholder:text-[#D1C4B0] focus:border-[#F59E0B]" />
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <button className="px-4 py-2 border border-[#DDD] rounded-lg text-[13px] text-[#666]" onClick={() => setShowAdd(false)}>취소</button>
-            <button className="px-4 py-2 bg-[#6C5CE7] text-white rounded-lg text-[13px]" onClick={() => setShowAdd(false)}>추가</button>
+            <button className="px-4 py-2 border border-[#E8E0D5] rounded-xl text-[13px] text-[#6B7280]" onClick={() => setShowAdd(false)}>취소</button>
+            <button className="px-4 py-2 text-white rounded-xl text-[13px] hover:opacity-90 active:scale-95 transition-all" style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)", fontWeight: 600 }} onClick={() => setShowAdd(false)}>추가</button>
           </div>
         </div>
       )}
 
       {/* Supplies List */}
-      <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-white rounded-2xl border border-[#E8E0D5] overflow-hidden">
+        <div className="overflow-x-auto" style={{ maxHeight: "360px", overflowY: "auto" }}>
           <table className="w-full text-[13px]">
             <thead>
-              <tr className="bg-[#FAFAFA] border-b border-[#EEE]">
-                <th className="text-left px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>품목</th>
-                <th className="text-left px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>카테고리</th>
-                <th className="text-left px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>대상</th>
-                <th className="text-right px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>금액</th>
-                <th className="text-center px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>주기</th>
-                <th className="text-center px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>다음 구매</th>
-                <th className="text-center px-4 py-3 text-[#888]" style={{ fontWeight: 500 }}>액션</th>
+              <tr className="bg-[#FAF8F5] border-b border-[#F0EBE3] sticky top-0 z-10">
+                <th className="text-left px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>품목</th>
+                <th className="text-left px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>카테고리</th>
+                <th className="text-left px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>대상</th>
+                <th className="text-right px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>금액</th>
+                <th className="text-center px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>주기</th>
+                <th className="text-center px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>다음 구매</th>
+                <th className="text-center px-4 py-3 text-[#9CA3AF]" style={{ fontWeight: 500 }}>액션</th>
               </tr>
             </thead>
             <tbody>
               {supplies.map((s) => (
-                <tr key={s.id} className="border-b border-[#F5F5F5] hover:bg-[#FAFAFA] transition-colors">
+                <tr key={s.id} className="border-b border-[#F0EBE3] hover:bg-[#FAF8F5] transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Package className="w-4 h-4 text-[#AAA]" />
@@ -204,7 +205,7 @@ export default function SuppliesPage() {
                       <span className="text-[#666]">{s.pet}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right text-[#333]" style={{ fontWeight: 500 }}>₩{s.price.toLocaleString()}</td>
+                  <td className="px-4 py-3 text-right text-[#374151]" style={{ fontWeight: 500, fontFamily: "'Nunito', sans-serif" }}>₩{s.price.toLocaleString()}</td>
                   <td className="px-4 py-3 text-center text-[#888]">{s.cycle}일</td>
                   <td className="px-4 py-3 text-center">
                     {s.daysLeft <= 0 ? (
@@ -221,8 +222,8 @@ export default function SuppliesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-center gap-1.5">
-                      <button className="p-1.5 rounded hover:bg-[#F0F0F5] transition-colors" title="구매 링크">
-                        <ExternalLink className="w-3.5 h-3.5 text-[#6C5CE7]" />
+                      <button className="p-1.5 rounded hover:bg-[#FEF3C7] transition-colors" title="구매 링크">
+                        <ExternalLink className="w-3.5 h-3.5 text-[#D97706]" strokeWidth={1.5} />
                       </button>
                       <button className="p-1.5 rounded hover:bg-[#F0F0F5] transition-colors" title="수정">
                         <Edit3 className="w-3.5 h-3.5 text-[#888]" />

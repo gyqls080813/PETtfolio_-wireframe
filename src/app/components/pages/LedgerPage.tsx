@@ -26,15 +26,15 @@ import {
 } from "recharts";
 
 const categories = [
-  { name: "사료", color: "#6C5CE7" },
+  { name: "사료", color: "#F59E0B" },
   { name: "간식", color: "#E17055" },
-  { name: "위생/소모품", color: "#00B894" },
-  { name: "병원/의료", color: "#FF6B6B" },
+  { name: "위생/소모품", color: "#14B8A6" },
+  { name: "병원/의료", color: "#EF4444" },
   { name: "약/영양제", color: "#FDCB6E" },
   { name: "미용", color: "#FD79A8" },
   { name: "용품", color: "#74B9FF" },
-  { name: "돌봄/서비스", color: "#A29BFE" },
-  { name: "보험/저축", color: "#55EFC4" },
+  { name: "돌봄/서비스", color: "#FB923C" },
+  { name: "보험/저축", color: "#8B5CF6" },
   { name: "기타", color: "#B2BEC3" },
 ];
 
@@ -64,8 +64,8 @@ export default function LedgerPage() {
   const constraintsRef = useRef<HTMLDivElement>(null);
 
   const topCategories = [
-    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "#6C5CE7", sizeText: 20 },
-    { id: 2, name: "병원/의료", size: 95, top: "52%", left: "62%", color: "#FF6B6B", sizeText: 17 },
+    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "#F59E0B", sizeText: 20 },
+    { id: 2, name: "병원/의료", size: 95, top: "52%", left: "62%", color: "#EF4444", sizeText: 17 },
     { id: 3, name: "간식", size: 85, top: "75%", left: "38%", color: "#E17055", sizeText: 16 },
     { id: 4, name: "용품", size: 80, top: "60%", left: "15%", color: "#74B9FF", sizeText: 15 },
     { id: 5, name: "미용", size: 75, top: "22%", left: "68%", color: "#FD79A8", sizeText: 14 },
@@ -88,29 +88,27 @@ export default function LedgerPage() {
     <div className="space-y-5">
       <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-5 items-stretch">
         {/* ═══ Left Column: Calendar Box ═══ */}
-        <div className="bg-white rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full relative">
+        <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full relative">
           {/* Header */}
           <div className="px-5 pt-4">
-            <h2 className="text-[18px] font-bold text-[#222] flex items-center gap-1.5 mb-3">
+            <h2 className="text-[18px] font-bold text-[#111827] flex items-center gap-1.5 mb-3">
               12월 내 소비
-              <ChevronDown className="w-5 h-5 text-[#888]" />
+              <ChevronDown className="w-5 h-5 text-[#9CA3AF]" strokeWidth={1.5} />
             </h2>
 
-
-
             {/* Summary */}
-            <div className="py-3 border-b border-[#F0F0F5] flex justify-between items-center">
+            <div className="py-3 border-b border-[#F0EBE3] flex justify-between items-center">
               <div>
                 <div className="flex items-center gap-4 mb-1">
-                  <span className="text-[13px] text-[#555] w-8">소비</span>
-                  <span className="text-[17px] font-bold text-[#222]">1,625,560 원</span>
+                  <span className="text-[13px] text-[#6B7280] w-8">소비</span>
+                  <span className="text-[17px] font-bold text-[#111827]" style={{ fontFamily: "'Nunito', sans-serif" }}>1,625,560 원</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-[13px] text-[#555] w-8">저금</span>
-                  <span className="text-[17px] font-bold text-[#147BCE]">2,746,059 원</span>
+                  <span className="text-[13px] text-[#6B7280] w-8">저금</span>
+                  <span className="text-[17px] font-bold text-[#14B8A6]" style={{ fontFamily: "'Nunito', sans-serif" }}>2,746,059 원</span>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-[#AAA]" />
+              <ChevronRight className="w-5 h-5 text-[#D1C4B0]" strokeWidth={1.5} />
             </div>
           </div>
 
@@ -118,7 +116,7 @@ export default function LedgerPage() {
           <div className="px-5 pb-4 pt-2 flex-1 flex flex-col">
             <div className="grid grid-cols-7 text-center mb-1">
               {["일", "월", "화", "수", "목", "금", "토"].map((d) => (
-                <div key={d} className="text-[13px] text-[#999] font-medium py-2">{d}</div>
+                <div key={d} className="text-[13px] text-[#9CA3AF] font-medium py-2">{d}</div>
               ))}
             </div>
 
@@ -126,14 +124,14 @@ export default function LedgerPage() {
               {calendarDays.map((day, i) => (
                 <div
                   key={i}
-                  className={`min-h-[46px] flex flex-col items-center rounded-xl transition-colors ${day ? "cursor-pointer hover:bg-black/5" : ""}`}
+                  className={`min-h-[46px] flex flex-col items-center rounded-xl transition-colors ${day ? "cursor-pointer hover:bg-[#FEF9EC]" : ""}`}
                   onClick={() => day && setSelectedDay(day)}
                 >
                   {day && (
                     <>
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[13px] ${day === 31
-                        ? "bg-[#E6F0FF] text-[#147BCE] font-bold"
-                        : "text-[#333]"
+                        ? "bg-[#FEF3C7] text-[#D97706] font-bold"
+                        : "text-[#374151]"
                         }`}>
                         {day}
                       </div>
@@ -141,12 +139,12 @@ export default function LedgerPage() {
                       {/* Daily amounts */}
                       <div className="mt-0.5 space-y-[1px]">
                         {calData[day]?.exp && (
-                          <div className="text-[10px] text-[#888] font-medium leading-none">
+                          <div className="text-[10px] text-[#9CA3AF] font-medium leading-none">
                             -{calData[day].exp.toLocaleString()}
                           </div>
                         )}
                         {calData[day]?.inc && (
-                          <div className="text-[10px] text-[#147BCE] font-medium leading-none">
+                          <div className="text-[10px] text-[#14B8A6] font-medium leading-none">
                             +{calData[day].inc.toLocaleString()}
                           </div>
                         )}
@@ -159,7 +157,7 @@ export default function LedgerPage() {
 
             {/* Bottom Button */}
             <div className="mt-2 text-center">
-              <button className="px-5 py-2 bg-[#F0F5FD] text-[#147BCE] rounded-xl text-[13px] font-medium hover:bg-[#E3EDFA] transition-colors">
+              <button className="px-5 py-2 bg-[#FEF3C7] text-[#D97706] rounded-xl text-[13px] font-medium hover:bg-[#FDE68A] transition-colors">
                 11월 달력 확인하기
               </button>
             </div>
@@ -173,12 +171,12 @@ export default function LedgerPage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
               >
-                <div className="flex justify-between items-center p-5 border-b border-[#F0F0F5]">
-                  <h3 className="text-[18px] font-bold text-[#222]">
+                <div className="flex justify-between items-center p-5 border-b border-[#F0EBE3]">
+                  <h3 className="text-[18px] font-bold text-[#111827]">
                     12월 {selectedDay}일 상세 내역
                   </h3>
-                  <button onClick={() => setSelectedDay(null)} className="text-[#888] hover:text-[#222]">
-                    <X className="w-6 h-6" />
+                  <button onClick={() => setSelectedDay(null)} className="text-[#9CA3AF] hover:text-[#374151]">
+                    <X className="w-6 h-6" strokeWidth={1.5} />
                   </button>
                 </div>
 
@@ -186,71 +184,72 @@ export default function LedgerPage() {
                   {/* 소비 내역 */}
                   <div className="mb-6">
                     <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-[15px] font-bold text-[#FF6B6B]">소비 내역</h4>
-                      <span className="text-[14px] font-semibold text-[#FF6B6B]">
+                      <h4 className="text-[15px] font-bold text-[#EF4444]">소비 내역</h4>
+                      <span className="text-[14px] font-semibold text-[#EF4444]">
                         -{calData[selectedDay as number]?.exp?.toLocaleString() || 0}원
                       </span>
                     </div>
                     {calData[selectedDay as number]?.exp ? (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center bg-[#F8F9FA] p-3 rounded-xl border border-[#F0F0F5]">
+                        <div className="flex justify-between items-center bg-[#FAF8F5] p-3 rounded-xl border border-[#F0EBE3]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[18px] shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                               🛒
                             </div>
                             <div>
-                              <div className="text-[14px] font-bold text-[#222]">지출</div>
-                              <div className="text-[12px] text-[#888]">오후 2:30</div>
+                              <div className="text-[14px] font-bold text-[#111827]">지출</div>
+                              <div className="text-[12px] text-[#9CA3AF]">오후 2:30</div>
                             </div>
                           </div>
-                          <div className="text-[15px] font-bold text-[#222]">
+                          <div className="text-[15px] font-bold text-[#111827]" style={{ fontFamily: "'Nunito', sans-serif" }}>
                             {calData[selectedDay as number]?.exp?.toLocaleString()}원
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <p className="text-[13px] text-[#888] text-center py-5 bg-[#F8F9FA] rounded-xl border border-[#F0F0F5] border-dashed">소비 내역이 없습니다.</p>
+                      <p className="text-[13px] text-[#9CA3AF] text-center py-5 bg-[#FAF8F5] rounded-xl border border-[#F0EBE3] border-dashed">소비 내역이 없습니다.</p>
                     )}
                   </div>
 
                   {/* 저금 내역 */}
                   <div>
                     <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-[15px] font-bold text-[#147BCE]">저금 내역</h4>
-                      <span className="text-[14px] font-semibold text-[#147BCE]">
+                      <h4 className="text-[15px] font-bold text-[#14B8A6]">저금 내역</h4>
+                      <span className="text-[14px] font-semibold text-[#14B8A6]">
                         +{calData[selectedDay as number]?.inc?.toLocaleString() || 0}원
                       </span>
                     </div>
                     {calData[selectedDay as number]?.inc ? (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center bg-[#F8F9FA] p-3 rounded-xl border border-[#F0F0F5]">
+                        <div className="flex justify-between items-center bg-[#FAF8F5] p-3 rounded-xl border border-[#F0EBE3]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[18px] shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                               💰
                             </div>
                             <div>
-                              <div className="text-[14px] font-bold text-[#222]">수입/저축</div>
-                              <div className="text-[12px] text-[#888]">오전 10:00</div>
+                              <div className="text-[14px] font-bold text-[#111827]">수입/저축</div>
+                              <div className="text-[12px] text-[#9CA3AF]">오전 10:00</div>
                             </div>
                           </div>
-                          <div className="text-[15px] font-bold text-[#222]">
+                          <div className="text-[15px] font-bold text-[#111827]" style={{ fontFamily: "'Nunito', sans-serif" }}>
                             {calData[selectedDay as number]?.inc?.toLocaleString()}원
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <p className="text-[13px] text-[#888] text-center py-5 bg-[#F8F9FA] rounded-xl border border-[#F0F0F5] border-dashed">저금 내역이 없습니다.</p>
+                      <p className="text-[13px] text-[#9CA3AF] text-center py-5 bg-[#FAF8F5] rounded-xl border border-[#F0EBE3] border-dashed">저금 내역이 없습니다.</p>
                     )}
                   </div>
                 </div>
 
-                <div className="p-4 border-t border-[#F0F0F5] bg-gray-50 flex gap-3">
+                <div className="p-4 border-t border-[#F0EBE3] bg-[#FAF8F5] flex gap-3">
                   <button
                     onClick={() => {
                       setSelectedDay(null);
                       setShowAdd(true);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-[#6C5CE7] text-white rounded-xl font-bold text-[15px] hover:bg-[#5A4BDE] shadow-md shadow-[#6C5CE7]/20 transition-all active:scale-[0.98]"
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 text-white rounded-xl font-bold text-[15px] hover:opacity-90 active:scale-[0.98] transition-all"
+                    style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
                   >
                     <Plus className="w-5 h-5" />
                     소비 내역 추가
@@ -262,73 +261,27 @@ export default function LedgerPage() {
 
           {/* Add Modal */}
           {showAdd && (
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-50 p-5 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && setShowAdd(false)}>
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-              >
-                <div className="flex justify-between items-center p-5 border-b border-[#F0F0F5]">
-                  <h3 className="text-[18px] font-bold text-[#222]">소비 내역 추가</h3>
-                  <button onClick={() => setShowAdd(false)} className="text-[#888] hover:text-[#222]">
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-
-                <div className="p-5 space-y-5 overflow-y-auto">
-                  <div>
-                    <label className="block text-[13px] font-bold text-[#555] mb-2">금액</label>
-                    <div className="relative">
-                      <input type="text" placeholder="0" className="w-full p-3.5 rounded-xl bg-[#F8F9FA] border border-[#EEE] focus:outline-none focus:border-[#6C5CE7] focus:bg-white text-right font-bold text-[18px] transition-colors pr-8" />
-                      <span className="absolute right-3.5 top-1/2 -translate-y-1/2 font-bold text-[#888]">원</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-bold text-[#555] mb-2">카테고리</label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {categories.slice(0, 8).map(c => (
-                        <button key={c.name} className="py-2.5 px-1 text-[12px] font-medium rounded-xl bg-[#F8F9FA] text-[#555] border border-[#EEE] hover:border-[#6C5CE7] hover:bg-[rgba(108,92,231,0.05)] hover:text-[#6C5CE7] transition-colors flex flex-col items-center justify-center gap-1">
-                          {c.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-bold text-[#555] mb-2">내용</label>
-                    <input type="text" placeholder="어디서 사용했나요?" className="w-full p-3.5 rounded-xl bg-[#F8F9FA] border border-[#EEE] focus:outline-none focus:border-[#6C5CE7] focus:bg-white transition-colors text-[14px]" />
-                  </div>
-                </div>
-
-                <div className="p-4 border-t border-[#F0F0F5] bg-gray-50">
-                  <button
-                    onClick={() => setShowAdd(false)}
-                    className="w-full py-4 bg-[#6C5CE7] text-white rounded-xl font-bold text-[16px] hover:bg-[#5A4BDE] shadow-md shadow-[#6C5CE7]/30 transition-all active:scale-[0.98]"
-                  >
-                    저장하기
-                  </button>
-                </div>
-              </motion.div>
-            </div>
+            <AddModal onClose={() => setShowAdd(false)} />
           )}
         </div>
 
         {/* ═══ Right Column: Charts ═══ */}
         <div className="flex flex-col gap-5 h-full">
-          {/* Top Right: Cash Flow Chart (Using existing chart component but framed elegantly) */}
-          <div className="bg-white rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5">
+          {/* Cash Flow Chart */}
+          <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[17px] font-bold text-[#222]">분석 보기</h3>
-              <button className="text-[12px] text-[#888] flex items-center gap-0.5">
-                통계보기 <ChevronRight className="w-4 h-4" />
+              <h3 className="text-[17px] font-bold text-[#111827]">분석 보기</h3>
+              <button className="text-[12px] text-[#9CA3AF] flex items-center gap-0.5">
+                통계보기 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
 
             <div className="h-[160px]">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={cashFlowData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F5" vertical={false} />
-                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} dy={10} />
-                  <YAxis tick={{ fontSize: 10, fill: "#AAA" }} axisLine={false} tickLine={false} tickFormatter={(v) => v === 0 ? "0" : `${(v / 1000000).toFixed(1)}M`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F0EBE3" vertical={false} />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} dy={10} />
+                  <YAxis tick={{ fontSize: 10, fill: "#D1C4B0" }} axisLine={false} tickLine={false} tickFormatter={(v) => v === 0 ? "0" : `${(v / 1000000).toFixed(1)}M`} />
                   <Tooltip
                     contentStyle={{ fontSize: 11, borderRadius: 10, border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
                     formatter={(value: number, name: string) => {
@@ -336,17 +289,17 @@ export default function LedgerPage() {
                       return [`₩${Math.abs(value).toLocaleString()}`, label];
                     }}
                   />
-                  <Bar dataKey="savings" fill="#6C5CE7" radius={[5, 5, 0, 0]} barSize={16} stackId="stack" />
-                  <Bar dataKey="expense" fill="#D8D3F5" radius={[0, 0, 5, 5]} barSize={16} stackId="stack" />
-                  <Line type="monotone" dataKey="balance" stroke="#999" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3, fill: "#fff", stroke: "#999", strokeWidth: 2 }} activeDot={{ r: 5, fill: "#6C5CE7", stroke: "#fff", strokeWidth: 2 }} />
+                  <Bar dataKey="savings" fill="#F59E0B" radius={[5, 5, 0, 0]} barSize={16} stackId="stack" />
+                  <Bar dataKey="expense" fill="#FDE68A" radius={[0, 0, 5, 5]} barSize={16} stackId="stack" />
+                  <Line type="monotone" dataKey="balance" stroke="#9CA3AF" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3, fill: "#fff", stroke: "#9CA3AF", strokeWidth: 2 }} activeDot={{ r: 5, fill: "#F59E0B", stroke: "#fff", strokeWidth: 2 }} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Bottom Right: Transaction Frequency Top 5 Bubble Chart */}
-          <div className="bg-white rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-0">
-            <h3 className="text-[17px] font-bold text-[#222] mb-4">카테고리별 분포 (Top 5)</h3>
+          {/* Category Bubble Chart */}
+          <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-0">
+            <h3 className="text-[17px] font-bold text-[#111827] mb-4">카테고리별 분포 (Top 5)</h3>
 
             <div ref={constraintsRef} className="relative w-full max-w-[280px] aspect-square mx-auto flex-1 min-h-0 my-2">
               {topCategories.map((cat, i) => (
@@ -362,7 +315,7 @@ export default function LedgerPage() {
                     height: cat.size,
                     top: cat.top,
                     left: cat.left,
-                    border: `2px solid ${cat.color}20`,
+                    border: `2px solid ${cat.color}30`,
                     zIndex: 10 + i,
                   }}
                 >
@@ -378,6 +331,166 @@ export default function LedgerPage() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   새 지출 추가 모달
+════════════════════════════════════════════ */
+const MODAL_CATEGORIES = [
+  { name: "사료",        emoji: "🥣" },
+  { name: "병원/의료",   emoji: "🏥" },
+  { name: "미용",        emoji: "✂️" },
+  { name: "위생/소모품", emoji: "🪥" },
+  { name: "간식",        emoji: "🍖" },
+  { name: "약/영양제",   emoji: "💊" },
+  { name: "용품",        emoji: "🛒" },
+  { name: "돌봄/서비스", emoji: "🏠" },
+];
+
+function AddModal({ onClose }: { onClose: () => void }) {
+  const [selCat, setSelCat]   = useState("사료");
+  const [amount, setAmount]   = useState(0);
+  const [content, setContent] = useState("");
+  const [pet, setPet]         = useState("초코");
+  const today = new Date().toISOString().split("T")[0];
+  const [date, setDate]       = useState(today);
+
+  const addAmount = (n: number) => setAmount((v) => v + n);
+
+  return (
+    <div
+      className="absolute inset-0 bg-black/40 flex items-center justify-center z-50 p-5 backdrop-blur-sm"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden flex flex-col"
+      >
+        {/* 헤더 */}
+        <div className="flex justify-between items-center px-5 pt-5 pb-3">
+          <h3 className="text-[18px] font-bold text-[#111827]">새 지출 추가</h3>
+          <button onClick={onClose} className="text-[#9CA3AF] hover:text-[#374151] transition-colors">
+            <X className="w-5 h-5" strokeWidth={2} />
+          </button>
+        </div>
+
+        <div className="px-5 pb-5 space-y-4 overflow-y-auto">
+
+          {/* 카테고리 */}
+          <div>
+            <p className="text-[13px] font-bold text-[#374151] mb-2">카테고리 선택</p>
+            <div className="flex flex-wrap gap-2">
+              {MODAL_CATEGORIES.map((c) => {
+                const active = selCat === c.name;
+                return (
+                  <button
+                    key={c.name}
+                    onClick={() => setSelCat(c.name)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] border transition-all"
+                    style={{
+                      background:  active ? "#F59E0B" : "#FAF8F5",
+                      borderColor: active ? "#F59E0B" : "#E8E0D5",
+                      color:       active ? "#fff"    : "#374151",
+                      fontWeight:  active ? 600       : 400,
+                    }}
+                  >
+                    <span>{c.emoji}</span>
+                    {c.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 금액 */}
+          <div>
+            <p className="text-[13px] font-bold text-[#374151] mb-2">금액</p>
+            <div className="relative">
+              <input
+                type="number"
+                value={amount || ""}
+                onChange={(e) => setAmount(Number(e.target.value))}
+                placeholder="0"
+                className="w-full p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8E0D5] focus:outline-none focus:border-[#F59E0B] focus:bg-white text-[18px] font-bold transition-colors pr-10"
+                style={{ fontFamily: "'Nunito', sans-serif" }}
+              />
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[14px] font-bold text-[#9CA3AF]">원</span>
+            </div>
+            <div className="flex gap-2 mt-2">
+              {[10000, 30000, 50000, 100000].map((n) => (
+                <button
+                  key={n}
+                  onClick={() => addAmount(n)}
+                  className="flex-1 py-2 rounded-lg text-[13px] font-medium transition-colors hover:brightness-95"
+                  style={{ background: "#FEF3C7", color: "#D97706" }}
+                >
+                  +{n / 10000}만
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 내용 */}
+          <div>
+            <p className="text-[13px] font-bold text-[#374151] mb-2">내용</p>
+            <input
+              type="text"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="지출 내용을 입력하세요"
+              className="w-full p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E8E0D5] focus:outline-none focus:border-[#F59E0B] focus:bg-white transition-colors text-[14px]"
+            />
+          </div>
+
+          {/* 반려동물 + 날짜 */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-[13px] font-bold text-[#374151] mb-2">반려동물</p>
+              <div className="relative">
+                <select
+                  value={pet}
+                  onChange={(e) => setPet(e.target.value)}
+                  className="w-full p-3 rounded-xl bg-[#FAF8F5] border border-[#E8E0D5] focus:outline-none focus:border-[#F59E0B] text-[14px] appearance-none pr-8"
+                >
+                  <option>초코</option>
+                  <option>나비</option>
+                  <option>전체</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#9CA3AF] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
+            <div>
+              <p className="text-[13px] font-bold text-[#374151] mb-2">날짜</p>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full p-3 rounded-xl bg-[#FAF8F5] border border-[#E8E0D5] focus:outline-none focus:border-[#F59E0B] text-[14px]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 하단 버튼 */}
+        <div className="px-5 pb-5 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 py-3.5 rounded-xl border border-[#E8E0D5] text-[15px] font-bold text-[#374151] hover:bg-[#FAF8F5] transition-colors"
+          >
+            취소
+          </button>
+          <button
+            onClick={onClose}
+            className="flex-1 py-3.5 text-white rounded-xl font-bold text-[15px] hover:opacity-90 active:scale-[0.98] transition-all"
+            style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
+          >
+            저장하기
+          </button>
+        </div>
+      </motion.div>
     </div>
   );
 }

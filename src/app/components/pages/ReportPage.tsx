@@ -19,15 +19,15 @@ const petExpenseData: Record<
   { name: string; value: number; color: string }[]
 > = {
   초코: [
-    { name: "사료", value: 120000, color: "#6C5CE7" },
-    { name: "병원/의료", value: 45000, color: "#FF6B6B" },
+    { name: "사료", value: 120000, color: "#F59E0B" },
+    { name: "병원/의료", value: 45000, color: "#EF4444" },
     { name: "미용", value: 50000, color: "#FD79A8" },
     { name: "간식", value: 20000, color: "#E17055" },
     { name: "용품", value: 18000, color: "#74B9FF" },
   ],
   나비: [
-    { name: "사료", value: 69000, color: "#6C5CE7" },
-    { name: "병원/의료", value: 60000, color: "#FF6B6B" },
+    { name: "사료", value: 69000, color: "#F59E0B" },
+    { name: "병원/의료", value: 60000, color: "#EF4444" },
     { name: "약/영양제", value: 35000, color: "#FDCB6E" },
     { name: "간식", value: 12500, color: "#E17055" },
     { name: "용품", value: 15000, color: "#74B9FF" },
@@ -72,7 +72,7 @@ petMemberRank["나비"] = petMemberRank["나비"]
   .sort((a, b) => b.expense - a.expense)
   .map((m, i) => ({ ...m, rank: i + 1 }));
 
-// Build "전체" member rank by summing across pets
+// Build "전체" member rank
 function buildAllMemberRank() {
   const merged: Record<string, { name: string; expense: number; savings: number }> = {};
   for (const petData of Object.values(petMemberRank)) {
@@ -137,7 +137,7 @@ const petBreedData: Record<
       pet: "마리당 평균",
       breed: "반려동물 2마리 · 전체 사육인 대상",
       icon: PawPrint,
-      iconColor: "#6C5CE7",
+      iconColor: "#F59E0B",
       myExpense: 222250,
       avgExpense: 185000,
       stdDev: 55000,
@@ -154,7 +154,7 @@ const budgetMap: Record<string, number> = {
 };
 
 const pets = [
-  { key: "전체", icon: PawPrint, color: "#6C5CE7", type: "모든 반려동물" },
+  { key: "전체", icon: PawPrint, color: "#F59E0B", type: "모든 반려동물" },
   { key: "초코", icon: Dog, color: "#E17055", type: "강아지" },
   { key: "나비", icon: Cat, color: "#FDCB6E", type: "고양이" },
 ];
@@ -163,7 +163,6 @@ export default function ReportPage() {
   const [period, setPeriod] = useState("month");
   const [selectedPet, setSelectedPet] = useState<string>("전체");
 
-  // Derived data based on selected pet
   const donutData = useMemo(() => petExpenseData[selectedPet] ?? [], [selectedPet]);
   const totalExpense = useMemo(() => donutData.reduce((s, d) => s + d.value, 0), [donutData]);
   const memberRank = useMemo(() => petMemberRank[selectedPet] ?? [], [selectedPet]);
@@ -189,36 +188,38 @@ export default function ReportPage() {
     setActiveCard(idx);
   }, []);
 
-  // Reset carousel when pet changes
   useEffect(() => {
     scrollTo(0);
   }, [selectedPet, scrollTo]);
 
   // ── Shared card content ──
   const ExpenseCard = (
-    <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 flex flex-col h-full">
+    <div className="bg-white rounded-2xl border border-[#E8E0D5] p-4 flex flex-col h-full">
       <div className="mb-1.5">
-        <span className="text-[13px] text-[#888]">
+        <span className="text-[13px] text-[#9CA3AF]">
           {selectedPet === "전체" ? "전체" : selectedPet} 이달 총 지출
         </span>
-        <div className="text-[28px] text-[#222] mt-0.5" style={{ fontWeight: 700 }}>
+        <div className="text-[28px] text-[#111827] mt-0.5" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>
           ₩{totalExpense.toLocaleString()}
         </div>
         <div className="flex items-center gap-2 mt-2">
-          <span className="text-[11px] text-[#888]">예산</span>
-          <div className="flex-1 bg-[#F0F0F5] rounded-full h-2">
+          <span className="text-[11px] text-[#9CA3AF]">예산</span>
+          <div className="flex-1 bg-[#F1F5F9] rounded-full h-2">
             <div
-              className="bg-[#6C5CE7] h-2 rounded-full"
-              style={{ width: `${Math.min((totalExpense / budget) * 100, 100)}%` }}
+              className="h-2 rounded-full transition-all duration-700"
+              style={{
+                width: `${Math.min((totalExpense / budget) * 100, 100)}%`,
+                background: "linear-gradient(90deg, #F59E0B, #F97316)"
+              }}
             />
           </div>
-          <span className="text-[11px] text-[#666]">₩{budget.toLocaleString()}</span>
+          <span className="text-[11px] text-[#6B7280]" style={{ fontFamily: "'Nunito', sans-serif" }}>₩{budget.toLocaleString()}</span>
         </div>
-        <div className="text-[12px] text-[#00B894] mt-1">
+        <div className="text-[12px] text-[#14B8A6] mt-1">
           예산 대비 {Math.round((totalExpense / budget) * 100)}% 사용
         </div>
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center pt-3 mt-2 border-t border-[#F0F0F5]">
+      <div className="flex-1 flex flex-col items-center justify-center pt-3 mt-2 border-t border-[#F0EBE3]">
         <div className="relative">
           <PieChart width={180} height={180}>
             <Pie data={donutData} cx="50%" cy="50%" innerRadius={50} outerRadius={82} dataKey="value" stroke="none">
@@ -229,13 +230,13 @@ export default function ReportPage() {
           </PieChart>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             {selectedPet === "전체" ? (
-              <PawPrint className="w-6 h-6 text-[#6C5CE7] mb-0.5" />
+              <PawPrint className="w-6 h-6 text-[#F59E0B] mb-0.5" strokeWidth={1.5} />
             ) : selectedPet === "초코" ? (
-              <Dog className="w-6 h-6 text-[#E17055] mb-0.5" />
+              <Dog className="w-6 h-6 text-[#E17055] mb-0.5" strokeWidth={1.5} />
             ) : (
-              <Cat className="w-6 h-6 text-[#FDCB6E] mb-0.5" />
+              <Cat className="w-6 h-6 text-[#FDCB6E] mb-0.5" strokeWidth={1.5} />
             )}
-            <span className="text-[11px] text-[#AAA]">카테고리</span>
+            <span className="text-[11px] text-[#9CA3AF]">카테고리</span>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-x-5 gap-y-1 mt-2 w-full max-w-[260px]">
@@ -245,9 +246,9 @@ export default function ReportPage() {
               <div key={i} className="flex items-center justify-between text-[12px]">
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: d.color }} />
-                  <span className="text-[#666]">{d.name}</span>
+                  <span className="text-[#6B7280]">{d.name}</span>
                 </div>
-                <span className="text-[#444]" style={{ fontWeight: 500 }}>{pct}%</span>
+                <span className="text-[#374151]" style={{ fontWeight: 500 }}>{pct}%</span>
               </div>
             );
           })}
@@ -257,40 +258,43 @@ export default function ReportPage() {
   );
 
   const RankingCard = (
-    <div className="bg-white rounded-xl border border-[#E0E0E0] p-3 flex-1 min-h-0 flex flex-col">
-      <h3 className="text-[13px] text-[#222] mb-1" style={{ fontWeight: 600 }}>
-        <Trophy className="w-3.5 h-3.5 inline mr-1 text-[#FDCB6E]" />
+    <div className="bg-white rounded-2xl border border-[#E8E0D5] p-3 flex-1 min-h-0 flex flex-col">
+      <h3 className="text-[13px] text-[#111827] mb-1" style={{ fontWeight: 600 }}>
+        <Trophy className="w-3.5 h-3.5 inline mr-1 text-[#FDCB6E]" strokeWidth={1.5} />
         랭킹
       </h3>
       <div className="flex-1 flex justify-center items-end px-1 min-h-0">
         {memberRank.length >= 2 && (
           <div className="flex flex-col items-center z-10" style={{ marginRight: -6 }}>
-            <span className="text-[12px] text-[#6C5CE7]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
-            <span className="text-[10px] text-[#888] mb-1">{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
-            <div className="w-[90px] h-[56px] bg-[#E8E6F0] rounded-t-xl flex flex-col items-center justify-center gap-0.5">
+            <span className="text-[12px] text-[#D97706]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
+            <span className="text-[10px] text-[#9CA3AF] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
+            <div className="w-[90px] h-[56px] bg-[#FEF3C7] rounded-t-xl flex flex-col items-center justify-center gap-0.5">
               <div className="flex items-center gap-1 text-[9px]">
-                <span className="text-[#FF6B6B]" style={{ fontWeight: 500 }}>지출</span>
-                <span className="text-[#666]" style={{ fontWeight: 600 }}>{memberRank[1].expense.toLocaleString()}</span>
+                <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
+                <span className="text-[#374151]" style={{ fontWeight: 600 }}>{memberRank[1].expense.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1 text-[9px]">
-                <span className="text-[#00B894]" style={{ fontWeight: 500 }}>저축</span>
-                <span className="text-[#666]" style={{ fontWeight: 600 }}>{memberRank[1].savings.toLocaleString()}</span>
+                <span className="text-[#14B8A6]" style={{ fontWeight: 500 }}>저축</span>
+                <span className="text-[#374151]" style={{ fontWeight: 600 }}>{memberRank[1].savings.toLocaleString()}</span>
               </div>
             </div>
           </div>
         )}
         {memberRank.length >= 1 && (
           <div className="flex flex-col items-center z-20">
-            <span className="text-[13px] text-[#6C5CE7]" style={{ fontWeight: 700 }}>{memberRank[0].name}</span>
-            <span className="text-[10px] text-[#888] mb-1">{(memberRank[0].expense + memberRank[0].savings).toLocaleString()}원</span>
-            <div className="w-[110px] h-[82px] bg-[#6C5CE7] rounded-t-xl flex flex-col items-center justify-center">
-              <span className="px-2 py-0.5 bg-[#A29BFE] text-white rounded-full text-[8px] mb-0.5" style={{ fontWeight: 600 }}>MASTER PAYER</span>
+            <span className="text-[13px] text-[#D97706]" style={{ fontWeight: 700 }}>{memberRank[0].name}</span>
+            <span className="text-[10px] text-[#9CA3AF] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[0].expense + memberRank[0].savings).toLocaleString()}원</span>
+            <div
+              className="w-[110px] h-[82px] rounded-t-xl flex flex-col items-center justify-center"
+              style={{ background: "linear-gradient(to top, #F59E0B, #FB923C)" }}
+            >
+              <span className="px-2 py-0.5 bg-white/20 text-white rounded-full text-[8px] mb-0.5" style={{ fontWeight: 600 }}>MASTER PAYER</span>
               <div className="flex items-center gap-1 text-[9px] mb-0.5">
-                <span className="text-[#FFB8B8]" style={{ fontWeight: 500 }}>지출</span>
+                <span className="text-white/80" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-white" style={{ fontWeight: 600 }}>{memberRank[0].expense.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1 text-[9px]">
-                <span className="text-[#A8F0D0]" style={{ fontWeight: 500 }}>저축</span>
+                <span className="text-white/80" style={{ fontWeight: 500 }}>저축</span>
                 <span className="text-white" style={{ fontWeight: 600 }}>{memberRank[0].savings.toLocaleString()}</span>
               </div>
             </div>
@@ -298,16 +302,16 @@ export default function ReportPage() {
         )}
         {memberRank.length >= 3 && (
           <div className="flex flex-col items-center z-10" style={{ marginLeft: -6 }}>
-            <span className="text-[12px] text-[#6C5CE7]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
-            <span className="text-[10px] text-[#888] mb-1">{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
-            <div className="w-[80px] h-[38px] bg-[#E8E6F0] rounded-t-xl flex flex-col items-center justify-center gap-0.5">
+            <span className="text-[12px] text-[#D97706]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
+            <span className="text-[10px] text-[#9CA3AF] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
+            <div className="w-[80px] h-[38px] bg-[#FEF3C7] rounded-t-xl flex flex-col items-center justify-center gap-0.5">
               <div className="flex items-center gap-1 text-[9px]">
-                <span className="text-[#FF6B6B]" style={{ fontWeight: 500 }}>지출</span>
-                <span className="text-[#666]" style={{ fontWeight: 600 }}>{memberRank[2].expense.toLocaleString()}</span>
+                <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
+                <span className="text-[#374151]" style={{ fontWeight: 600 }}>{memberRank[2].expense.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1 text-[9px]">
-                <span className="text-[#00B894]" style={{ fontWeight: 500 }}>저축</span>
-                <span className="text-[#666]" style={{ fontWeight: 600 }}>{memberRank[2].savings.toLocaleString()}</span>
+                <span className="text-[#14B8A6]" style={{ fontWeight: 500 }}>저축</span>
+                <span className="text-[#374151]" style={{ fontWeight: 600 }}>{memberRank[2].savings.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -326,29 +330,30 @@ export default function ReportPage() {
 
   return (
     <div className="space-y-3">
-      {/* Pet Selector + Period in one row */}
+      {/* Pet Selector + Period */}
       <div className="flex items-center justify-between">
         <div className="flex gap-2 overflow-x-auto">
           {pets.map((p) => (
             <button
               key={p.key}
               onClick={() => setSelectedPet(p.key)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] transition-all shrink-0 ${selectedPet === p.key
-                ? "bg-[#6C5CE7]/10 text-[#6C5CE7] border border-[#6C5CE7]/30"
-                : "bg-white text-[#888] border border-[#E0E0E0] hover:border-[#CCC]"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] transition-all shrink-0 ${selectedPet === p.key
+                ? "bg-[#FEF3C7] text-[#D97706] border border-[#F59E0B]/40"
+                : "bg-white text-[#9CA3AF] border border-[#E8E0D5] hover:border-[#F59E0B]/30"
                 }`}
               style={{ fontWeight: selectedPet === p.key ? 600 : 400 }}
             >
               <p.icon
                 className="w-4 h-4"
-                style={{ color: selectedPet === p.key ? p.color : "#AAA" }}
+                strokeWidth={1.5}
+                style={{ color: selectedPet === p.key ? p.color : "#D1C4B0" }}
               />
               {p.key}
             </button>
           ))}
         </div>
         <select
-          className="border border-[#DDD] rounded-lg px-3 py-1.5 text-[13px] text-[#666] outline-none bg-[#FAFAFA] appearance-none shrink-0"
+          className="border border-[#E8E0D5] rounded-xl px-3 py-1.5 text-[13px] text-[#6B7280] outline-none bg-[#FAF8F5] appearance-none shrink-0 focus:border-[#F59E0B]"
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
         >
@@ -361,30 +366,28 @@ export default function ReportPage() {
 
       {/* ═══════════ Mobile: Swipe Carousel ═══════════ */}
       <div className="md:hidden">
-        {/* Card label + navigation */}
         <div className="flex items-center justify-between mb-2">
           <button
             onClick={() => scrollTo(Math.max(0, activeCard - 1))}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeCard > 0 ? "bg-[#F0F0F5] text-[#666]" : "text-[#DDD]"
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeCard > 0 ? "bg-[#FEF3C7] text-[#D97706]" : "text-[#E8E0D5]"
               }`}
             disabled={activeCard === 0}
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4" strokeWidth={1.5} />
           </button>
-          <span className="text-[13px] text-[#666]" style={{ fontWeight: 600 }}>
+          <span className="text-[13px] text-[#374151]" style={{ fontWeight: 600 }}>
             {mobileCardLabels[activeCard]}
           </span>
           <button
             onClick={() => scrollTo(Math.min(1, activeCard + 1))}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeCard < 1 ? "bg-[#F0F0F5] text-[#666]" : "text-[#DDD]"
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeCard < 1 ? "bg-[#FEF3C7] text-[#D97706]" : "text-[#E8E0D5]"
               }`}
             disabled={activeCard === 1}
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
           </button>
         </div>
 
-        {/* Scrollable cards */}
         <div
           ref={scrollRef}
           onScroll={handleScroll}
@@ -398,15 +401,14 @@ export default function ReportPage() {
           </div>
         </div>
 
-        {/* Dot indicators */}
         <div className="flex justify-center gap-1.5 mt-3">
           {mobileCardLabels.map((_, i) => (
             <button
               key={i}
               onClick={() => scrollTo(i)}
               className={`rounded-full transition-all ${activeCard === i
-                ? "w-5 h-2 bg-[#6C5CE7]"
-                : "w-2 h-2 bg-[#DDD]"
+                ? "w-5 h-2 bg-[#F59E0B]"
+                : "w-2 h-2 bg-[#E8E0D5]"
                 }`}
             />
           ))}
@@ -491,11 +493,11 @@ function BreedDistribution({
   const isAboveAvg = item.myExpense > item.avgExpense;
 
   return (
-    <div className="bg-white rounded-xl border border-[#E0E0E0] p-3 flex-1 min-h-0 flex flex-col justify-between">
+    <div className="bg-white rounded-2xl border border-[#E8E0D5] p-3 flex-1 min-h-0 flex flex-col justify-between">
       {/* Percentile badge */}
       <div className="flex items-center justify-end mb-1">
         <span
-          className={`px-2.5 py-0.5 rounded-full text-[12px] ${isAboveAvg ? "bg-[#FF6B6B]/10 text-[#FF6B6B]" : "bg-[#00B894]/10 text-[#00B894]"
+          className={`px-2.5 py-0.5 rounded-full text-[12px] ${isAboveAvg ? "bg-[#EF4444]/10 text-[#EF4444]" : "bg-[#14B8A6]/10 text-[#14B8A6]"
             }`}
           style={{ fontWeight: 600 }}
         >
@@ -506,49 +508,49 @@ function BreedDistribution({
       {/* SVG curve */}
       <div className="relative flex-1 min-h-0 flex items-center justify-center">
         <svg viewBox={`0 0 ${svgWidth} ${svgHeight + 25}`} className="w-full" style={{ maxHeight: 110 }}>
-          <path d={areaPath.join(" ")} fill="#F0EFFE" />
-          <path d={shadedPath.join(" ")} fill="#6C5CE7" opacity="0.2" />
-          <path d={curvePath.join(" ")} fill="none" stroke="#6C5CE7" strokeWidth="2.5" />
+          <path d={areaPath.join(" ")} fill="#FEF9EC" />
+          <path d={shadedPath.join(" ")} fill="#F59E0B" opacity="0.2" />
+          <path d={curvePath.join(" ")} fill="none" stroke="#F59E0B" strokeWidth="2.5" />
           <line
             x1={padding + chartWidth / 2}
             y1={10}
             x2={padding + chartWidth / 2}
             y2={svgHeight - 20}
-            stroke="#CCCCCC"
+            stroke="#E8E0D5"
             strokeDasharray="4 3"
             strokeWidth="1"
           />
-          <text x={padding + chartWidth / 2} y={svgHeight - 4} textAnchor="middle" fill="#AAA" fontSize="11">
+          <text x={padding + chartWidth / 2} y={svgHeight - 4} textAnchor="middle" fill="#D1C4B0" fontSize="11">
             평균 ₩{(item.avgExpense / 10000).toFixed(0)}만
           </text>
-          <line x1={myX} y1={10} x2={myX} y2={svgHeight - 20} stroke="#6C5CE7" strokeWidth="2" />
-          <circle cx={myX} cy={18} r="5" fill="#6C5CE7" />
-          <rect x={myX - 40} y={0} width="80" height="22" rx="11" fill="#6C5CE7" />
+          <line x1={myX} y1={10} x2={myX} y2={svgHeight - 20} stroke="#F59E0B" strokeWidth="2" />
+          <circle cx={myX} cy={18} r="5" fill="#F59E0B" />
+          <rect x={myX - 40} y={0} width="80" height="22" rx="11" fill="#F59E0B" />
           <text x={myX} y={15} textAnchor="middle" fill="white" fontSize="11" fontWeight="600">
             나 ₩{(item.myExpense / 10000).toFixed(1)}만
           </text>
-          <text x={padding} y={svgHeight + 16} textAnchor="middle" fill="#CCC" fontSize="10">적음</text>
-          <text x={padding + chartWidth} y={svgHeight + 16} textAnchor="middle" fill="#CCC" fontSize="10">많음</text>
+          <text x={padding} y={svgHeight + 16} textAnchor="middle" fill="#D1C4B0" fontSize="10">적음</text>
+          <text x={padding + chartWidth} y={svgHeight + 16} textAnchor="middle" fill="#D1C4B0" fontSize="10">많음</text>
         </svg>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2 mt-2">
-        <div className="text-center py-1.5 px-1 bg-[#FAFAFA] rounded-lg">
-          <div className="text-[10px] text-[#AAA]">내 지출</div>
-          <div className="text-[13px] text-[#6C5CE7] mt-0.5" style={{ fontWeight: 600 }}>
+        <div className="text-center py-1.5 px-1 bg-[#FAF8F5] rounded-xl">
+          <div className="text-[10px] text-[#9CA3AF]">내 지출</div>
+          <div className="text-[13px] text-[#F59E0B] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             ₩{item.myExpense.toLocaleString()}
           </div>
         </div>
-        <div className="text-center py-1.5 px-1 bg-[#FAFAFA] rounded-lg">
-          <div className="text-[10px] text-[#AAA]">평균</div>
-          <div className="text-[13px] text-[#333] mt-0.5" style={{ fontWeight: 600 }}>
+        <div className="text-center py-1.5 px-1 bg-[#FAF8F5] rounded-xl">
+          <div className="text-[10px] text-[#9CA3AF]">평균</div>
+          <div className="text-[13px] text-[#374151] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             ₩{item.avgExpense.toLocaleString()}
           </div>
         </div>
-        <div className="text-center py-1.5 px-1 bg-[#FAFAFA] rounded-lg">
-          <div className="text-[10px] text-[#AAA]">비교 대상</div>
-          <div className="text-[13px] text-[#333] mt-0.5" style={{ fontWeight: 600 }}>
+        <div className="text-center py-1.5 px-1 bg-[#FAF8F5] rounded-xl">
+          <div className="text-[10px] text-[#9CA3AF]">비교 대상</div>
+          <div className="text-[13px] text-[#374151] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             {item.totalUsers.toLocaleString()}명
           </div>
         </div>

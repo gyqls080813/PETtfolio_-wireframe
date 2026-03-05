@@ -5,19 +5,19 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#F5F5F8] flex items-center justify-center p-4" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+    <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center p-4" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
       <div className="w-full max-w-[400px]">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-[#6C5CE7]/10 flex items-center justify-center mb-3">
-            <PawPrint className="w-8 h-8 text-[#6C5CE7]" />
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-3" style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)" }}>
+            <PawPrint className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-[24px] text-[#222]" style={{ fontWeight: 700 }}>펫 가계부</h1>
-          <p className="text-[14px] text-[#888] mt-1">반려동물 금융 관리 서비스</p>
+          <h1 className="text-[24px] text-[#111827]" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>pawwallet</h1>
+          <p className="text-[14px] text-[#9CA3AF] mt-1">반려동물 금융 관리 서비스</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-2xl border border-[#E0E0E0] p-6 space-y-4">
+        <div className="bg-white rounded-2xl border border-[#E8E0D5] p-6 space-y-4">
           <div>
             <label className="text-[13px] text-[#666] mb-1.5 block">이메일</label>
             <div className="flex items-center gap-2 border border-[#DDD] rounded-lg px-3 py-2.5 bg-[#FAFAFA]">
@@ -42,7 +42,8 @@ export default function LoginPage() {
           </div>
 
           <button
-            className="w-full py-3 bg-[#6C5CE7] text-white rounded-lg text-[15px] hover:bg-[#5A4BD1] transition-colors"
+            className="w-full py-3 text-white rounded-xl text-[15px] font-semibold hover:opacity-90 transition-opacity active:scale-[0.99]"
+            style={{ background: "linear-gradient(135deg, #F59E0B, #F97316)" }}
             onClick={() => navigate("/")}
           >
             로그인
@@ -58,7 +59,7 @@ export default function LoginPage() {
           </div>
 
           <button
-            className="w-full py-3 border border-[#DDD] rounded-lg text-[14px] text-[#444] flex items-center justify-center gap-2 hover:bg-[#FAFAFA] transition-colors"
+            className="w-full py-3 border border-[#E8E0D5] rounded-xl text-[14px] text-[#374151] flex items-center justify-center gap-2 hover:bg-[#FAF8F5] transition-colors"
             onClick={() => navigate("/")}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -74,7 +75,7 @@ export default function LoginPage() {
         <div className="flex items-center justify-center gap-1 mt-5">
           <span className="text-[13px] text-[#888]">계정이 없으신가요?</span>
           <button
-            className="text-[13px] text-[#6C5CE7] hover:underline"
+            className="text-[13px] text-[#F59E0B] hover:underline"
             onClick={() => navigate("/register")}
           >
             회원가입
