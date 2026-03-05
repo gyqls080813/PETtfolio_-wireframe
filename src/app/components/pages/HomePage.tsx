@@ -15,11 +15,12 @@ import {
   X,
 } from "lucide-react";
 import PetCharacter from "../figma/PetCharacter";
+import PetAvatar from "../figma/PetAvatar";
 
 const upcomingExpenses = [
-  { label: "사료 (오리젠)", date: "03/10", amount: "89,000", pet: "초코", icon: Dog },
-  { label: "예방접종", date: "03/15", amount: "60,000", pet: "나비", icon: Cat },
-  { label: "미용", date: "03/20", amount: "50,000", pet: "초코", icon: Dog },
+  { label: "사료 (오리젠)", date: "03/10", amount: "89,000", pet: "초코", petId: "choco", icon: Dog },
+  { label: "예방접종", date: "03/15", amount: "60,000", pet: "나비", petId: "nabi", icon: Cat },
+  { label: "미용", date: "03/20", amount: "50,000", pet: "초코", petId: "choco", icon: Dog },
 ];
 
 export default function HomePage() {
@@ -29,7 +30,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-3">
-      {/* Pet Selector */}
+      {/* Pet Selector — ① 펫 아바타 사진 적용 */}
       <div className="flex gap-2">
         <div
           onClick={() => setSelectedPet("전체")}
@@ -42,14 +43,14 @@ export default function HomePage() {
           onClick={() => setSelectedPet("초코")}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "초코" ? "bg-[#F5E6D0] border border-[#D4A574]/50 text-[#6B4F3A]" : "bg-[#FFFDF8] border border-[#E8D5C0] text-[#8B7355] hover:border-[#D4A574]/40"}`}
         >
-          <Dog className={`w-4 h-4 ${selectedPet === "초코" ? "text-[#D4A574]" : "text-[#B4A08A]"}`} strokeWidth={1.5} />
+          <PetAvatar pet="choco" size="xs" border={false} />
           <span className="text-[13px]" style={{ fontWeight: selectedPet === "초코" ? 600 : 500 }}>초코</span>
         </div>
         <div
           onClick={() => setSelectedPet("나비")}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "나비" ? "bg-[#E8DFD0] border border-[#C4A684]/50 text-[#5C4A3A]" : "bg-[#FFFDF8] border border-[#E8D5C0] text-[#8B7355] hover:border-[#C4A684]/40"}`}
         >
-          <Cat className={`w-4 h-4 ${selectedPet === "나비" ? "text-[#C4A684]" : "text-[#B4A08A]"}`} strokeWidth={1.5} />
+          <PetAvatar pet="nabi" size="xs" border={false} />
           <span className="text-[13px]" style={{ fontWeight: selectedPet === "나비" ? 600 : 500 }}>나비</span>
         </div>
       </div>
@@ -65,9 +66,9 @@ export default function HomePage() {
           >
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16" />
             <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full blur-2xl -ml-10 -mb-10" />
-            {/* Pet character floating in the corner */}
-            <div className="absolute -bottom-2 -right-2 opacity-20">
-              <PetCharacter type="dog" size="lg" mood="sleepy" />
+            {/* ② 지갑 카드 — 펫 아바타 사진 오버레이 */}
+            <div className="absolute bottom-3 right-3 opacity-30">
+              <PetAvatar pet={selectedPet === "나비" ? "nabi" : "choco"} size="lg" border={false} className="opacity-60" />
             </div>
             <div className="relative z-10 flex items-center justify-between mb-4 cursor-pointer" onClick={() => navigate("/accounts")}>
               <div className="flex items-center gap-2">
@@ -171,9 +172,8 @@ export default function HomePage() {
               {upcomingExpenses.map((exp, i) => (
                 <div key={i} className="flex items-center justify-between p-2.5 bg-[#FFF8EE] rounded-2xl">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-xl bg-[#FFFDF8] border border-[#E8D5C0] flex items-center justify-center">
-                      <exp.icon className="w-3.5 h-3.5 text-[#B4A08A]" strokeWidth={1.5} />
-                    </div>
+                    {/* ③ 예정된 지출 — 펫 아바타 사진 */}
+                    <PetAvatar pet={exp.petId} size="xs" border={true} />
                     <div>
                       <div className="text-[13px] text-[#5C4A3A]">{exp.label}</div>
                       <div className="text-[10px] text-[#B4A08A]">{exp.pet} · {exp.date}</div>
@@ -185,37 +185,95 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Savings Water Level */}
+          {/* ── 개체별 추천 목표 달성률 — 원형 프로그레스 + 펫 일러스트 ── */}
           <div className="bg-[#FFFDF8] rounded-3xl border border-[#E8D5C0] p-4 flex flex-col flex-1">
-            <h3 className="text-[14px] text-[#3D3229] mb-4" style={{ fontWeight: 600 }}>
+            <h3 className="text-[14px] text-[#3D3229] mb-3" style={{ fontWeight: 600 }}>
               <Target className="w-3.5 h-3.5 inline mr-1.5 text-[#D4A574]" strokeWidth={1.5} />
               개체별 추천 목표 달성률
             </h3>
-            <div className="flex items-end justify-center gap-8 flex-1 pb-2">
+
+            <div className="flex items-center justify-center gap-4 flex-1">
               {[
-                { pet: "초코", pct: 64, gradient: "linear-gradient(to top, #D4A574, #C4956A)", shadow: "rgba(212,165,116,0.3)", goal: "5,000,000", current: "3,200,000", type: "dog" as const },
-                { pet: "나비", pct: 45, gradient: "linear-gradient(to top, #E8C5A0, #D4B08C)", shadow: "rgba(232,197,160,0.3)", goal: "3,000,000", current: "1,350,000", type: "cat" as const },
-              ].filter(item => selectedPet === "전체" || item.pet === selectedPet).map((item, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <PetCharacter type={item.type} size="sm" mood={item.pct > 50 ? "happy" : "sleepy"} />
-                  <span className="text-[14px] text-[#3D3229] mb-0.5" style={{ fontWeight: 700 }}>{item.pet}</span>
-                  <span className="text-[12px] text-[#B4A08A] mb-1.5 font-bold">
-                    <span style={{ color: "#D4A574" }}>{item.pct}%</span> 달성
-                  </span>
-                  <div className="w-16 h-[110px] bg-[#F5EDDF] rounded-2xl relative overflow-hidden border border-[#E8D5C0]">
-                    <div
-                      className="absolute bottom-0 w-full rounded-b-2xl transition-all duration-500"
-                      style={{
-                        height: `${item.pct}%`,
-                        background: item.gradient,
-                        boxShadow: `inset 0 2px 8px ${item.shadow}`,
-                      }}
-                    />
+                { pet: "초코", pct: 64, color: "#D4A574", trackColor: "#F5EDDF", goal: "5,000,000", current: "3,200,000", petId: "choco" },
+                { pet: "나비", pct: 45, color: "#E8C5A0", trackColor: "#F5EDDF", goal: "3,000,000", current: "1,350,000", petId: "nabi" },
+              ].filter(item => selectedPet === "전체" || item.pet === selectedPet).map((item, i) => {
+                const radius = 58;
+                const circumference = 2 * Math.PI * radius;
+                const strokeDashoffset = circumference - (item.pct / 100) * circumference;
+                const isHigh = item.pct > 50;
+
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center bg-[#FFF8EE] rounded-2xl p-3 flex-1 border border-[#E8D5C0]/50 hover:shadow-md transition-shadow"
+                  >
+                    {/* Circular Progress Ring with Pet inside */}
+                    <div className="relative w-[140px] h-[140px] flex items-center justify-center">
+                      {/* SVG Ring */}
+                      <svg className="absolute inset-0 -rotate-90" viewBox="0 0 140 140">
+                        {/* Track */}
+                        <circle cx="70" cy="70" r={radius} fill="none" stroke={item.trackColor} strokeWidth="8" />
+                        {/* Progress */}
+                        <circle
+                          cx="70" cy="70" r={radius}
+                          fill="none"
+                          stroke={isHigh ? "#A8C5A0" : item.color}
+                          strokeWidth="8"
+                          strokeLinecap="round"
+                          strokeDasharray={circumference}
+                          strokeDashoffset={strokeDashoffset}
+                          style={{ transition: "stroke-dashoffset 1s ease-in-out" }}
+                        />
+                      </svg>
+
+                      {/* Pet Image inside the ring */}
+                      <div className="relative z-10">
+                        <PetAvatar
+                          pet={item.petId}
+                          mood={isHigh ? "happy" : "sleepy"}
+                          fullBody={true}
+                          border={false}
+                          size="lg"
+                        />
+                      </div>
+
+                      {/* Percentage badge */}
+                      <div
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] z-20"
+                        style={{ fontWeight: 700, background: isHigh ? "#A8C5A0" : item.color, boxShadow: `0 2px 6px ${isHigh ? "rgba(168,197,160,0.4)" : "rgba(212,165,116,0.4)"}` }}
+                      >
+                        {item.pct}%
+                      </div>
+
+                      {/* Sparkles for high achievers */}
+                      {isHigh && (
+                        <>
+                          <div className="absolute top-1 right-2 text-[10px] animate-pulse">✨</div>
+                          <div className="absolute top-4 left-1 text-[8px] animate-pulse" style={{ animationDelay: "0.5s" }}>⭐</div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Pet Name */}
+                    <span className="text-[15px] text-[#3D3229] mt-2" style={{ fontWeight: 700 }}>{item.pet}</span>
+                    <span className="text-[11px] text-[#B4A08A] mb-2">
+                      {isHigh ? "잘하고 있어요! 🎉" : "조금 더 힘내요 💪"}
+                    </span>
+
+                    {/* Amount info */}
+                    <div className="w-full bg-[#FFFDF8] rounded-xl p-2 border border-[#E8D5C0]/30 space-y-1">
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-[#B4A08A]">모인 금액</span>
+                        <span className="text-[#3D3229]" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>₩{item.current}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-[#B4A08A]">목표</span>
+                        <span className="text-[#B4A08A]" style={{ fontFamily: "'Nunito', sans-serif" }}>₩{item.goal}</span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-[11px] text-[#5C4A3A] mt-2 font-semibold" style={{ fontFamily: "'Nunito', sans-serif" }}>모인 금액 ₩ {item.current}</span>
-                  <span className="text-[10px] text-[#B4A08A] mt-0.5">목표 ₩ {item.goal}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
