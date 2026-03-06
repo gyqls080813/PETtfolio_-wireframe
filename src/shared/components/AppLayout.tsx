@@ -27,7 +27,6 @@ const navItems = [
     { href: "/accounts", icon: Landmark, label: "페이 관리" },
     { href: "/savings", icon: PiggyBank, label: "저축 관리" },
     { href: "/reports", icon: BarChart3, label: "리포트" },
-    { href: "/health", icon: Activity, label: "건강 검진" },
     { href: "/supplies", icon: Package, label: "소모품" },
 ];
 
