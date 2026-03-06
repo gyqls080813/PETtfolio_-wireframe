@@ -10,7 +10,6 @@ import {
   X,
   ChevronRight,
 } from "lucide-react";
-import SwipeCarousel from "../../shared/components/SwipeCarousel";
 import pome from "../../assets/pome.png";
 
 const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
@@ -150,7 +149,7 @@ export default function SavingsPage() {
   const currentStage = guide[currentStageIdx];
 
   return (
-    <div className="flex flex-col gap-3 h-full">
+    <div className="flex flex-col gap-3 h-full min-h-max lg:h-full pb-20 lg:pb-0">
 
       {/* ── 탭 행 ── */}
       <div className="flex items-center gap-2 shrink-0">
@@ -178,11 +177,11 @@ export default function SavingsPage() {
 
 
 
-      {/* ── 메인 2열 레이아웃 ── */}
-      <div className="hidden lg:flex gap-3 flex-1 min-h-0">
+      {/* ── 메인 레이아웃 (모바일: 1열 세로 스크롤, 데스크탑: 2열 가로 배치) ── */}
+      <div className="flex flex-col lg:flex-row gap-3 flex-1 lg:min-h-0 min-h-max">
 
         {/* 왼쪽: 비상금 카드 */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] p-5 flex flex-col justify-between w-72 shrink-0">
+        <div className="bg-white rounded-xl border border-[var(--app-border)] p-5 flex flex-col justify-between w-full lg:w-72 shrink-0">
           {/* 헤더 */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -245,35 +244,41 @@ export default function SavingsPage() {
         </div>
 
         {/* 오른쪽: 캐릭터 + 말풍선 */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col min-h-0 overflow-hidden relative">
+        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col min-h-[400px] lg:min-h-0 overflow-hidden relative shadow-sm">
           {/* 상단 타이틀 */}
           <div className="flex items-center gap-2 px-5 pt-4 pb-2 shrink-0">
-            <AlertTriangle className="w-4 h-4 text-[var(--app-warning)]" />
-            <h3 className="text-[14px] text-[#222]" style={{ fontWeight: 600 }}>
+            <AlertTriangle className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[var(--app-warning)]" />
+            <h3 className="text-[13px] lg:text-[14px] text-[#222]" style={{ fontWeight: 600 }}>
               {pet.name}가 알려주는 질병 예방 가이드
             </h3>
             <span className="text-[11px] text-[#BBB] ml-auto">KB 펫 보험 약관 기준</span>
           </div>
 
           {/* ── AI 제안 배너 ── */}
-          <div className="mx-5 mb-2 bg-gradient-to-r from-[var(--app-primary)]/10 to-[var(--app-primary-dark)]/10 border border-[var(--app-primary)]/20 rounded-xl px-4 py-3 flex items-center gap-3 shrink-0 z-20 relative">
-            <div className="w-8 h-8 rounded-lg bg-[var(--app-primary)]/15 flex items-center justify-center shrink-0">
+          <div className="mx-3 lg:mx-5 mb-2 bg-gradient-to-r from-[var(--app-primary)]/10 to-[var(--app-primary-dark)]/10 border border-[var(--app-primary)]/20 rounded-xl px-3 lg:px-4 py-2 lg:py-3 flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-3 shrink-0 z-20 relative">
+            <div className="flex items-center gap-2 lg:hidden w-full">
+               <div className="w-6 h-6 rounded-md bg-[var(--app-primary)]/15 flex items-center justify-center shrink-0">
+                 <Sparkles className="w-3 h-3 text-[var(--app-primary)]" />
+               </div>
+               <span style={{ fontWeight: 600, color: "#333", fontSize: "12px" }}>{pet.name} 추천 </span>
+            </div>
+            <div className="hidden lg:flex w-8 h-8 rounded-lg bg-[var(--app-primary)]/15 items-center justify-center shrink-0">
               <Sparkles className="w-4 h-4 text-[var(--app-primary)]" />
             </div>
-            <p className="text-[13px] text-[#555] flex-1">
-              <span style={{ fontWeight: 600, color: "#333" }}>{pet.name} 추천 </span>
+            <p className="text-[11px] lg:text-[13px] text-[#555] flex-1 leading-snug">
+              <span className="hidden lg:inline" style={{ fontWeight: 600, color: "#333" }}>{pet.name} 추천 </span>
               {suggestion.text}{" "}
               <span className="text-[var(--app-danger)]" style={{ fontWeight: 500 }}>{suggestion.disease}</span>
-              {" "}발생률이 높아요 — 예상 치료비 기준{" "}
+              {" "}발생률이 높아요<br className="lg:hidden" /> — 예상 치료비 기준{" "}
               <span style={{ fontWeight: 600 }}>{suggestion.amount}</span> 저축 권장
             </p>
-            <div className="flex gap-2 shrink-0">
-              <button className="px-3 py-1.5 text-white rounded-lg text-[12px] hover:opacity-90 transition-all cursor-pointer" style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}>저축 시작</button>
+            <div className="flex gap-2 shrink-0 self-end lg:self-auto mt-1 lg:mt-0">
+              <button className="px-3 py-1.5 text-white rounded-lg text-[11px] lg:text-[12px] hover:opacity-90 transition-all cursor-pointer" style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}>저축 시작</button>
             </div>
           </div>
 
           {/* 캐릭터 + 말풍선 영역 */}
-          <div className="flex-1 relative flex items-end px-5 pb-5 min-h-0">
+          <div className="flex-1 relative flex items-end px-3 lg:px-5 pb-3 lg:pb-5 min-h-0">
 
             {/* 배경 그라데이션 */}
             <div
@@ -288,15 +293,13 @@ export default function SavingsPage() {
               <img
                 src={getImgSrc(pome)}
                 alt="반려동물 캐릭터"
-                className="object-contain drop-shadow-md"
-                style={{ height: "350px", maxHeight: "100%" }}
+                className="object-contain drop-shadow-md h-[220px] lg:h-[350px] max-h-full"
               />
             </div>
 
             {/* 말풍선 — 좌측 상단에 위치 */}
             <div
-              className="absolute top-4 left-5 z-20"
-              style={{ maxWidth: "320px" }}
+              className="absolute top-2 lg:top-4 left-3 lg:left-5 z-20 max-w-[240px] lg:max-w-[320px]"
             >
               {/* 말풍선 본체 */}
               <button
@@ -305,7 +308,7 @@ export default function SavingsPage() {
                 style={{ cursor: "pointer" }}
               >
                 <div
-                  className="rounded-2xl px-4 py-3 shadow-md border transition-all duration-200 group-hover:shadow-lg group-hover:scale-[1.02]"
+                  className="rounded-2xl px-3 py-2.5 lg:px-4 lg:py-3 shadow-md border transition-all duration-200 group-hover:shadow-lg group-hover:scale-[1.02]"
                   style={{
                     background: "white",
                     borderColor: `${pet.color}40`,
@@ -323,14 +326,14 @@ export default function SavingsPage() {
 
                   {/* 메시지 텍스트 */}
                   <p
-                    className="text-[13px] text-[#333] leading-relaxed whitespace-pre-line"
+                    className="text-[12px] lg:text-[13px] text-[#333] leading-relaxed whitespace-pre-line"
                     style={{ fontWeight: 500 }}
                   >
                     {current.message}
                   </p>
 
                   {/* 팁 텍스트 */}
-                  <p className="text-[11px] text-[#888] mt-1.5 leading-relaxed whitespace-pre-line">
+                  <p className="text-[10px] lg:text-[11px] text-[#888] mt-1 lg:mt-1.5 leading-relaxed whitespace-pre-line hidden sm:block">
                     {current.tip}
                   </p>
 
@@ -376,28 +379,28 @@ export default function SavingsPage() {
             </div>
 
             {/* 우측 하단 보조 정보 */}
-            <div className="absolute bottom-5 right-5 z-10 flex flex-col gap-2">
+            <div className="absolute bottom-3 lg:bottom-5 right-3 lg:right-5 z-10 flex flex-col gap-1.5 lg:gap-2">
               {guide.slice(0, 3).map((stage, si) => (
                 <div
                   key={si}
-                  className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-xl px-3 py-1.5 border shadow-sm"
+                  className="flex items-center gap-1.5 lg:gap-2 bg-white/80 backdrop-blur-sm rounded-xl px-2 py-1 lg:px-3 lg:py-1.5 border shadow-sm"
                   style={{ borderColor: `${stageColors[si]}25` }}
                 >
                   <span
-                    className="text-[9px] px-1.5 py-0.5 rounded-full text-white shrink-0"
+                    className="text-[8px] lg:text-[9px] px-1 lg:px-1.5 py-0.5 rounded-full text-white shrink-0"
                     style={{ background: stageColors[si], fontWeight: 600 }}
                   >
                     {stage.stage}
                   </span>
-                  <span className="text-[10px] text-[#555]">{stage.diseases[0].name}</span>
-                  <span className="text-[10px] text-[var(--app-danger)] ml-auto" style={{ fontWeight: 500 }}>
+                  <span className="text-[9px] lg:text-[10px] text-[#555] max-w-[80px] lg:max-w-none truncate">{stage.diseases[0].name}</span>
+                  <span className="text-[9px] lg:text-[10px] text-[var(--app-danger)] ml-auto" style={{ fontWeight: 500 }}>
                     {stage.diseases[0].cost}
                   </span>
                 </div>
               ))}
               <button
                 onClick={() => setModalOpen(true)}
-                className="text-[11px] text-center py-1.5 rounded-xl border transition-all hover:shadow-md"
+                className="text-[10px] lg:text-[11px] text-center py-1 lg:py-1.5 rounded-xl border transition-all hover:shadow-md"
                 style={{
                   color: pet.color,
                   borderColor: `${pet.color}40`,
@@ -412,112 +415,6 @@ export default function SavingsPage() {
         </div>
       </div>
 
-      {/* ── Mobile: Swipe Carousel ── */}
-      <div className="block lg:hidden h-[calc(100vh-[var(--safe-area-bottom,0px)]-210px)]">
-        <SwipeCarousel
-          views={[
-            // View 1: 비상금 카드
-            <div key="fund" className="bg-white rounded-xl border border-[var(--app-border)] p-5 flex flex-col justify-between w-full h-full shrink-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${pet.color}18` }}>
-                    <PiggyBank className="w-5 h-5" style={{ color: pet.color }} />
-                  </div>
-                  <div>
-                    <div className="text-[14px] text-[#222]" style={{ fontWeight: 600 }}>{pet.name} 비상금</div>
-                    <div className="text-[11px] text-[#999]">월 ₩{fund.monthlyDeposit.toLocaleString()} 자동 저축</div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => router.push("/accounts")}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] text-white hover:opacity-90 active:scale-95 transition-all"
-                  style={{ background: pet.color }}
-                >
-                  <Plus className="w-3.5 h-3.5" /> 입금
-                </button>
-              </div>
-
-              <div className="mt-4">
-                <div className="text-[30px] text-[#222]" style={{ fontWeight: 700 }}>
-                  ₩{fund.current.toLocaleString()}
-                </div>
-                <div className="text-[12px] text-[#999] mt-0.5">
-                  목표 ₩{fund.goal.toLocaleString()} 중 {pct}% 달성
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <div className="w-full bg-[#F5EDDF] rounded-full h-3 overflow-hidden">
-                  <div
-                    className="h-3 rounded-full transition-all"
-                    style={{ width: `${Math.min(pct, 100)}%`, background: `linear-gradient(90deg, ${pet.color}, ${pet.color}AA)` }}
-                  />
-                </div>
-                <div className="flex justify-between mt-1.5 text-[11px] text-[#AAA]">
-                  <span>₩{fund.current.toLocaleString()}</span>
-                  <span>목표 ₩{fund.goal.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 flex gap-3">
-                <div className="flex-1 bg-[var(--app-bg-secondary)] rounded-lg p-3 text-center">
-                  <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>{pct}%</div>
-                  <div className="text-[11px] text-[#999] mt-0.5">달성률</div>
-                </div>
-                <div className="flex-1 bg-[var(--app-bg-secondary)] rounded-lg p-3 text-center">
-                  <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>{monthsLeft}개월</div>
-                  <div className="text-[11px] text-[#999] mt-0.5">달성까지</div>
-                </div>
-              </div>
-            </div>,
-
-            // View 2: 질병 예방 가이드
-            <div key="guide" className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col min-h-0 overflow-hidden relative w-full h-full">
-              <div className="flex items-center gap-2 px-5 pt-4 pb-2 shrink-0">
-                <AlertTriangle className="w-4 h-4 text-[var(--app-warning)]" />
-                <h3 className="text-[14px] text-[#222]" style={{ fontWeight: 600 }}>{pet.name}가 알려주는 질병 예방 가이드</h3>
-                <span className="text-[11px] text-[#BBB] ml-auto">KB 펫 보험</span>
-              </div>
-
-              <div className="mx-5 mb-2 bg-gradient-to-r from-[var(--app-primary)]/10 to-[var(--app-primary-dark)]/10 border border-[var(--app-primary)]/20 rounded-xl px-4 py-3 flex items-start gap-3 shrink-0 z-20 relative">
-                <div className="w-8 h-8 rounded-lg bg-[var(--app-primary)]/15 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4 text-[var(--app-primary)]" />
-                </div>
-                <div className="flex-1 flex flex-col gap-2">
-                  <p className="text-[12px] text-[#555]">
-                    <span style={{ fontWeight: 600, color: "#333" }}>{pet.name} 추천 </span>
-                    {suggestion.text} <span className="text-[var(--app-danger)]" style={{ fontWeight: 500 }}>{suggestion.disease}</span>
-                    발생률이 높아요 — 예상 치료비 기준 <span style={{ fontWeight: 600 }}>{suggestion.amount}</span> 저축 권장
-                  </p>
-                  <button className="self-end px-3 py-1 text-white rounded-lg text-[12px] hover:opacity-90 transition-all cursor-pointer" style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}>저축 시작</button>
-                </div>
-              </div>
-
-              <div className="flex-1 relative flex items-end px-5 pb-5 min-h-0">
-                <div className="absolute inset-0 rounded-b-xl" style={{ background: `radial-gradient(ellipse at bottom center, ${pet.color}15 0%, transparent 70%)` }} />
-                <div className="relative z-10 flex items-end justify-center flex-1">
-                  <img src={getImgSrc(pome)} alt="반려동물 캐릭터" className="object-contain drop-shadow-md" style={{ height: "350px", maxHeight: "100%" }} />
-                </div>
-                <div className="absolute top-4 left-5 z-20" style={{ maxWidth: "240px" }}>
-                  <button onClick={() => setModalOpen(true)} className="relative group text-left cursor-pointer">
-                    <div className="rounded-2xl px-4 py-3 shadow-md border transition-all duration-200 group-hover:shadow-lg group-hover:scale-[1.02]" style={{ background: "white", borderColor: `${pet.color}40`, borderWidth: "1.5px" }}>
-                      <div className="inline-flex items-center gap-1 text-[10px] text-white rounded-full px-2 py-0.5 mb-2" style={{ background: stageColors[currentStageIdx], fontWeight: 600 }}>
-                        <span>현재</span><span>{current.stageName}</span>
-                      </div>
-                      <p className="text-[12px] text-[#333] leading-relaxed whitespace-pre-line" style={{ fontWeight: 500 }}>{current.message}</p>
-                      <p className="text-[10px] text-[#888] mt-1.5 leading-relaxed whitespace-pre-line">{current.tip}</p>
-                    </div>
-                    <div className="absolute" style={{ bottom: "-8px", right: "20px", width: 0, height: 0, borderLeft: "6px solid transparent", borderRight: "6px solid transparent", borderTop: `8px solid white`, filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.08))" }} />
-                  </button>
-                </div>
-                <div className="absolute bottom-5 right-5 z-10 flex flex-col gap-2">
-                  <button onClick={() => setModalOpen(true)} className="text-[11px] text-center px-3 py-1.5 rounded-xl border transition-all hover:shadow-md" style={{ color: pet.color, borderColor: `${pet.color}40`, background: `${pet.color}10`, fontWeight: 600 }}>전체 질병 비용 보기 →</button>
-                </div>
-              </div>
-            </div>
-          ]}
-        />
-      </div>
 
       {/* ═══ 모달: 전체 생애주기 질병 비용 ═══ */}
       {

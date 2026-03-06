@@ -86,13 +86,36 @@ export default function LedgerPage() {
   for (let i = 0; i < startDay; i++) calendarDays.push(null);
   for (let i = 1; i <= daysInMonth; i++) calendarDays.push(i);
 
-  const calData: Record<number, { exp?: number; inc?: number }> = {
-    1: { exp: 1200 }, 2: { exp: 20000, inc: 2530688 }, 3: { exp: 100000, inc: 2 },
-    5: { exp: 4999 }, 6: { exp: 102110 },
-    8: { exp: 326000 }, 9: { inc: 10000 }, 10: { exp: 17000 }, 11: { exp: 2400 }, 12: { inc: 11000 }, 13: { exp: 6000 }, 14: { exp: 22000 },
-    15: { exp: 14200 }, 16: { exp: 30000 }, 17: { inc: 103507 }, 18: { inc: 2 }, 19: { exp: 54842, inc: 5400 }, 20: { exp: 126484 }, 21: { exp: 10000 },
-    22: { exp: 14000 }, 23: { exp: 14000 }, 24: { inc: 50460 }, 25: { exp: 6500 }, 26: { exp: 110000 }, 27: { exp: 49390, inc: 24500 }, 28: { inc: 9500 },
-    29: { exp: 2900 }, 31: { exp: 5300, inc: 1000 },
+  type TransactionItem = { title: string; amount: number; type: "exp" | "inc"; time: string; category?: string };
+  const calData: Record<number, { exp?: number; inc?: number; items?: TransactionItem[] }> = {
+    1: { exp: 1200, items: [{ title: "간식 구매", amount: 1200, type: "exp", time: "오후 2:30", category: "간식" }] },
+    2: { exp: 20000, inc: 2530688, items: [{ title: "KB펫보험 환급", amount: 2530688, type: "inc", time: "오전 10:00" }, { title: "사료 (오리젠)", amount: 20000, type: "exp", time: "오후 1:15", category: "사료" }] },
+    3: { exp: 100000, inc: 2, items: [{ title: "건강 검진", amount: 100000, type: "exp", time: "오전 11:30", category: "병원/의료" }, { title: "이자수익", amount: 2, type: "inc", time: "오후 4:00" }] },
+    5: { exp: 4999, items: [{ title: "장난감", amount: 4999, type: "exp", time: "오후 5:20", category: "용품" }] },
+    6: { exp: 102110, items: [{ title: "특식 캔", amount: 102110, type: "exp", time: "저녁 7:40", category: "간식" }] },
+    8: { exp: 326000, items: [{ title: "종합 백신", amount: 326000, type: "exp", time: "오전 9:15", category: "병원/의료" }] },
+    9: { inc: 10000, items: [{ title: "용돈", amount: 10000, type: "inc", time: "낮 12:00" }] },
+    10: { exp: 17000, items: [{ title: "목욕 스파", amount: 17000, type: "exp", time: "오후 3:00", category: "미용" }] },
+    11: { exp: 2400, items: [{ title: "배변 패드", amount: 2400, type: "exp", time: "오후 2:10", category: "위생/소모품" }] },
+    12: { inc: 11000, items: [{ title: "앱테크 캐시백", amount: 11000, type: "inc", time: "오전 8:00" }] },
+    13: { exp: 6000, items: [{ title: "산책 물통", amount: 6000, type: "exp", time: "오후 4:30", category: "용품" }] },
+    14: { exp: 22000, items: [{ title: "하네스", amount: 22000, type: "exp", time: "저녁 6:00", category: "용품" }] },
+    15: { exp: 14200, items: [{ title: "덴탈 껌", amount: 14200, type: "exp", time: "오후 1:45", category: "간식" }] },
+    16: { exp: 30000, items: [{ title: "진드기약", amount: 30000, type: "exp", time: "오전 10:20", category: "약/영양제" }] },
+    17: { inc: 103507, items: [{ title: "적금 이자", amount: 103507, type: "inc", time: "오전 9:00" }] },
+    18: { inc: 2, items: [{ title: "토스 포인트", amount: 2, type: "inc", time: "오후 2:00" }] },
+    19: { exp: 54842, inc: 5400, items: [{ title: "수제 간식", amount: 54842, type: "exp", time: "오후 5:10", category: "간식" }, { title: "중고 거래", amount: 5400, type: "inc", time: "저녁 8:00" }] },
+    20: { exp: 126484, items: [{ title: "유치원", amount: 126484, type: "exp", time: "아침 8:30", category: "돌봄/서비스" }] },
+    21: { exp: 10000, items: [{ title: "펫택시", amount: 10000, type: "exp", time: "오후 6:40", category: "기타" }] },
+    22: { exp: 14000, items: [{ title: "샴푸", amount: 14000, type: "exp", time: "오후 2:15", category: "위생/소모품" }] },
+    23: { exp: 14000, items: [{ title: "발바닥 크림", amount: 14000, type: "exp", time: "오전 11:00", category: "용품" }] },
+    24: { inc: 50460, items: [{ title: "펫보험 보상", amount: 50460, type: "inc", time: "오후 12:30" }] },
+    25: { exp: 6500, items: [{ title: "매너벨트", amount: 6500, type: "exp", time: "오후 4:00", category: "위생/소모품" }] },
+    26: { exp: 110000, items: [{ title: "초음파 검사", amount: 110000, type: "exp", time: "오전 10:45", category: "병원/의료" }] },
+    27: { exp: 49390, inc: 24500, items: [{ title: "관절 영양제", amount: 49390, type: "exp", time: "오후 1:20", category: "약/영양제" }, { title: "친구 선물", amount: 24500, type: "inc", time: "오후 3:00" }] },
+    28: { inc: 9500, items: [{ title: "포인트 환급", amount: 9500, type: "inc", time: "오전 9:30" }] },
+    29: { exp: 2900, items: [{ title: "장난감 볼", amount: 2900, type: "exp", time: "오후 5:50", category: "용품" }] },
+    31: { exp: 5300, inc: 1000, items: [{ title: "눈물 세정제", amount: 5300, type: "exp", time: "오후 2:00", category: "위생/소모품" }, { title: "리워드", amount: 1000, type: "inc", time: "저녁 7:15" }] },
   };
 
   // 날짜별 펫 스티커 매핑 (활동 유형에 따라 다른 스티커)
@@ -241,20 +264,22 @@ export default function LedgerPage() {
                     </div>
                     {calData[selectedDay as number]?.exp ? (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center bg-[var(--app-bg-tertiary)] p-3 rounded-xl border border-[var(--app-border)]">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={getImgSrc(stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
+                        {(calData[selectedDay as number]?.items?.filter(i => i.type === 'exp') || []).map((item, idx) => (
+                          <div key={`exp-${idx}`} className="flex justify-between items-center bg-[var(--app-bg-tertiary)] p-3 rounded-xl border border-[var(--app-border)]">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <img src={getImgSrc(stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
+                              </div>
+                              <div>
+                                <div className="text-[14px] font-bold text-[var(--app-text-main)]">{item.title}</div>
+                                <div className="text-[12px] text-[var(--app-text-tertiary)]">{item.time} {item.category ? `· ${item.category}` : ''}</div>
+                              </div>
                             </div>
-                            <div>
-                              <div className="text-[14px] font-bold text-[var(--app-text-main)]">지출</div>
-                              <div className="text-[12px] text-[var(--app-text-tertiary)]">오후 2:30</div>
+                            <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                              {item.amount.toLocaleString()}원
                             </div>
                           </div>
-                          <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                            {calData[selectedDay as number]?.exp?.toLocaleString()}원
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     ) : (
                       <p className="text-[13px] text-[var(--app-text-tertiary)] text-center py-5 bg-[var(--app-bg-tertiary)] rounded-xl border border-[var(--app-border)] border-dashed">소비 내역이 없습니다.</p>
@@ -271,20 +296,22 @@ export default function LedgerPage() {
                     </div>
                     {calData[selectedDay as number]?.inc ? (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center bg-[var(--app-bg-tertiary)] p-3 rounded-xl border border-[var(--app-border)]">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={getImgSrc(stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
+                        {(calData[selectedDay as number]?.items?.filter(i => i.type === 'inc') || []).map((item, idx) => (
+                          <div key={`inc-${idx}`} className="flex justify-between items-center bg-[var(--app-bg-tertiary)] p-3 rounded-xl border border-[var(--app-border)]">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <img src={getImgSrc(stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
+                              </div>
+                              <div>
+                                <div className="text-[14px] font-bold text-[var(--app-text-main)]">{item.title}</div>
+                                <div className="text-[12px] text-[var(--app-text-tertiary)]">{item.time}</div>
+                              </div>
                             </div>
-                            <div>
-                              <div className="text-[14px] font-bold text-[var(--app-text-main)]">수입/저축</div>
-                              <div className="text-[12px] text-[var(--app-text-tertiary)]">오전 10:00</div>
+                            <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                              {item.amount.toLocaleString()}원
                             </div>
                           </div>
-                          <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                            {calData[selectedDay as number]?.inc?.toLocaleString()}원
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     ) : (
                       <p className="text-[13px] text-[var(--app-text-tertiary)] text-center py-5 bg-[var(--app-bg-tertiary)] rounded-xl border border-[var(--app-border)] border-dashed">저금 내역이 없습니다.</p>

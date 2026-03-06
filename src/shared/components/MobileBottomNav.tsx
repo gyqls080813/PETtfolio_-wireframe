@@ -29,7 +29,7 @@ export default function MobileBottomNav({ items, onItemClick, onQrClick, isActiv
                 onClick={() => onItemClick(item)}
                 className="flex flex-col items-center justify-center w-full h-full gap-1 active:scale-95 transition-transform appearance-none bg-transparent"
             >
-                <div className={`flex flex-col items-center p-1.5 rounded-xl ${active ? "text-[var(--app-primary)]" : "text-[var(--app-text-tertiary)] hover:text-[#6B4F3A]"}`}>
+                <div className={`flex flex-col items-center p-1.5 rounded-xl ${active ? "text-black" : "text-[var(--app-text-tertiary)] hover:text-[#6B4F3A]"}`}>
                     <item.icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
                     <span className="text-[10px] mt-0.5" style={{ fontWeight: active ? 700 : 500 }}>
                         {item.label}

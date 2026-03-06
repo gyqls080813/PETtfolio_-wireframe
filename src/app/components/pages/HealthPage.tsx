@@ -36,23 +36,23 @@ export default function HealthPage() {
                 <h3 className="text-[15px] font-bold text-[var(--app-text-main)] mb-3 flex items-center gap-1.5">
                     <Info className="w-4 h-4 text-[var(--app-primary)]" /> 촬영 가이드
                 </h3>
-                <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
+                <div className="flex lg:grid lg:grid-cols-3 gap-4 overflow-x-auto pb-2 custom-scrollbar lg:overflow-visible lg:pb-0 text-center">
                     {/* Guide items */}
-                    <div className="min-w-[140px] bg-white rounded-xl p-3 border border-[var(--app-border)]/50 shadow-sm flex flex-col items-center text-center gap-2">
+                    <div className="min-w-[140px] lg:min-w-0 lg:w-full bg-white rounded-xl p-3 border border-[var(--app-border)]/50 shadow-sm flex flex-col items-center gap-2">
                         <div className="w-16 h-16 bg-[#F5E6D0] rounded-full flex items-center justify-center mb-1">
                             <span className="text-[24px]">🐕</span>
                         </div>
                         <span className="text-[13px] font-bold text-[var(--app-text-secondary)]">정면 사진</span>
                         <span className="text-[11px] text-[var(--app-text-tertiary)] leading-tight">얼굴과 가슴이 잘 보이게 밝은 곳에서 찍어주세요</span>
                     </div>
-                    <div className="min-w-[140px] bg-white rounded-xl p-3 border border-[var(--app-border)]/50 shadow-sm flex flex-col items-center text-center gap-2">
+                    <div className="min-w-[140px] lg:min-w-0 lg:w-full bg-white rounded-xl p-3 border border-[var(--app-border)]/50 shadow-sm flex flex-col items-center gap-2">
                         <div className="w-16 h-16 bg-[#F5E6D0] rounded-full flex items-center justify-center mb-1">
                             <span className="text-[24px]">🐈</span>
                         </div>
                         <span className="text-[13px] font-bold text-[var(--app-text-secondary)]">측면 사진</span>
                         <span className="text-[11px] text-[var(--app-text-tertiary)] leading-tight">서 있는 상태에서 몸 전체가 나오도록 찍어주세요</span>
                     </div>
-                    <div className="min-w-[140px] bg-white rounded-xl p-3 border border-[var(--app-border)]/50 shadow-sm flex flex-col items-center text-center gap-2">
+                    <div className="min-w-[140px] lg:min-w-0 lg:w-full bg-white rounded-xl p-3 border border-[var(--app-border)]/50 shadow-sm flex flex-col items-center gap-2">
                         <div className="w-16 h-16 bg-[#FFF0F0] rounded-full flex items-center justify-center mb-1">
                             <AlertCircle className="w-6 h-6 text-[var(--app-danger)]" />
                         </div>
