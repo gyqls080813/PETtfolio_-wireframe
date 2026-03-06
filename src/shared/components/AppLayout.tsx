@@ -10,13 +10,11 @@ import {
     Package,
     User,
     Bell,
-    LogOut,
     Menu,
-    X,
     Activity,
 } from "lucide-react";
 import { useState } from "react";
-import PetCharacter from "./figma/PetCharacter";
+import dogImg from "../../assets/pome.png";
 
 const navItems = [
     { href: "/", icon: Home, label: "홈" },
@@ -32,7 +30,7 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     const currentPageLabel =
         navItems.find((item) =>
@@ -44,54 +42,54 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const isActive = (href: string) =>
         href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-    const navLinkClass = (href: string) =>
-        `flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all ${isActive(href)
-            ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-sm"
-            : "text-[#8B7355] hover:bg-[var(--app-bg-secondary)] hover:text-[#6B4F3A]"
-        }`;
-
     return (
         <div
-            className="flex h-screen bg-[var(--app-bg-tertiary)]"
+            className="flex h-screen w-full bg-[var(--app-bg-tertiary)] overflow-hidden"
             style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
         >
             {/* Sidebar */}
-            <aside className="hidden lg:flex flex-col w-[240px] bg-[var(--app-bg-main)] border-r border-[var(--app-border)] shrink-0">
-                <div
-                    className="flex items-center gap-2 px-5 py-4 border-b border-[var(--app-border)] cursor-pointer"
-                    onClick={() => router.push("/")}
-                >
-                    <PetCharacter type="dog" size="sm" mood="happy" />
-                    <span
-                        className="text-[18px] tracking-tight"
-                        style={{
-                            fontWeight: 800,
-                            color: "var(--app-primary)",
-                            fontFamily: "'Nunito', sans-serif",
-                        }}
-                    >
-                        Petfolio
-                    </span>
+            <aside className={`flex flex-col bg-[var(--app-bg-main)] border-r border-[var(--app-border)] shrink-0 transition-[width] duration-300 overflow-hidden z-20 ${isCollapsed ? 'w-[76px]' : 'w-[240px]'}`}>
+                <div className={`flex h-[60px] items-center border-b border-[var(--app-border)] shrink-0 ${isCollapsed ? 'justify-center px-0' : 'px-4 gap-2'}`}>
+                    <button onClick={() => setIsCollapsed(!isCollapsed)} className="p-1.5 text-[#8B7355] hover:bg-[var(--app-bg-secondary)] rounded-xl shrink-0 transition-colors">
+                        <Menu className="w-6 h-6" />
+                    </button>
+                    {!isCollapsed && (
+                        <div className="flex items-center gap-2 cursor-pointer overflow-hidden transition-opacity duration-300" onClick={() => router.push("/")}>
+                            <img src={(dogImg as any).src || (dogImg as unknown as string)} alt="logo" className="w-7 h-7 object-contain drop-shadow-sm shrink-0" />
+                            <span
+                                className="text-[18px] tracking-tight whitespace-nowrap"
+                                style={{
+                                    fontWeight: 800,
+                                    color: "var(--app-primary)",
+                                    fontFamily: "'Nunito', sans-serif",
+                                }}
+                            >
+                                Petfolio
+                            </span>
+                        </div>
+                    )}
                 </div>
-                <nav className="flex-1 py-4 px-3 space-y-1">
+                <nav className={`flex-1 py-4 space-y-1.5 overflow-y-auto custom-scrollbar ${isCollapsed ? 'px-2' : 'px-3'}`}>
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={navLinkClass(item.href)}
-                            style={isActive(item.href) ? { boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)" } : {}}
+                            className={`flex transition-all ${isCollapsed ? 'flex-col items-center justify-center gap-1 py-3 rounded-[16px]' : 'items-center gap-3 px-3 py-2.5 rounded-[16px]'} ${isActive(item.href)
+                                ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-sm"
+                                : "text-[#8B7355] hover:bg-[var(--app-bg-secondary)] hover:text-[#6B4F3A]"
+                                }`}
+                            style={isActive(item.href) && !isCollapsed ? { boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)" } : {}}
                         >
-                            <item.icon className="w-5 h-5" strokeWidth={isActive(item.href) ? 2 : 1.5} />
-                            <span className="text-[14px]" style={{ fontWeight: isActive(item.href) ? 600 : 400 }}>
+                            <item.icon className="w-5 h-5 shrink-0" strokeWidth={isActive(item.href) ? 2.5 : 2} />
+                            <span className={isCollapsed ? "text-[11px] font-[600] whitespace-nowrap" : "text-[14px] font-[600]"}>
                                 {item.label}
                             </span>
-                            {isActive(item.href) && <span className="ml-auto text-white/60">›</span>}
                         </Link>
                     ))}
                 </nav>
-                <div className="px-3 pb-4 space-y-2">
+                <div className={`pb-6 pt-3 mt-auto border-t border-[var(--app-border)] bg-[var(--app-bg-main)] shrink-0 ${isCollapsed ? 'px-2 flex flex-col items-center' : 'px-3'}`}>
                     <div
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-2xl hover:bg-[var(--app-bg-secondary)] transition-colors cursor-pointer w-full"
+                        className={`flex items-center gap-2 py-2.5 rounded-[16px] hover:bg-[var(--app-bg-secondary)] transition-colors cursor-pointer w-full ${isCollapsed ? 'justify-center px-0' : 'px-3'}`}
                         onClick={() => router.push("/mypage")}
                     >
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--app-primary)] to-[var(--app-primary-dark)] flex items-center justify-center shadow-sm shrink-0">
@@ -102,102 +100,38 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                                 R
                             </span>
                         </div>
-                        <span className="text-[14px] text-[var(--app-text-secondary)] font-medium">김집사</span>
+                        {!isCollapsed && <span className="text-[14px] text-[var(--app-text-main)] font-[700] whitespace-nowrap overflow-hidden text-ellipsis">김집사</span>}
                     </div>
-                    <button
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-[var(--app-text-tertiary)] hover:bg-[var(--app-bg-secondary)] hover:text-[#6B4F3A] w-full transition-colors"
-                        onClick={() => router.push("/login")}
-                    >
-                        <LogOut className="w-5 h-5" strokeWidth={1.5} />
-                        <span className="text-[14px]">로그아웃</span>
-                    </button>
                 </div>
             </aside>
 
-            {/* Mobile sidebar overlay */}
-            {mobileOpen && (
-                <div className="fixed inset-0 z-50 lg:hidden">
-                    <div className="absolute inset-0 bg-black/30" onClick={() => setMobileOpen(false)} />
-                    <aside className="relative w-[260px] h-full bg-[var(--app-bg-main)] flex flex-col">
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--app-border)]">
-                            <div className="flex items-center gap-2">
-                                <PetCharacter type="dog" size="sm" mood="happy" />
-                                <span
-                                    className="text-[16px]"
-                                    style={{ fontWeight: 800, color: "var(--app-primary)", fontFamily: "'Nunito', sans-serif" }}
-                                >
+            {/* Main content */}
+            <div className="flex-1 flex flex-col min-w-0 bg-[var(--app-bg-tertiary)]">
+                {/* Top bar */}
+                <header className="h-[60px] bg-[var(--app-bg-main)] border-b border-[var(--app-border)] flex items-center justify-between px-4 lg:px-6 shrink-0 z-10">
+                    <div className="flex items-center gap-3">
+                        {isCollapsed && (
+                            <div className="flex items-center gap-2 lg:hidden cursor-pointer mr-2" onClick={() => router.push("/")}>
+                                <img src={(dogImg as any).src || (dogImg as unknown as string)} alt="logo" className="w-6 h-6 object-contain drop-shadow-sm shrink-0" />
+                                <span className="text-[16px] tracking-tight whitespace-nowrap" style={{ fontWeight: 800, color: "var(--app-primary)", fontFamily: "'Nunito', sans-serif" }}>
                                     Petfolio
                                 </span>
                             </div>
-                            <button onClick={() => setMobileOpen(false)}>
-                                <X className="w-5 h-5 text-[#8B7355]" />
-                            </button>
-                        </div>
-                        <nav className="flex-1 py-4 px-3 space-y-1">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className={navLinkClass(item.href)}
-                                    style={isActive(item.href) ? { boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)" } : {}}
-                                >
-                                    <item.icon className="w-5 h-5" strokeWidth={isActive(item.href) ? 2 : 1.5} />
-                                    <span className="text-[14px]" style={{ fontWeight: isActive(item.href) ? 600 : 400 }}>
-                                        {item.label}
-                                    </span>
-                                </Link>
-                            ))}
-                        </nav>
-                        <div className="px-3 pb-8 space-y-2 mt-auto">
-                            <div
-                                className="flex items-center gap-2 px-3 py-2.5 rounded-2xl hover:bg-[var(--app-bg-secondary)] transition-colors cursor-pointer w-full"
-                                onClick={() => { setMobileOpen(false); router.push("/mypage"); }}
-                            >
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--app-primary)] to-[var(--app-primary-dark)] flex items-center justify-center shadow-sm shrink-0">
-                                    <span
-                                        className="text-white text-[13px]"
-                                        style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}
-                                    >
-                                        R
-                                    </span>
-                                </div>
-                                <span className="text-[14px] text-[var(--app-text-secondary)] font-medium">김집사</span>
-                            </div>
-                            <button
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-[var(--app-text-tertiary)] hover:bg-[var(--app-bg-secondary)] hover:text-[#6B4F3A] w-full transition-colors"
-                                onClick={() => { setMobileOpen(false); router.push("/login"); }}
-                            >
-                                <LogOut className="w-5 h-5" strokeWidth={1.5} />
-                                <span className="text-[14px]">로그아웃</span>
-                            </button>
-                        </div>
-                    </aside>
-                </div>
-            )}
-
-            {/* Main content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-                {/* Top bar */}
-                <header className="h-[60px] bg-[var(--app-bg-main)] border-b border-[var(--app-border)] flex items-center justify-between px-4 lg:px-6 shrink-0">
-                    <div className="flex items-center gap-3">
-                        <button className="lg:hidden" onClick={() => setMobileOpen(true)}>
-                            <Menu className="w-6 h-6 text-[#8B7355]" />
-                        </button>
-                        <span className="text-[16px] text-[var(--app-text-main)]" style={{ fontWeight: 600 }}>
+                        )}
+                        <span className="text-[16px] text-[var(--app-text-main)]" style={{ fontWeight: 700 }}>
                             {currentPageLabel}
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
                         <button className="relative p-2 rounded-2xl hover:bg-[var(--app-bg-secondary)] transition-colors">
-                            <Bell className="w-5 h-5 text-[#8B7355]" strokeWidth={1.5} />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#E07C6A] rounded-full" />
+                            <Bell className="w-5 h-5 text-[#8B7355]" strokeWidth={2} />
+                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--app-danger)] rounded-full border border-white" />
                         </button>
                     </div>
                 </header>
 
                 {/* Page content */}
-                <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+                <main className="flex-1 overflow-y-auto p-4 lg:p-6 custom-scrollbar relative">
                     {children}
                 </main>
             </div>

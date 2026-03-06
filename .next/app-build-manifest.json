@@ -11,10 +11,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/layout.js"
     ],
+    "/(main)/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(main)/page.js"
+    ],
     "/(main)/ledger/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/ledger/page.js"
+    ],
+    "/(main)/mypage/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(main)/mypage/page.js"
     ],
     "/(main)/accounts/page": [
       "static/chunks/webpack.js",
@@ -26,35 +36,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/savings/page.js"
     ],
-    "/(main)/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/page.js"
-    ],
     "/(main)/reports/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/reports/page.js"
-    ],
-    "/(main)/supplies/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/supplies/page.js"
-    ],
-    "/(main)/mypage/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/mypage/page.js"
     ],
     "/(main)/health/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/health/page.js"
     ],
-    "/_not-found/page": [
+    "/(main)/supplies/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/(main)/supplies/page.js"
     ]
   }
 }
