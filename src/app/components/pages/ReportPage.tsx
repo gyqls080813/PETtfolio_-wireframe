@@ -11,6 +11,9 @@ import {
   PawPrint,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
+  CheckCircle,
+  Package,
 } from "lucide-react";
 
 // 펫 커스텀 스티커 이미지
@@ -167,6 +170,18 @@ const pets = [
   { key: "나비", img: catImg, color: "#FDCB6E", type: "고양이" },
 ];
 
+const aiSummaryText: Record<string, string> = {
+  초코: "이번 달 초코의 수의 진료비 지출이 평균 대비 15% 높습니다. 하지만, 전월 대비 전체 지출에서 ₩50,000 더 절약하셨어요!",
+  나비: "나비의 사료 및 간식 지출이 평균보다 안정적으로 관리되고 있습니다. 예산 내에서 훌륭한 소비 패턴이에요!",
+  전체: "이번 달은 평균 대비 지출이 5% 줄었어요! 절약된 금액으로 아이들을 위한 특가 용품을 확인해 보세요.",
+};
+
+const pendingCount: Record<string, number> = {
+  초코: 2,
+  나비: 1,
+  전체: 3,
+};
+
 export default function ReportPage() {
   const [period, setPeriod] = useState("month");
   const [selectedPet, setSelectedPet] = useState<string>("전체");
@@ -274,9 +289,26 @@ export default function ReportPage() {
             )}
           </div>
         </div>
+
+        {/* Predictive Supplies Alert Integration */}
+        {selectedPet !== "전체" && (
+          <div className="w-full mt-4 bg-[#F5EDDF]/40 rounded-xl p-2.5 flex items-center gap-2 border border-[var(--app-primary)]/20 shadow-sm">
+            <Package className="w-4 h-4 text-[var(--app-primary)] shrink-0" />
+            <div className="flex-1 text-[11px] text-[#6B4F3A]">
+              <span className="font-bold">{selectedPet}</span>의 <span className="font-bold">사료</span>가 <span className="font-bold text-[var(--app-primary)]">5일 뒤</span> 소진될 예정이에요.
+            </div>
+            <button className="text-[10px] bg-white border border-[var(--app-primary)]/30 text-[var(--app-primary)] px-2 py-1 rounded-lg shrink-0 font-bold hover:bg-[var(--app-primary)] hover:text-white transition-colors">
+              특가 보기
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
+
+  const rank1Img = selectedPet === "나비" ? catImg : stickerThumbsup;
+  const rank2Img = selectedPet === "나비" ? catImg : pomeImg;
+  const rank3Img = selectedPet === "나비" ? catImg : stickerSad;
 
   const RankingCard = (
     <div className="bg-white rounded-2xl border border-[var(--app-border)] p-3 flex-1 min-h-0 flex flex-col">
@@ -284,17 +316,18 @@ export default function ReportPage() {
         <Trophy className="w-3.5 h-3.5 inline mr-1 text-[#FDCB6E]" strokeWidth={1.5} />
         랭킹
       </h3>
-      <div className="flex-1 flex justify-center items-end px-1 min-h-0">
+      <div className="flex-1 flex justify-center items-end px-1 min-h-0 mt-2">
         {memberRank.length >= 2 && (
           <div className="flex flex-col items-center z-10" style={{ marginRight: -6 }}>
             <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
             <span className="text-[10px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
-            <div className="w-[90px] h-[56px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
-              <img src={getImgSrc(pomeImg)} alt="평범" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
+            <div className="w-[90px] h-[56px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6 border-t border-x border-[var(--app-border)]">
+              <img src={getImgSrc(rank2Img)} alt="2등" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
               <div className="mt-2" />
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>{memberRank[1].expense.toLocaleString()}</span>
+                {selectedPet === "나비" ? <img src={getImgSrc(catImg)} className="w-2.5 h-2.5 rounded-full border border-black/10" /> : selectedPet === "초코" ? <img src={getImgSrc(pomeImg)} className="w-2.5 h-2.5 rounded-full border border-black/10" /> : <PawPrint className="w-2.5 h-2.5 text-black/20" />}
               </div>
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[var(--app-success)]" style={{ fontWeight: 500 }}>저축</span>
@@ -308,15 +341,16 @@ export default function ReportPage() {
             <span className="text-[13px] text-[#6B4F3A]" style={{ fontWeight: 700 }}>{memberRank[0].name}</span>
             <span className="text-[10px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[0].expense + memberRank[0].savings).toLocaleString()}원</span>
             <div
-              className="w-[110px] h-[95px] rounded-t-xl flex flex-col items-center justify-center relative mt-7"
+              className="w-[110px] h-[95px] rounded-t-xl flex flex-col items-center justify-center relative mt-7 shadow-lg"
               style={{ background: "linear-gradient(to top, var(--app-primary), var(--app-primary-dark))" }}
             >
-              <img src={getImgSrc(stickerThumbsup)} alt="최고" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-md z-10" />
+              <img src={getImgSrc(rank1Img)} alt="1등" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-md z-10" />
               <div className="mt-2" />
               <span className="px-2 py-0.5 bg-white/20 text-white rounded-full text-[8px] mb-1" style={{ fontWeight: 600 }}>MASTER PAYER</span>
               <div className="flex items-center gap-1 text-[9px] mb-0.5">
                 <span className="text-white/80" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-white" style={{ fontWeight: 600 }}>{memberRank[0].expense.toLocaleString()}</span>
+                {selectedPet === "나비" ? <img src={getImgSrc(catImg)} className="w-2.5 h-2.5 rounded-full border border-white/30" /> : selectedPet === "초코" ? <img src={getImgSrc(pomeImg)} className="w-2.5 h-2.5 rounded-full border border-white/30" /> : <PawPrint className="w-2.5 h-2.5 text-white/50" />}
               </div>
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-white/80" style={{ fontWeight: 500 }}>저축</span>
@@ -329,12 +363,13 @@ export default function ReportPage() {
           <div className="flex flex-col items-center z-10" style={{ marginLeft: -6 }}>
             <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
             <span className="text-[10px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
-            <div className="w-[80px] h-[38px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
-              <img src={getImgSrc(stickerSad)} alt="슬픔" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
+            <div className="w-[80px] h-[38px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6 border-t border-x border-[var(--app-border)]">
+              <img src={getImgSrc(rank3Img)} alt="3등" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
               <div className="mt-2" />
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>{memberRank[2].expense.toLocaleString()}</span>
+                {selectedPet === "나비" ? <img src={getImgSrc(catImg)} className="w-2.5 h-2.5 rounded-full border border-black/10" /> : selectedPet === "초코" ? <img src={getImgSrc(pomeImg)} className="w-2.5 h-2.5 rounded-full border border-black/10" /> : <PawPrint className="w-2.5 h-2.5 text-black/20" />}
               </div>
               <div className="flex items-center gap-1 text-[9px]">
                 <span className="text-[var(--app-success)]" style={{ fontWeight: 500 }}>저축</span>
@@ -393,6 +428,49 @@ export default function ReportPage() {
           <option value="6month">최근 6개월</option>
           <option value="year">연간</option>
         </select>
+      </div>
+
+      {/* ═══════════ NEW: AI Summary & Zero-Effort Confirmation ═══════════ */}
+      <div className="flex flex-col gap-2.5">
+        {/* AI Natural Language Summary */}
+        <div className="bg-gradient-to-r from-[var(--app-primary-light)] to-[#F5EDDF]/40 rounded-2xl p-4 pr-6 flex gap-3.5 items-start border border-[var(--app-primary)]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] relative overflow-hidden">
+          <div className="absolute -bottom-4 -right-4 text-[var(--app-primary)] opacity-5">
+            <Sparkles className="w-20 h-20" />
+          </div>
+          <div className="bg-white rounded-full p-2 shadow-sm shrink-0 mt-0.5">
+            <Sparkles className="w-4 h-4 text-[var(--app-primary)]" />
+          </div>
+          <div className="flex-1 relative z-10">
+            <h4 className="text-[13px] font-bold text-[#6B4F3A] mb-1.5 flex items-center gap-1.5">
+              AI 월간 브리핑
+            </h4>
+            <p className="text-[12.5px] text-[#6B4F3A]/90 leading-relaxed font-medium">
+              {aiSummaryText[selectedPet] || "분석 결과를 불러오는 중입니다."}
+            </p>
+          </div>
+        </div>
+
+        {/* Zero-Effort Transaction Confirmation UI */}
+        {pendingCount[selectedPet] > 0 && (
+          <div className="bg-white hover:bg-[var(--app-bg-main)] transition-colors border border-[var(--app-border)] shadow-sm rounded-2xl p-3 px-4 flex items-center justify-between cursor-pointer group">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#EF4444]/15 rounded-full p-2 flex items-center justify-center shrink-0">
+                <CheckCircle className="w-4 h-4 text-[#EF4444] group-hover:scale-110 transition-transform" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[13px] text-[#1E293B] font-bold leading-tight mb-0.5">
+                  확인이 필요한 내역이 있어요
+                </span>
+                <span className="text-[11px] text-[var(--app-text-tertiary)] font-medium">
+                  AI가 자동으로 분류한 <span className="text-[#EF4444] font-bold">{pendingCount[selectedPet]}건</span>의 지출 내역
+                </span>
+              </div>
+            </div>
+            <button className="text-[11px] bg-[#1E293B] hover:bg-[#0F172A] text-white px-3.5 py-1.5 rounded-full font-bold shadow-sm transition-colors shrink-0">
+              확인
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ═══════════ Mobile: Swipe Carousel ═══════════ */}
@@ -567,22 +645,25 @@ function BreedDistribution({
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2 mt-2">
-        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl">
-          <div className="text-[10px] text-[var(--app-text-tertiary)]">내 지출</div>
-          <div className="text-[13px] text-[var(--app-primary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
+        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl flex flex-col justify-center">
+          <div className="text-[10px] text-[var(--app-text-tertiary)] mb-0.5">내 지출</div>
+          <div className="text-[13px] text-[var(--app-primary)]" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             ₩{item.myExpense.toLocaleString()}
           </div>
         </div>
-        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl">
-          <div className="text-[10px] text-[var(--app-text-tertiary)]">평균</div>
-          <div className="text-[13px] text-[var(--app-text-secondary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
+        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl flex flex-col justify-center">
+          <div className="text-[10px] text-[var(--app-text-tertiary)] mb-0.5">평균</div>
+          <div className="text-[13px] text-[var(--app-text-secondary)]" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             ₩{item.avgExpense.toLocaleString()}
           </div>
         </div>
-        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl">
-          <div className="text-[10px] text-[var(--app-text-tertiary)]">비교 대상</div>
-          <div className="text-[13px] text-[var(--app-text-secondary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
-            {item.totalUsers.toLocaleString()}명
+        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl flex flex-col justify-center">
+          <div className="text-[11px] text-[var(--app-text-main)] leading-tight" style={{ fontWeight: 600 }}>
+            {item.breed.includes('전체') ? '전체 사육인' : `비슷한 ${item.breed.split(' · ')[0]}`}
+            <br />
+            <span className="text-[9px] text-[var(--app-text-tertiary)] font-normal mt-0.5 block">
+              {item.breed.includes('전체') ? '비교 평균' : `(${item.breed.split(' · ')[1]})`}
+            </span>
           </div>
         </div>
       </div>

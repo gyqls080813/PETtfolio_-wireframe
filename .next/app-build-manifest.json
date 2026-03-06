@@ -26,30 +26,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/reports/page.js"
     ],
-    "/(main)/health/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/health/page.js"
-    ],
     "/(main)/ledger/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/ledger/page.js"
     ],
-    "/(main)/accounts/page": [
+    "/(main)/health/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(main)/accounts/page.js"
+      "static/chunks/app/(main)/health/page.js"
     ],
     "/(main)/supplies/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/supplies/page.js"
-    ],
-    "/(main)/mypage/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/mypage/page.js"
     ]
   }
 }

@@ -24,8 +24,7 @@ import MobileBottomNav from "./MobileBottomNav";
 const navItems = [
     { href: "/", icon: Home, label: "홈" },
     { href: "/ledger", icon: BookOpen, label: "가계부" },
-    { href: "/accounts", icon: Landmark, label: "페이 관리" },
-    { href: "/savings", icon: PiggyBank, label: "저축 관리" },
+    { href: "/savings", icon: Activity, label: "생애주기" },
     { href: "/reports", icon: BarChart3, label: "리포트" },
     { href: "/supplies", icon: Package, label: "소모품" },
 ];
@@ -34,13 +33,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isQrModalOpen, setIsQrModalOpen] = useState(false);
-
-    useEffect(() => {
-        const handleOpenQr = () => setIsQrModalOpen(true);
-        window.addEventListener('openQrModal', handleOpenQr);
-        return () => window.removeEventListener('openQrModal', handleOpenQr);
-    }, []);
 
     const currentPageLabel =
         navItems.find((item) =>
@@ -156,57 +148,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Mobile Bottom App Bar Navigation */}
-            <MobileBottomNav items={navItems} onItemClick={(item) => router.push(item.href || "")} onQrClick={() => setIsQrModalOpen(true)} isActive={isActive} />
-
-            {/* QR Modal */}
-            {isQrModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => setIsQrModalOpen(false)} />
-                    <div className="relative bg-white rounded-[32px] w-full max-w-[360px] overflow-hidden shadow-2xl">
-                        <div className="flex items-center justify-between px-6 pt-6 pb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, #E8A365, #D48C45)" }}>
-                                    <Send className="w-5 h-5 text-white" strokeWidth={2} />
-                                </div>
-                                <span className="text-[20px] text-[#1F2937]" style={{ fontWeight: 700 }}>QR 결제</span>
-                            </div>
-                            <button onClick={() => setIsQrModalOpen(false)} className="w-8 h-8 flex items-center justify-center bg-[#F3F4F6] rounded-full hover:bg-[#E5E7EB] transition-colors">
-                                <X className="w-4 h-4 text-[#9CA3AF]" strokeWidth={2} />
-                            </button>
-                        </div>
-                        <div className="px-6 pb-6 flex flex-col items-stretch">
-                            <div className="bg-[#FFFDF5] rounded-[20px] p-4 flex items-center justify-between mb-8 border border-[#F3EAD5]">
-                                <div className="flex items-center gap-3">
-                                    <Wallet className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={2} />
-                                    <div className="flex flex-col">
-                                        <span className="text-[12px] text-[#9CA3AF]" style={{ fontWeight: 500 }}>공동 관리 지갑</span>
-                                        <span className="text-[16px] text-[#1F2937] leading-tight mt-0.5" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>1,250,000원</span>
-                                    </div>
-                                </div>
-                                <div className="bg-[#FDF2E3] px-3 py-1.5 rounded-full">
-                                    <span className="text-[12px] text-[var(--app-primary)]" style={{ fontWeight: 600 }}>결제용</span>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-center mb-6">
-                                <div className="w-[200px] h-[200px] bg-[#F9FAFB] rounded-[32px] p-4 flex items-center justify-center mb-5">
-                                    <div className="w-full h-full bg-white rounded-[20px] p-2 flex items-center justify-center">
-                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250&data=example" alt="QR" className="w-[140px] h-[140px] mix-blend-multiply" />
-                                    </div>
-                                </div>
-                                <span className="text-[15px] text-[#374151] mb-1.5" style={{ fontWeight: 700 }}>QR을 스캔하여 결제하세요</span>
-                                <span className="text-[13px] text-[#9CA3AF]">이 QR은 5분 후 만료됩니다</span>
-                            </div>
-                            <div className="relative flex items-center justify-center mb-6">
-                                <div className="absolute inset-x-0 h-px bg-[#F3F4F6]" />
-                                <span className="relative bg-white px-3 text-[12px] text-[#9CA3AF]">또는</span>
-                            </div>
-                            <button className="w-full py-4 rounded-[20px] border border-[#FDE6C8] flex items-center justify-center bg-white hover:bg-[#FFFDF5] transition-colors">
-                                <span className="text-[14px] text-[#B87A3E]" style={{ fontWeight: 600 }}>금액 직접 입력하기</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <MobileBottomNav items={navItems} onItemClick={(item) => router.push(item.href || "")} isActive={isActive} />
         </div>
     );
 }

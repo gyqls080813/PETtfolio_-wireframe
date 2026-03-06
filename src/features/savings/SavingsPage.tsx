@@ -2,108 +2,76 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
-  Sparkles,
   Dog,
   Cat,
-  PiggyBank,
-  Plus,
-  X,
-  ChevronRight,
+  HeartPulse,
+  Info,
+  CheckCircle2,
+  CalendarDays
 } from "lucide-react";
 import pome from "../../assets/pome.png";
+import catImg from "../../assets/cat-character.png";
 
 const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 /* ───────────── 반려동물 데이터 ───────────── */
 const pets = [
-  { id: "choco", name: "초코", icon: Dog, color: "var(--app-primary)", breed: "말티즈", age: 3 },
-  { id: "nabi", name: "나비", icon: Cat, color: "var(--app-success)", breed: "코리안숏헤어", age: 7 },
+  { id: "choco", name: "초코", icon: Dog, color: "var(--app-primary)", breed: "말티즈", age: 3, img: pome },
+  { id: "nabi", name: "나비", icon: Cat, color: "var(--app-success)", breed: "코리안숏헤어", age: 7, img: catImg },
 ];
 
-/* ───────────── 반려동물별 비상금 현황 ───────────── */
-const emergencyFundByPet: Record<string, {
-  current: number; goal: number; monthlyDeposit: number;
-}> = {
-  choco: { current: 1200000, goal: 2000000, monthlyDeposit: 80000 },
-  nabi: { current: 800000, goal: 2000000, monthlyDeposit: 70000 },
-};
-
-/* ───────────── 반려동물별 생애주기 질병 가이드 ───────────── */
-const diseaseGuideByPet: Record<string, {
-  stage: string; ageRange: string; diseases: { name: string; cost: string }[];
+/* ───────────── 생애주기별 가이드 데이터 ───────────── */
+const lifeCycleGuideByPet: Record<string, {
+  stage: string; ageRange: string; title: string; description: string; points: string[];
 }[]> = {
   choco: [
     {
-      stage: "유년기", ageRange: "0~2세",
-      diseases: [
-        { name: "파보 바이러스 / 홍역", cost: "30만~80만원" },
-        { name: "고관절 이형성증 검사", cost: "10만~20만원" },
-        { name: "기관지염 / 호흡기 질환", cost: "5만~20만원/회" },
-      ],
+      stage: "유년기", ageRange: "0~2세", title: "기초 면역과 사회화 단계", 
+      description: "면역력이 약한 시기로 철저한 예방접종과 다양한 환경에 노출시켜주는 사회화 훈련이 가장 중요합니다.",
+      points: ["기초 5차 예방접종 및 광견병 접종 완료", "월 1회 내외부 기생충(심장사상충) 예방", "다양한 사람과 강아지를 만나는 사회화 훈련"]
     },
     {
-      stage: "청년기", ageRange: "3~6세",
-      diseases: [
-        { name: "슬개골 탈구 수술", cost: "150만~300만원" },
-        { name: "아토피성 피부염 치료", cost: "20만~50만원/월" },
-        { name: "외이염 / 귀 질환", cost: "5만~15만원/회" },
-      ],
+      stage: "청년기", ageRange: "3~6세", title: "활동량 증가와 골관절 주의",
+      description: "가장 활동적인 시기로 충분한 운동을 제공해야 하며, 소형견 특성상 관절 건강에 유의해야 합니다.",
+      points: ["슬개골 탈구 예방을 위한 미끄럼 방지 매트 설치", "매일 꾸준하고 적절한 산책(30분~1시간)", "치석 예방을 위한 양치질 습관화"]
     },
     {
-      stage: "중년기", ageRange: "7~10세",
-      diseases: [
-        { name: "심장 질환 (판막증 등)", cost: "30만~100만원/월" },
-        { name: "치주 질환 / 스케일링", cost: "20만~50만원" },
-        { name: "당뇨병 관리", cost: "10만~30만원/월" },
-      ],
+      stage: "중년기", ageRange: "7~10세", title: "신체 변화 시작 및 정기 검진 선제 조치",
+      description: "활동량이 서서히 줄어들면서 체중이 증가하기 쉬우며, 본격적인 노화성 질환이 나타나기 시작합니다.",
+      points: ["연 1회 이상 종합 건강 파노라마 검진 실시", "심장 질환(판막증) 초기 발견을 위한 청진", "체중 관리를 위한 맞춤형 식단 조절"]
     },
     {
-      stage: "노년기", ageRange: "11세~",
-      diseases: [
-        { name: "암 / 종양 치료", cost: "100만~500만원" },
-        { name: "디스크 / 척추 질환", cost: "200만~400만원" },
-        { name: "신부전 치료", cost: "30만~200만원/월" },
-      ],
+      stage: "노년기", ageRange: "11세~", title: "집중 케어 및 삶의 질 유지",
+      description: "감각 기관이 둔화되고 면역력이 낮아집니다. 질환에 대한 적극적인 대처와 편안한 환경 조성이 필요합니다.",
+      points: ["백내장 등 안구 질환 정기 체크", "소화가 잘되고 부드러운 노령견 전용 식단 교체", "과도한 운동을 피하고 짧고 가벼운 산책 위주"]
     },
   ],
   nabi: [
     {
-      stage: "유년기", ageRange: "0~2세",
-      diseases: [
-        { name: "고양이 범백혈구감소증", cost: "20만~80만원" },
-        { name: "고양이 헤르페스 / 칼리시", cost: "5만~30만원/회" },
-        { name: "기생충 / 내부 감염", cost: "3만~10만원/회" },
-      ],
+      stage: "유년기", ageRange: "0~2세", title: "기초 예방과 환경 적응",
+      description: "고양이 범백혈구감소증 등 치명적인 전염병을 막기 위해 꼼꼼한 접종과 스트레스 없는 환경 적응이 필요합니다.",
+      points: ["고양이 3종/4종 종합백신 완료", "화장실(모래) 및 캣타워 등 수직 공간 적응", "구강 질환 예방을 위한 이른 양치질 교육"]
     },
     {
-      stage: "청년기", ageRange: "3~6세",
-      diseases: [
-        { name: "하부 요로계 질환 (FLUTD)", cost: "20만~100만원" },
-        { name: "고양이 천식", cost: "10만~30만원/월" },
-        { name: "치주 질환", cost: "20만~50만원" },
-      ],
+      stage: "청년기", ageRange: "3~6세", title: "활동성 파악과 비뇨기 질환 예방",
+      description: "에너지가 넘치는 시기이며, 특히 수컷의 경우 하부 요로계 질환(FLUTD) 발생 가능성이 상승합니다.",
+      points: ["충분한 음수량 확보를 위한 다양한 형태의 물그릇/분수대 배치", "비만 예방을 위한 하루 15분 이상 사냥 놀이", "정기적인 소변량/형태 모니터링"]
     },
     {
-      stage: "중년기", ageRange: "7~10세",
-      diseases: [
-        { name: "만성 신부전 (CKD)", cost: "30만~150만원/월" },
-        { name: "갑상선 기능 항진증", cost: "10만~40만원/월" },
-        { name: "백내장 / 안구 질환", cost: "50만원/회" },
-      ],
+      stage: "중년기", ageRange: "7~10세", title: "기초 대사량 감소 및 만성 질환 체크",
+      description: "체중 관리가 필수적이며, 만성 신부전이나 갑상선 질환 등 서서히 진행되는 질병에 주의해야 합니다.",
+      points: ["만성 신부전 선별을 위한 혈액/뇨 정기 검사", "갑상선 기능 항진증 대비 체중 감소 유무 관찰", "관절 무리를 줄이기 위한 낮은 스텝 설치"]
     },
     {
-      stage: "노년기", ageRange: "11세~",
-      diseases: [
-        { name: "암 / 림프종", cost: "100만~500만원" },
-        { name: "당뇨병 관리", cost: "10만~30만원/월" },
-        { name: "심근병증 치료", cost: "30만~100만원/월" },
-      ],
+      stage: "노년기", ageRange: "11세~", title: "정밀 건강 모니터링",
+      description: "면역력과 활력이 급감하며 숨겨진 통증을 잘 표현하지 않으므로 보호자의 세심한 관찰이 중요합니다.",
+      points: ["연 2회 반기별 정밀 건강 검진", "소화 흡수율을 고려한 노묘용 처방식 검토", "심박수와 호흡수 주기적 체크"]
     },
   ],
 };
 
-/* ───────────── 현재 나이대에 맞는 말풍선 메시지 ───────────── */
-const currentDiseaseByPet: Record<string, {
+/* ───────────── 현재 상태 말풍선 ───────────── */
+const currentStatusByPet: Record<string, {
   message: string;
   tip: string;
   stageName: string;
@@ -111,55 +79,40 @@ const currentDiseaseByPet: Record<string, {
   choco: {
     stageName: "청년기 (3~6세)",
     message: "저 요즘 슬개골이\n자꾸 신경 쓰여요 😢",
-    tip: "말티즈 3세는 슬개골 탈구 위험이 높아요!\n미리 준비해두면 든든해요 💪",
+    tip: "말티즈 3세는 슬개골 탈구 방지를 위해\n미끄럼 방지 등 일상 관리를 꼭 챙겨주세요.",
   },
   nabi: {
     stageName: "중년기 (7~10세)",
     message: "신장이 좀 약해지는\n나이가 됐어요 🐾",
-    tip: "코리안숏헤어 7세는 만성 신부전(CKD)에\n주의가 필요한 시기예요!",
+    tip: "코리안숏헤어 7세부터는 만성 신부전(CKD)\n각별한 모니터링과 음수량 관리가 필수예요!",
   },
 };
 
 const stageColors = ["var(--app-primary)", "var(--app-success)", "var(--app-warning)", "#A29BFE"];
 
-const aiSuggestionByPet: Record<string, { text: string; disease: string; amount: string }> = {
-  choco: { text: "초코(말티즈, 3세) 연령대에서", disease: "아토피성 피부염", amount: "월 ₩30,000" },
-  nabi: { text: "나비(코리안숏헤어, 7세) 연령대에서", disease: "만성 신부전(CKD)", amount: "월 ₩90,000" },
-};
-
-/* ════════════════════════════════════════════ */
 export default function SavingsPage() {
   const router = useRouter();
   const [activePet, setActivePet] = useState(pets[0].id);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [bubbleExpanded, setBubbleExpanded] = useState(false);
 
   const pet = pets.find((p) => p.id === activePet)!;
-  const fund = emergencyFundByPet[activePet];
-  const guide = diseaseGuideByPet[activePet];
-  const suggestion = aiSuggestionByPet[activePet];
-  const current = currentDiseaseByPet[activePet];
-
-  const pct = Math.round((fund.current / fund.goal) * 100);
-  const remaining = fund.goal - fund.current;
-  const monthsLeft = Math.ceil(remaining / fund.monthlyDeposit);
+  const guide = lifeCycleGuideByPet[activePet];
+  const current = currentStatusByPet[activePet];
 
   /* 현재 나이에 해당하는 stage index 찾기 */
   const currentStageIdx = activePet === "choco" ? 1 : 2; // 초코=청년기, 나비=중년기
-  const currentStage = guide[currentStageIdx];
 
   return (
-    <div className="flex flex-col gap-3 h-full min-h-max lg:h-full pb-20 lg:pb-0">
+    <div className="flex flex-col gap-3 h-full min-h-max lg:h-full lg:min-h-0 lg:overflow-hidden pb-20 lg:pb-0">
 
       {/* ── 탭 행 ── */}
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-2 auto-cols-max shrink-0">
         {pets.map((p) => {
           const Icon = p.icon;
           const isActive = p.id === activePet;
           return (
             <button
               key={p.id}
-              onClick={() => { setActivePet(p.id); setBubbleExpanded(false); }}
+              onClick={() => setActivePet(p.id)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-[14px] transition-all"
               style={{
                 background: isActive ? p.color : "var(--app-bg-tertiary)",
@@ -175,106 +128,18 @@ export default function SavingsPage() {
         })}
       </div>
 
-
-
       {/* ── 메인 레이아웃 (모바일: 1열 세로 스크롤, 데스크탑: 2열 가로 배치) ── */}
       <div className="flex flex-col lg:flex-row gap-3 flex-1 lg:min-h-0 min-h-max">
 
-        {/* 왼쪽: 비상금 카드 */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] p-5 flex flex-col justify-between w-full lg:w-72 shrink-0">
-          {/* 헤더 */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${pet.color}18` }}>
-                <PiggyBank className="w-5 h-5" style={{ color: pet.color }} />
-              </div>
-              <div>
-                <div className="text-[14px] text-[#222]" style={{ fontWeight: 600 }}>{pet.name} 비상금</div>
-                <div className="text-[11px] text-[#999]">월 ₩{fund.monthlyDeposit.toLocaleString()} 자동 저축</div>
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/accounts")}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] text-white hover:opacity-90 active:scale-95 transition-all"
-              style={{ background: pet.color }}
-            >
-              <Plus className="w-3.5 h-3.5" /> 입금
-            </button>
-          </div>
-
-          {/* 금액 */}
-          <div className="mt-4">
-            <div className="text-[30px] text-[#222]" style={{ fontWeight: 700 }}>
-              ₩{fund.current.toLocaleString()}
-            </div>
-            <div className="text-[12px] text-[#999] mt-0.5">
-              목표 ₩{fund.goal.toLocaleString()} 중 {pct}% 달성
-            </div>
-          </div>
-
-          {/* 진행 바 */}
-          <div className="mt-3">
-            <div className="w-full bg-[#F5EDDF] rounded-full h-3 overflow-hidden">
-              <div
-                className="h-3 rounded-full transition-all"
-                style={{ width: `${Math.min(pct, 100)}%`, background: `linear-gradient(90deg, ${pet.color}, ${pet.color}AA)` }}
-              />
-            </div>
-            <div className="flex justify-between mt-1.5 text-[11px] text-[#AAA]">
-              <span>₩{fund.current.toLocaleString()}</span>
-              <span>목표 ₩{fund.goal.toLocaleString()}</span>
-            </div>
-          </div>
-
-          {/* 하단 정보 */}
-          <div className="mt-4 flex gap-3">
-            <div className="flex-1 bg-[var(--app-bg-secondary)] rounded-lg p-3 text-center">
-              <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>
-                {pct}%
-              </div>
-              <div className="text-[11px] text-[#999] mt-0.5">달성률</div>
-            </div>
-            <div className="flex-1 bg-[var(--app-bg-secondary)] rounded-lg p-3 text-center">
-              <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>
-                {monthsLeft}개월
-              </div>
-              <div className="text-[11px] text-[#999] mt-0.5">달성까지</div>
-            </div>
-          </div>
-        </div>
-
-        {/* 오른쪽: 캐릭터 + 말풍선 */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col min-h-[400px] lg:min-h-0 overflow-hidden relative shadow-sm">
+        {/* 왼쪽: 캐릭터 + 질병 예방 가이드 (기존 오른쪽 요소 였음) */}
+        <div className="bg-white rounded-xl border border-[var(--app-border)] p-0 lg:p-0 flex flex-col justify-between w-full lg:w-96 shrink-0 relative overflow-hidden shadow-sm lg:h-full min-h-[400px] lg:min-h-0">
           {/* 상단 타이틀 */}
-          <div className="flex items-center gap-2 px-5 pt-4 pb-2 shrink-0">
+          <div className="flex items-center gap-2 px-5 pt-4 pb-2 shrink-0 z-20">
             <AlertTriangle className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[var(--app-warning)]" />
             <h3 className="text-[13px] lg:text-[14px] text-[#222]" style={{ fontWeight: 600 }}>
-              {pet.name}가 알려주는 질병 예방 가이드
+              {pet.name}의 질병 예방 가이드
             </h3>
-            <span className="text-[11px] text-[#BBB] ml-auto">KB 펫 보험 약관 기준</span>
-          </div>
-
-          {/* ── AI 제안 배너 ── */}
-          <div className="mx-3 lg:mx-5 mb-2 bg-gradient-to-r from-[var(--app-primary)]/10 to-[var(--app-primary-dark)]/10 border border-[var(--app-primary)]/20 rounded-xl px-3 lg:px-4 py-2 lg:py-3 flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-3 shrink-0 z-20 relative">
-            <div className="flex items-center gap-2 lg:hidden w-full">
-               <div className="w-6 h-6 rounded-md bg-[var(--app-primary)]/15 flex items-center justify-center shrink-0">
-                 <Sparkles className="w-3 h-3 text-[var(--app-primary)]" />
-               </div>
-               <span style={{ fontWeight: 600, color: "#333", fontSize: "12px" }}>{pet.name} 추천 </span>
-            </div>
-            <div className="hidden lg:flex w-8 h-8 rounded-lg bg-[var(--app-primary)]/15 items-center justify-center shrink-0">
-              <Sparkles className="w-4 h-4 text-[var(--app-primary)]" />
-            </div>
-            <p className="text-[11px] lg:text-[13px] text-[#555] flex-1 leading-snug">
-              <span className="hidden lg:inline" style={{ fontWeight: 600, color: "#333" }}>{pet.name} 추천 </span>
-              {suggestion.text}{" "}
-              <span className="text-[var(--app-danger)]" style={{ fontWeight: 500 }}>{suggestion.disease}</span>
-              {" "}발생률이 높아요<br className="lg:hidden" /> — 예상 치료비 기준{" "}
-              <span style={{ fontWeight: 600 }}>{suggestion.amount}</span> 저축 권장
-            </p>
-            <div className="flex gap-2 shrink-0 self-end lg:self-auto mt-1 lg:mt-0">
-              <button className="px-3 py-1.5 text-white rounded-lg text-[11px] lg:text-[12px] hover:opacity-90 transition-all cursor-pointer" style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}>저축 시작</button>
-            </div>
+            <span className="text-[11px] text-[#BBB] ml-auto">{pet.breed} {pet.age}세</span>
           </div>
 
           {/* 캐릭터 + 말풍선 영역 */}
@@ -284,40 +149,33 @@ export default function SavingsPage() {
             <div
               className="absolute inset-0 rounded-b-xl"
               style={{
-                background: `radial-gradient(ellipse at bottom center, ${pet.color}15 0%, transparent 70%)`,
+                background: `radial-gradient(ellipse at bottom left, ${pet.color}15 0%, transparent 70%)`,
               }}
             />
 
-            {/* 강아지 이미지 */}
-            <div className="relative z-10 flex items-end justify-center flex-1">
+            {/* 펫 이미지 */}
+            <div className="relative z-10 flex items-end justify-center flex-1 w-full translate-x-4 lg:h-full lg:min-h-0">
               <img
-                src={getImgSrc(pome)}
+                src={getImgSrc(pet.img)}
                 alt="반려동물 캐릭터"
-                className="object-contain drop-shadow-md h-[220px] lg:h-[350px] max-h-full"
+                className="object-contain drop-shadow-md h-[260px] lg:h-full max-h-[85%] lg:max-h-[300px]"
               />
             </div>
 
             {/* 말풍선 — 좌측 상단에 위치 */}
-            <div
-              className="absolute top-2 lg:top-4 left-3 lg:left-5 z-20 max-w-[240px] lg:max-w-[320px]"
-            >
-              {/* 말풍선 본체 */}
-              <button
-                onClick={() => setModalOpen(true)}
-                className="relative group text-left"
-                style={{ cursor: "pointer" }}
-              >
+            <div className="absolute top-4 lg:top-8 left-4 lg:left-6 z-20 max-w-[220px] lg:max-w-[280px]">
+              <div className="relative text-left">
                 <div
-                  className="rounded-2xl px-3 py-2.5 lg:px-4 lg:py-3 shadow-md border transition-all duration-200 group-hover:shadow-lg group-hover:scale-[1.02]"
+                  className="rounded-[20px] px-3 py-2.5 lg:px-4 lg:py-3 shadow-md border"
                   style={{
                     background: "white",
-                    borderColor: `${pet.color}40`,
-                    borderWidth: "1.5px",
+                    borderColor: "#4A3C31",
+                    borderWidth: "2px",
                   }}
                 >
                   {/* 현재 나이대 배지 */}
                   <div
-                    className="inline-flex items-center gap-1 text-[10px] text-white rounded-full px-2 py-0.5 mb-2"
+                    className="inline-flex items-center gap-1 text-[11px] text-white rounded-full px-2.5 py-0.5 mb-2"
                     style={{ background: stageColors[currentStageIdx], fontWeight: 600 }}
                   >
                     <span>현재</span>
@@ -326,219 +184,111 @@ export default function SavingsPage() {
 
                   {/* 메시지 텍스트 */}
                   <p
-                    className="text-[12px] lg:text-[13px] text-[#333] leading-relaxed whitespace-pre-line"
-                    style={{ fontWeight: 500 }}
+                    className="text-[13px] lg:text-[15px] text-[#222]"
+                    style={{ fontWeight: 600, lineHeight: 1.5 }}
                   >
-                    {current.message}
+                    {current.message.split("\n").map((line, i) => (
+                       <span key={i}>{line}<br/></span>
+                    ))}
                   </p>
 
                   {/* 팁 텍스트 */}
-                  <p className="text-[10px] lg:text-[11px] text-[#888] mt-1 lg:mt-1.5 leading-relaxed whitespace-pre-line hidden sm:block">
-                    {current.tip}
-                  </p>
-
-                  {/* 클릭 유도 */}
-                  <div
-                    className="flex items-center gap-1 mt-2 text-[11px] transition-colors"
-                    style={{ color: pet.color, fontWeight: 600 }}
-                  >
-                    <span>예상 비용 보기</span>
-                    <ChevronRight className="w-3 h-3" />
+                  <div className="bg-[#FAF9F6] rounded-xl p-2.5 mt-2.5">
+                     <p className="text-[11px] lg:text-[12px] text-[#6B4F3A] leading-relaxed font-medium hidden sm:block">
+                       {current.tip}
+                     </p>
                   </div>
                 </div>
 
-                {/* 말풍선 꼬리 (아래 오른쪽으로) */}
+                {/* 꼬리 테두리 (border) 역할 */}
                 <div
                   className="absolute"
                   style={{
-                    bottom: "-10px",
-                    right: "30px",
+                    bottom: "-14px",
+                    right: "26px",
                     width: 0,
                     height: 0,
                     borderLeft: "8px solid transparent",
                     borderRight: "8px solid transparent",
-                    borderTop: `10px solid white`,
-                    filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.08))",
-                  }}
-                />
-                {/* 꼬리 테두리 레이어 */}
-                <div
-                  className="absolute"
-                  style={{
-                    bottom: "-12px",
-                    right: "29px",
-                    width: 0,
-                    height: 0,
-                    borderLeft: "9px solid transparent",
-                    borderRight: "9px solid transparent",
-                    borderTop: `11px solid ${pet.color}40`,
+                    borderTop: `16px solid #4A3C31`,
                     zIndex: -1,
                   }}
                 />
-              </button>
-            </div>
-
-            {/* 우측 하단 보조 정보 */}
-            <div className="absolute bottom-3 lg:bottom-5 right-3 lg:right-5 z-10 flex flex-col gap-1.5 lg:gap-2">
-              {guide.slice(0, 3).map((stage, si) => (
+                {/* 실체 말풍선 꼬리 (흰색) */}
                 <div
-                  key={si}
-                  className="flex items-center gap-1.5 lg:gap-2 bg-white/80 backdrop-blur-sm rounded-xl px-2 py-1 lg:px-3 lg:py-1.5 border shadow-sm"
-                  style={{ borderColor: `${stageColors[si]}25` }}
-                >
-                  <span
-                    className="text-[8px] lg:text-[9px] px-1 lg:px-1.5 py-0.5 rounded-full text-white shrink-0"
-                    style={{ background: stageColors[si], fontWeight: 600 }}
-                  >
-                    {stage.stage}
-                  </span>
-                  <span className="text-[9px] lg:text-[10px] text-[#555] max-w-[80px] lg:max-w-none truncate">{stage.diseases[0].name}</span>
-                  <span className="text-[9px] lg:text-[10px] text-[var(--app-danger)] ml-auto" style={{ fontWeight: 500 }}>
-                    {stage.diseases[0].cost}
-                  </span>
-                </div>
-              ))}
-              <button
-                onClick={() => setModalOpen(true)}
-                className="text-[10px] lg:text-[11px] text-center py-1 lg:py-1.5 rounded-xl border transition-all hover:shadow-md"
-                style={{
-                  color: pet.color,
-                  borderColor: `${pet.color}40`,
-                  background: `${pet.color}10`,
-                  fontWeight: 600,
-                }}
-              >
-                전체 질병 비용 보기 →
-              </button>
+                  className="absolute"
+                  style={{
+                    bottom: "-11px",
+                    right: "28px",
+                    width: 0,
+                    height: 0,
+                    borderLeft: "6px solid transparent",
+                    borderRight: "6px solid transparent",
+                    borderTop: `13px solid white`,
+                    zIndex: 10,
+                  }}
+                />
+              </div>
             </div>
+           </div>
+        </div>
+
+         {/* 오른쪽: 생애주기별 규칙 기반 리스트 (새로운 가이드 레이아웃) */}
+        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col lg:h-full min-h-[400px] lg:min-h-0 overflow-hidden shadow-sm">
+          {/* 상단 타이틀 */}
+          <div className="flex items-center gap-2 px-5 pt-5 pb-3 shrink-0 border-b border-[var(--app-bg-secondary)]">
+            <HeartPulse className="w-4 h-4 text-[var(--app-primary-dark)]" />
+            <h3 className="text-[15px] lg:text-[15px] text-[#222]" style={{ fontWeight: 700 }}>
+              {pet.name} 생애주기 맞춤 정보
+            </h3>
           </div>
+          
+          <div className="flex-1 overflow-y-auto custom-scrollbar bg-[var(--app-bg-secondary)] p-4 space-y-4">
+            {guide.map((stage, idx) => (
+               <div 
+                 key={idx} 
+                 className={`flex flex-col bg-white rounded-2xl p-4 border transition-shadow ${currentStageIdx === idx ? 'border-[var(--app-primary)] shadow-md relative' : 'border-[#EAEAEA] shadow-sm'}`}
+               >
+                 {currentStageIdx === idx && (
+                    <div className="absolute top-4 right-4 bg-[var(--app-primary)] text-white px-2.5 py-1 rounded-full text-[10px] font-bold shadow-sm">
+                      현재 단계
+                    </div>
+                 )}
+                 <div className="flex items-center gap-3 mb-3">
+                   <div 
+                     className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                     style={{ background: `${stageColors[idx]}20` }}
+                   >
+                      <CalendarDays className="w-5 h-5" style={{ color: stageColors[idx] }} />
+                   </div>
+                   <div>
+                     <h4 className="text-[14px] text-[#222]" style={{ fontWeight: 700 }}>
+                       {stage.stage} <span className="text-[11px] text-[#888] font-normal ml-1 border border-[#DDD] rounded px-1.5 py-0.5">{stage.ageRange}</span>
+                     </h4>
+                     <p className="text-[11px] text-[#6B4F3A] mt-0.5 font-bold">{stage.title}</p>
+                   </div>
+                 </div>
+
+                 <div className="bg-[#FAF9F6] p-3 rounded-xl border border-[#F2EFE9] mb-3">
+                    <p className="text-[12px] text-[#555] leading-relaxed">
+                      {stage.description}
+                    </p>
+                 </div>
+                 
+                 <ul className="space-y-1.5 px-1">
+                   {stage.points.map((point, pIdx) => (
+                      <li key={pIdx} className="flex items-start gap-2 text-[12px] text-[#444] leading-snug">
+                         <CheckCircle2 className="w-3.5 h-3.5 text-[var(--app-primary)] shrink-0 mt-[1.5px]" />
+                         <span>{point}</span>
+                      </li>
+                   ))}
+                 </ul>
+               </div>
+            ))}
+          </div>
+
         </div>
       </div>
-
-
-      {/* ═══ 모달: 전체 생애주기 질병 비용 ═══ */}
-      {
-        modalOpen && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
-            style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
-            onClick={() => setModalOpen(false)}
-          >
-            <div
-              className="relative bg-white rounded-2xl shadow-2xl overflow-hidden"
-              style={{ width: "480px", maxHeight: "80vh" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* 모달 헤더 */}
-              <div
-                className="px-6 py-4 flex items-center gap-3"
-                style={{ background: `linear-gradient(135deg, ${pet.color}20, ${pet.color}05)` }}
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: pet.color }}
-                >
-                  <AlertTriangle className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-[16px] text-[#222]" style={{ fontWeight: 700 }}>
-                    {pet.name} 생애주기별 예상 질병 비용
-                  </h2>
-                  <p className="text-[11px] text-[#999]">KB 펫 보험 약관 기준</p>
-                </div>
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#F5F5F5] transition-colors"
-                >
-                  <X className="w-4 h-4 text-[#888]" />
-                </button>
-              </div>
-
-              {/* 모달 본문 */}
-              <div className="px-6 py-4 overflow-y-auto" style={{ maxHeight: "calc(80vh - 80px)" }}>
-                <div className="space-y-4">
-                  {guide.map((stage, si) => (
-                    <div
-                      key={si}
-                      className="rounded-xl border overflow-hidden"
-                      style={{
-                        borderColor: `${stageColors[si]}30`,
-                        background: si === currentStageIdx ? `${stageColors[si]}08` : "white",
-                      }}
-                    >
-                      {/* 스테이지 헤더 */}
-                      <div
-                        className="flex items-center gap-3 px-4 py-2.5"
-                        style={{ background: `${stageColors[si]}12` }}
-                      >
-                        <span
-                          className="text-[12px] px-2.5 py-0.5 rounded-full text-white"
-                          style={{ background: stageColors[si], fontWeight: 600 }}
-                        >
-                          {stage.stage}
-                        </span>
-                        <span className="text-[12px] text-[#666]">{stage.ageRange}</span>
-                        {si === currentStageIdx && (
-                          <span
-                            className="ml-auto text-[10px] px-2 py-0.5 rounded-full text-white"
-                            style={{ background: "var(--app-danger)", fontWeight: 600 }}
-                          >
-                            현재 나이
-                          </span>
-                        )}
-                      </div>
-
-                      {/* 질병 목록 */}
-                      <div className="px-4 py-3 space-y-2">
-                        {stage.diseases.map((d, di) => (
-                          <div
-                            key={di}
-                            className="flex items-center justify-between py-1.5 border-b last:border-0"
-                            style={{ borderColor: "#F0F0F0" }}
-                          >
-                            <div className="flex items-center gap-2">
-                              <div
-                                className="w-1.5 h-1.5 rounded-full shrink-0"
-                                style={{ background: stageColors[si] }}
-                              />
-                              <span className="text-[13px] text-[#444]">{d.name}</span>
-                            </div>
-                            <span
-                              className="text-[13px]"
-                              style={{ color: "var(--app-danger)", fontWeight: 600 }}
-                            >
-                              {d.cost}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* 모달 하단 저축 제안 */}
-                <div
-                  className="mt-4 rounded-xl p-4"
-                  style={{ background: `${pet.color}10`, border: `1px solid ${pet.color}30` }}
-                >
-                  <p className="text-[13px] text-[#444] leading-relaxed">
-                    <span style={{ fontWeight: 700, color: pet.color }}>💡 저축 TIP</span><br />
-                    {suggestion.text} <span style={{ fontWeight: 600, color: "var(--app-danger)" }}>{suggestion.disease}</span> 발생률이
-                    높아요. 예상 치료비 기준 <span style={{ fontWeight: 700 }}>{suggestion.amount}</span> 적립을 권장합니다.
-                  </p>
-                  <button
-                    className="mt-3 w-full py-2.5 rounded-xl text-white text-[13px] transition-all hover:opacity-90 active:scale-[0.99]"
-                    style={{ background: `linear-gradient(135deg, ${pet.color}, ${pet.color}CC)`, fontWeight: 600 }}
-                    onClick={() => setModalOpen(false)}
-                  >
-                    저축 목표 설정하기
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      }
-    </div >
+    </div>
   );
 }

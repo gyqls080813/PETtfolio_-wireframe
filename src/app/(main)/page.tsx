@@ -15,6 +15,7 @@ import {
   QrCode,
   X,
   Send,
+  Activity,
 } from "lucide-react";
 import PetCharacter from "../../shared/components/figma/PetCharacter";
 import PetAvatar from "../../shared/components/figma/PetAvatar";
@@ -104,161 +105,64 @@ export default function HomePage() {
 
       {/* Main Content Layout */}
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 lg:items-stretch">
-        {/* Left Column: Pay Overview */}
-        <div className="bg-[var(--app-bg-secondary)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col h-full">
-          <div
-            className="rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between mb-4 flex-none"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark), #B8865A)",
-            }}
-          >
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16" />
-            <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full blur-2xl -ml-10 -mb-10" />
-            <div className="absolute bottom-3 right-3 opacity-30">
-              <PetAvatar
-                pet={selectedPet === "나비" ? "nabi" : "choco"}
-                size="lg"
-                border={false}
-                className="opacity-60"
-              />
-            </div>
-            <div
-              className="relative z-10 flex items-center justify-between mb-4 cursor-pointer"
-              onClick={() => router.push("/accounts")}
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-md">
-                  <Wallet className="w-5 h-5 text-white" strokeWidth={1.5} />
-                </div>
-                <span className="text-[15px] text-white/90 font-medium">
-                  내 지갑
-                </span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-white/70" />
-            </div>
-            <div className="relative z-10">
-              <div
-                className="text-[32px] tracking-tight cursor-pointer text-white"
-                style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}
-                onClick={() => router.push("/accounts")}
-              >
-                ₩ 2,730,000
-              </div>
-              <div className="flex items-center gap-2 mt-4">
-                <button
-                  className="w-full py-2.5 rounded-2xl flex items-center justify-center gap-2 transition-colors border border-white/20"
-                  style={{
-                    background: "rgba(255,255,255,0.22)",
-                    backdropFilter: "blur(8px)",
-                  }}
-                  onClick={() => router.push("/accounts")}
-                >
-                  <span className="text-[13px] font-semibold text-white">
-                    충전하기
-                  </span>
-                </button>
-                <button
-                  className="w-full py-2.5 rounded-2xl flex items-center justify-center gap-2 transition-colors border border-white/20"
-                  style={{
-                    background: "rgba(255,255,255,0.22)",
-                    backdropFilter: "blur(8px)",
-                  }}
-                  onClick={triggerQrModal}
-                >
-                  <span className="text-[13px] font-semibold text-white">
-                    결제하기
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 mb-3 px-1">
-            <span
-              className="text-[13px] text-[var(--app-text-secondary)]"
+        {/* Left Column: Spending History & Upcoming Expenses */}
+        <div className="flex flex-col gap-3 h-full">
+          {/* Spending History Section */}
+          <div className="bg-[var(--app-bg-secondary)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col flex-1 h-full">
+            <h3
+              className="text-[14px] text-[var(--app-text-main)] mb-3"
               style={{ fontWeight: 600 }}
             >
-              연결된 계좌
-            </span>
-          </div>
-
-          <div className="flex-1 flex flex-col gap-2">
-            <div
-              className="bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)] p-4 cursor-pointer hover:border-[var(--app-success)]/40 transition-colors flex items-center justify-between group flex-1"
-              onClick={() => router.push("/accounts")}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[var(--app-success)]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <PiggyBank
-                    className="w-5 h-5 text-[var(--app-success)]"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <div>
-                  <div className="text-[13px] text-[var(--app-text-tertiary)] mb-0.5">
-                    비상금 계좌
+              <TrendingDown
+                className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]"
+                strokeWidth={1.5}
+              />
+              나의 소비 내역
+            </h3>
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center justify-between p-3 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center">
+                      <TrendingDown className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <div className="text-[13px] text-[var(--app-text-main)] font-medium">동물병원 진료비</div>
+                      <div className="text-[11px] text-[var(--app-text-tertiary)] mt-0.5">오늘 · 14:30</div>
+                    </div>
                   </div>
-                  <div
-                    className="text-[18px] text-[var(--app-text-main)]"
-                    style={{
-                      fontWeight: 700,
-                      fontFamily: "'Nunito', sans-serif",
-                    }}
-                  >
-                    ₩ 2,150,000
-                  </div>
-                </div>
+                  <span className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>-₩45,000</span>
               </div>
-              <div className="flex flex-col items-end justify-between h-full py-1">
-                <ChevronRight className="w-4 h-4 text-[#D9C8B4]" />
-                <div className="flex items-center gap-0.5 mt-auto">
-                  <ArrowDownRight className="w-3 h-3 text-[var(--app-success)]" />
-                  <span className="text-[11px] text-[var(--app-success)] font-medium">
-                    안전 수준
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)] p-4 cursor-pointer hover:border-[var(--app-primary)]/40 transition-colors flex items-center justify-between group flex-1"
-              onClick={() => router.push("/accounts")}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Wallet
-                    className="w-5 h-5 text-[var(--app-primary)]"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <div>
-                  <div className="text-[13px] text-[var(--app-text-tertiary)] mb-0.5">
-                    공동 관리 계좌
+              <div className="flex items-center justify-between p-3 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center">
+                      <TrendingDown className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <div className="text-[13px] text-[var(--app-text-main)] font-medium">장난감 구매</div>
+                      <div className="text-[11px] text-[var(--app-text-tertiary)] mt-0.5">어제 · 18:20</div>
+                    </div>
                   </div>
-                  <div
-                    className="text-[18px] text-[var(--app-text-main)]"
-                    style={{
-                      fontWeight: 700,
-                      fontFamily: "'Nunito', sans-serif",
-                    }}
-                  >
-                    ₩ 580,000
-                  </div>
-                </div>
+                  <span className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>-₩12,000</span>
               </div>
-              <div className="flex flex-col items-end justify-between h-full py-1">
-                <ChevronRight className="w-4 h-4 text-[#D9C8B4]" />
-                <div className="text-[11px] text-[var(--app-text-tertiary)] mt-auto">
-                  이번달 입금: ₩200,000
-                </div>
+              <div className="flex items-center justify-between p-3 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center">
+                      <TrendingDown className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <div className="text-[13px] text-[var(--app-text-main)] font-medium">펫시터 예약</div>
+                      <div className="text-[11px] text-[var(--app-text-tertiary)] mt-0.5">03/03 · 09:15</div>
+                    </div>
+                  </div>
+                  <span className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>-₩35,000</span>
               </div>
             </div>
+            <button className="w-full mt-3 py-2.5 rounded-2xl bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[13px] text-[var(--app-text-secondary)] font-medium hover:border-[var(--app-primary)]/40 transition-colors" onClick={() => router.push("/ledger")}>
+              전체 내역 보기
+            </button>
           </div>
-        </div>
 
-        {/* Right Column */}
-        <div className="flex flex-col gap-3 h-full">
+          {/* Upcoming Expenses Section (Moved from Right Column) */}
           <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex-none">
             <div className="flex items-center justify-between mb-3">
               <h3
@@ -282,7 +186,7 @@ export default function HomePage() {
               {upcomingExpenses.map((exp, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-2.5 bg-[var(--app-bg-main)] rounded-2xl"
+                  className="flex items-center justify-between p-2.5 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/30"
                 >
                   <div className="flex items-center gap-2.5">
                     <PetAvatar pet={exp.petId} size="xs" border={true} />
@@ -308,146 +212,67 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+        </div>
 
-          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col flex-1">
+        {/* Right Column: Life-Cycle Guide */}
+        <div className="flex flex-col gap-3 h-full">
+          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-5 flex flex-col flex-1 h-full relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--app-primary-light)] rounded-full blur-3xl opacity-30 -mr-16 -mt-16" />
             <h3
-              className="text-[14px] text-[var(--app-text-main)] mb-3"
-              style={{ fontWeight: 600 }}
+              className="text-[15px] text-[var(--app-text-main)] mb-1 relative z-10"
+              style={{ fontWeight: 700 }}
             >
-              <Target
-                className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]"
-                strokeWidth={1.5}
+              <Activity
+                className="w-4 h-4 inline mr-1.5 text-[var(--app-primary)]"
+                strokeWidth={2}
               />
-              개체별 추천 목표 달성률
+              반려동물 생애주기 가이드
             </h3>
-            <div className="flex items-center justify-center gap-4 flex-1">
-              {[
-                {
-                  pet: "초코",
-                  pct: 64,
-                  color: "var(--app-primary)",
-                  trackColor: "#F5EDDF",
-                  goal: "5,000,000",
-                  current: "3,200,000",
-                  petId: "choco",
-                  img: pomeImg,
-                },
-                {
-                  pet: "나비",
-                  pct: 45,
-                  color: "#E8C5A0",
-                  trackColor: "#F5EDDF",
-                  goal: "3,000,000",
-                  current: "1,350,000",
-                  petId: "nabi",
-                  img: catImg,
-                },
-              ]
-                .filter(
-                  (item) => selectedPet === "전체" || item.pet === selectedPet,
-                )
-                .map((item, i) => {
-                  const radius = 58;
-                  const circumference = 2 * Math.PI * radius;
-                  const strokeDashoffset =
-                    circumference - (item.pct / 100) * circumference;
-                  const isHigh = item.pct > 50;
-                  return (
-                    <div
-                      key={i}
-                      className="flex flex-col items-center bg-[var(--app-bg-main)] rounded-2xl p-3 flex-1 border border-[var(--app-border)]/50 hover:shadow-md transition-shadow"
-                    >
-                      <div className="relative w-[140px] h-[140px] flex items-center justify-center">
-                        <svg
-                          className="absolute inset-0 -rotate-90"
-                          viewBox="0 0 140 140"
-                        >
-                          <circle
-                            cx="70"
-                            cy="70"
-                            r={radius}
-                            fill="none"
-                            stroke={item.trackColor}
-                            strokeWidth="8"
-                          />
-                          <circle
-                            cx="70"
-                            cy="70"
-                            r={radius}
-                            fill="none"
-                            stroke={isHigh ? "var(--app-success)" : item.color}
-                            strokeWidth="8"
-                            strokeLinecap="round"
-                            strokeDasharray={circumference}
-                            strokeDashoffset={strokeDashoffset}
-                            style={{
-                              transition: "stroke-dashoffset 1s ease-in-out",
-                            }}
-                          />
-                        </svg>
-                        <div className="relative z-10 w-[80px] h-[80px]">
-                          <img
-                            src={
-                              typeof item.img === "string"
-                                ? item.img
-                                : item.img.src
-                            }
-                            alt={item.pet}
-                            className="w-full h-full object-contain drop-shadow-md"
-                          />
-                        </div>
-                        <div
-                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] z-20"
-                          style={{
-                            fontWeight: 700,
-                            background: isHigh
-                              ? "var(--app-success)"
-                              : item.color,
-                          }}
-                        >
-                          {item.pct}%
-                        </div>
-                      </div>
-                      <span
-                        className="text-[15px] text-[var(--app-text-main)] mt-2"
-                        style={{ fontWeight: 700 }}
-                      >
-                        {item.pet}
-                      </span>
-                      <span className="text-[11px] text-[var(--app-text-tertiary)] mb-2">
-                        {isHigh ? "잘하고 있어요! 🎉" : "조금 더 힘내요 💪"}
-                      </span>
-                      <div className="w-full bg-[var(--app-bg-main)] rounded-xl p-2 border border-[var(--app-border)]/30 space-y-1">
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[var(--app-text-tertiary)]">
-                            모인 금액
-                          </span>
-                          <span
-                            className="text-[var(--app-text-main)]"
-                            style={{
-                              fontWeight: 600,
-                              fontFamily: "'Nunito', sans-serif",
-                            }}
-                          >
-                            ₩{item.current}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[var(--app-text-tertiary)]">
-                            목표
-                          </span>
-                          <span
-                            className="text-[var(--app-text-tertiary)]"
-                            style={{ fontFamily: "'Nunito', sans-serif" }}
-                          >
-                            ₩{item.goal}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+            <p className="text-[12px] text-[var(--app-text-tertiary)] mb-5 relative z-10">
+              나이와 건강 상태에 맞춘 맞춤형 케어 팁을 확인하세요.
+            </p>
+            
+            <div className="space-y-3 flex-1 overflow-y-auto pr-1 custom-scrollbar relative z-10">
+              {/* Dog Guide */}
+              <div className="p-4 rounded-2xl border border-[var(--app-border)]/60 bg-[#FAFAFA] hover:border-[var(--app-primary)]/40 transition-colors">
+                <div className="flex justify-between items-start mb-2">
+                   <div className="flex items-center gap-1.5">
+                     <span className="text-[14px] font-bold text-[#6B4F3A]">강아지 (시니어)</span>
+                   </div>
+                   <span className="bg-[#E8C5A0]/30 text-[#6B4F3A] text-[10px] px-2 py-0.5 rounded-full font-semibold">초코</span>
+                </div>
+                <div className="text-[12px] text-[var(--app-text-main)] leading-relaxed mb-3">
+                  노령견은 관절 건강과 정기적인 치아 관리가 중요합니다. 과도한 산책보다는 가벼운 걷기 운동을 꾸준히 해주시고, 연 1~2회 종합 건강 검진을 권장합니다.
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#관절영양제</span>
+                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#치석제거</span>
+                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#가벼운산책</span>
+                </div>
+              </div>
+
+              {/* Cat Guide */}
+              <div className="p-4 rounded-2xl border border-[var(--app-border)]/60 bg-[#FAFAFA] hover:border-[#C4A684]/40 transition-colors">
+                <div className="flex justify-between items-start mb-2">
+                   <div className="flex items-center gap-1.5">
+                     <span className="text-[14px] font-bold text-[#6B4F3A]">고양이 (성묘)</span>
+                   </div>
+                   <span className="bg-[#E8C5A0]/30 text-[#6B4F3A] text-[10px] px-2 py-0.5 rounded-full font-semibold">나비</span>
+                </div>
+                <div className="text-[12px] text-[var(--app-text-main)] leading-relaxed mb-3">
+                  활동량이 줄어드는 시기이므로 비만에 주의해야 합니다. 수분 섭취를 늘리기 위해 습식 사료 빈도를 높이고, 스트레스 해소를 위해 캣타워와 사냥 놀이를 규칙적으로 제공하세요.
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#체중관리</span>
+                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#음수량늘리기</span>
+                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#사냥놀이</span>
+                </div>
+              </div>
             </div>
+            
+            <button className="w-full mt-4 py-2.5 rounded-2xl bg-[var(--app-primary-light)] text-[13px] text-[var(--app-primary-dark)] font-bold hover:bg-[#E8C5A0]/60 transition-colors relative z-10" onClick={() => router.push("/health")}>
+              맞춤 가이드 더보기
+            </button>
           </div>
         </div>
       </div>
