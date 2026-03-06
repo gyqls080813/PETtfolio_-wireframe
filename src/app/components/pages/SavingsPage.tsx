@@ -13,8 +13,8 @@ import pome from "../../../assets/pome.png";
 
 /* ───────────── 반려동물 데이터 ───────────── */
 const pets = [
-  { id: "choco", name: "초코", icon: Dog, color: "#D4A574", breed: "말티즈",       age: 3 },
-  { id: "nabi",  name: "나비", icon: Cat, color: "#A8C5A0", breed: "코리안숏헤어", age: 7 },
+  { id: "choco", name: "초코", icon: Dog, color: "var(--app-primary)", breed: "말티즈", age: 3 },
+  { id: "nabi", name: "나비", icon: Cat, color: "var(--app-success)", breed: "코리안숏헤어", age: 7 },
 ];
 
 /* ───────────── 반려동물별 비상금 현황 ───────────── */
@@ -22,7 +22,7 @@ const emergencyFundByPet: Record<string, {
   current: number; goal: number; monthlyDeposit: number;
 }> = {
   choco: { current: 1200000, goal: 2000000, monthlyDeposit: 80000 },
-  nabi:  { current:  800000, goal: 2000000, monthlyDeposit: 70000 },
+  nabi: { current: 800000, goal: 2000000, monthlyDeposit: 70000 },
 };
 
 /* ───────────── 반려동물별 생애주기 질병 가이드 ───────────── */
@@ -33,33 +33,33 @@ const diseaseGuideByPet: Record<string, {
     {
       stage: "유년기", ageRange: "0~2세",
       diseases: [
-        { name: "파보 바이러스 / 홍역",   cost: "30만~80만원"   },
-        { name: "고관절 이형성증 검사",    cost: "10만~20만원"   },
+        { name: "파보 바이러스 / 홍역", cost: "30만~80만원" },
+        { name: "고관절 이형성증 검사", cost: "10만~20만원" },
         { name: "기관지염 / 호흡기 질환", cost: "5만~20만원/회" },
       ],
     },
     {
       stage: "청년기", ageRange: "3~6세",
       diseases: [
-        { name: "슬개골 탈구 수술",     cost: "150만~300만원"  },
+        { name: "슬개골 탈구 수술", cost: "150만~300만원" },
         { name: "아토피성 피부염 치료", cost: "20만~50만원/월" },
-        { name: "외이염 / 귀 질환",    cost: "5만~15만원/회"  },
+        { name: "외이염 / 귀 질환", cost: "5만~15만원/회" },
       ],
     },
     {
       stage: "중년기", ageRange: "7~10세",
       diseases: [
         { name: "심장 질환 (판막증 등)", cost: "30만~100만원/월" },
-        { name: "치주 질환 / 스케일링",  cost: "20만~50만원"     },
-        { name: "당뇨병 관리",           cost: "10만~30만원/월"  },
+        { name: "치주 질환 / 스케일링", cost: "20만~50만원" },
+        { name: "당뇨병 관리", cost: "10만~30만원/월" },
       ],
     },
     {
       stage: "노년기", ageRange: "11세~",
       diseases: [
-        { name: "암 / 종양 치료",     cost: "100만~500만원"  },
-        { name: "디스크 / 척추 질환", cost: "200만~400만원"  },
-        { name: "신부전 치료",        cost: "30만~200만원/월" },
+        { name: "암 / 종양 치료", cost: "100만~500만원" },
+        { name: "디스크 / 척추 질환", cost: "200만~400만원" },
+        { name: "신부전 치료", cost: "30만~200만원/월" },
       ],
     },
   ],
@@ -67,32 +67,32 @@ const diseaseGuideByPet: Record<string, {
     {
       stage: "유년기", ageRange: "0~2세",
       diseases: [
-        { name: "고양이 범백혈구감소증",    cost: "20만~80만원"   },
+        { name: "고양이 범백혈구감소증", cost: "20만~80만원" },
         { name: "고양이 헤르페스 / 칼리시", cost: "5만~30만원/회" },
-        { name: "기생충 / 내부 감염",       cost: "3만~10만원/회" },
+        { name: "기생충 / 내부 감염", cost: "3만~10만원/회" },
       ],
     },
     {
       stage: "청년기", ageRange: "3~6세",
       diseases: [
-        { name: "하부 요로계 질환 (FLUTD)", cost: "20만~100만원"  },
-        { name: "고양이 천식",              cost: "10만~30만원/월" },
-        { name: "치주 질환",               cost: "20만~50만원"    },
+        { name: "하부 요로계 질환 (FLUTD)", cost: "20만~100만원" },
+        { name: "고양이 천식", cost: "10만~30만원/월" },
+        { name: "치주 질환", cost: "20만~50만원" },
       ],
     },
     {
       stage: "중년기", ageRange: "7~10세",
       diseases: [
-        { name: "만성 신부전 (CKD)",  cost: "30만~150만원/월" },
-        { name: "갑상선 기능 항진증", cost: "10만~40만원/월"  },
-        { name: "백내장 / 안구 질환", cost: "50만원/회"       },
+        { name: "만성 신부전 (CKD)", cost: "30만~150만원/월" },
+        { name: "갑상선 기능 항진증", cost: "10만~40만원/월" },
+        { name: "백내장 / 안구 질환", cost: "50만원/회" },
       ],
     },
     {
       stage: "노년기", ageRange: "11세~",
       diseases: [
-        { name: "암 / 림프종",   cost: "100만~500만원"  },
-        { name: "당뇨병 관리",  cost: "10만~30만원/월" },
+        { name: "암 / 림프종", cost: "100만~500만원" },
+        { name: "당뇨병 관리", cost: "10만~30만원/월" },
         { name: "심근병증 치료", cost: "30만~100만원/월" },
       ],
     },
@@ -117,11 +117,11 @@ const currentDiseaseByPet: Record<string, {
   },
 };
 
-const stageColors = ["#D4A574", "#A8C5A0", "#E17055", "#A29BFE"];
+const stageColors = ["var(--app-primary)", "var(--app-success)", "var(--app-warning)", "#A29BFE"];
 
 const aiSuggestionByPet: Record<string, { text: string; disease: string; amount: string }> = {
-  choco: { text: "초코(말티즈, 3세) 연령대에서",        disease: "아토피성 피부염",  amount: "월 ₩30,000" },
-  nabi:  { text: "나비(코리안숏헤어, 7세) 연령대에서", disease: "만성 신부전(CKD)", amount: "월 ₩90,000" },
+  choco: { text: "초코(말티즈, 3세) 연령대에서", disease: "아토피성 피부염", amount: "월 ₩30,000" },
+  nabi: { text: "나비(코리안숏헤어, 7세) 연령대에서", disease: "만성 신부전(CKD)", amount: "월 ₩90,000" },
 };
 
 /* ════════════════════════════════════════════ */
@@ -130,14 +130,14 @@ export default function SavingsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [bubbleExpanded, setBubbleExpanded] = useState(false);
 
-  const pet        = pets.find((p) => p.id === activePet)!;
-  const fund       = emergencyFundByPet[activePet];
-  const guide      = diseaseGuideByPet[activePet];
+  const pet = pets.find((p) => p.id === activePet)!;
+  const fund = emergencyFundByPet[activePet];
+  const guide = diseaseGuideByPet[activePet];
   const suggestion = aiSuggestionByPet[activePet];
-  const current    = currentDiseaseByPet[activePet];
+  const current = currentDiseaseByPet[activePet];
 
-  const pct        = Math.round((fund.current / fund.goal) * 100);
-  const remaining  = fund.goal - fund.current;
+  const pct = Math.round((fund.current / fund.goal) * 100);
+  const remaining = fund.goal - fund.current;
   const monthsLeft = Math.ceil(remaining / fund.monthlyDeposit);
 
   /* 현재 나이에 해당하는 stage index 찾기 */
@@ -150,7 +150,7 @@ export default function SavingsPage() {
       {/* ── 탭 행 ── */}
       <div className="flex items-center gap-2 shrink-0">
         {pets.map((p) => {
-          const Icon     = p.icon;
+          const Icon = p.icon;
           const isActive = p.id === activePet;
           return (
             <button
@@ -158,10 +158,10 @@ export default function SavingsPage() {
               onClick={() => { setActivePet(p.id); setBubbleExpanded(false); }}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-[14px] transition-all"
               style={{
-                background: isActive ? p.color : "#FFF8EE",
-                color:      isActive ? "#fff"  : "#888",
-                fontWeight: isActive ? 600     : 400,
-                boxShadow:  isActive ? `0 2px 8px ${p.color}40` : "none",
+                background: isActive ? p.color : "var(--app-bg-main)",
+                color: isActive ? "#fff" : "#888",
+                fontWeight: isActive ? 600 : 400,
+                boxShadow: isActive ? `0 2px 8px ${p.color}40` : "none",
               }}
             >
               <Icon className="w-4 h-4" />
@@ -172,19 +172,19 @@ export default function SavingsPage() {
       </div>
 
       {/* ── AI 제안 배너 ── */}
-      <div className="bg-gradient-to-r from-[#D4A574]/10 to-[#C4956A]/10 border border-[#D4A574]/20 rounded-xl px-4 py-3 flex items-center gap-3 shrink-0">
-        <div className="w-8 h-8 rounded-lg bg-[#D4A574]/15 flex items-center justify-center shrink-0">
-          <Sparkles className="w-4 h-4 text-[#D4A574]" />
+      <div className="bg-gradient-to-r from-[var(--app-primary)]/10 to-[var(--app-primary-dark)]/10 border border-[var(--app-primary)]/20 rounded-xl px-4 py-3 flex items-center gap-3 shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-[var(--app-primary)]/15 flex items-center justify-center shrink-0">
+          <Sparkles className="w-4 h-4 text-[var(--app-primary)]" />
         </div>
         <p className="text-[13px] text-[#555] flex-1">
           <span style={{ fontWeight: 600, color: "#333" }}>{pet.name} 추천 </span>
           {suggestion.text}{" "}
-          <span className="text-[#FF6B6B]" style={{ fontWeight: 500 }}>{suggestion.disease}</span>
+          <span className="text-[var(--app-danger)]" style={{ fontWeight: 500 }}>{suggestion.disease}</span>
           {" "}발생률이 높아요 — 예상 치료비 기준{" "}
           <span style={{ fontWeight: 600 }}>{suggestion.amount}</span> 저축 권장
         </p>
         <div className="flex gap-2 shrink-0">
-          <button className="px-3 py-1.5 text-white rounded-lg text-[12px]" style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}>저축 시작</button>
+          <button className="px-3 py-1.5 text-white rounded-lg text-[12px]" style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}>저축 시작</button>
           <button className="px-3 py-1.5 border border-[#DDD] text-[#666] rounded-lg text-[12px]">나중에</button>
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function SavingsPage() {
       <div className="flex gap-3 flex-1 min-h-0">
 
         {/* 왼쪽: 비상금 카드 */}
-        <div className="bg-white rounded-xl border border-[#E8D5C0] p-5 flex flex-col justify-between w-72 shrink-0">
+        <div className="bg-white rounded-xl border border-[var(--app-border)] p-5 flex flex-col justify-between w-72 shrink-0">
           {/* 헤더 */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -239,13 +239,13 @@ export default function SavingsPage() {
 
           {/* 하단 정보 */}
           <div className="mt-4 flex gap-3">
-            <div className="flex-1 bg-[#F9F0E4] rounded-lg p-3 text-center">
+            <div className="flex-1 bg-[var(--app-bg-secondary)] rounded-lg p-3 text-center">
               <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>
                 {pct}%
               </div>
               <div className="text-[11px] text-[#999] mt-0.5">달성률</div>
             </div>
-            <div className="flex-1 bg-[#F9F0E4] rounded-lg p-3 text-center">
+            <div className="flex-1 bg-[var(--app-bg-secondary)] rounded-lg p-3 text-center">
               <div className="text-[18px] text-[#222]" style={{ fontWeight: 700 }}>
                 {monthsLeft}개월
               </div>
@@ -255,10 +255,10 @@ export default function SavingsPage() {
         </div>
 
         {/* 오른쪽: 캐릭터 + 말풍선 */}
-        <div className="bg-white rounded-xl border border-[#E8D5C0] flex-1 flex flex-col min-h-0 overflow-hidden relative">
+        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col min-h-0 overflow-hidden relative">
           {/* 상단 타이틀 */}
           <div className="flex items-center gap-2 px-5 pt-4 pb-2 shrink-0">
-            <AlertTriangle className="w-4 h-4 text-[#E17055]" />
+            <AlertTriangle className="w-4 h-4 text-[var(--app-warning)]" />
             <h3 className="text-[14px] text-[#222]" style={{ fontWeight: 600 }}>
               {pet.name}가 알려주는 질병 예방 가이드
             </h3>
@@ -267,7 +267,7 @@ export default function SavingsPage() {
 
           {/* 캐릭터 + 말풍선 영역 */}
           <div className="flex-1 relative flex items-end px-5 pb-5 min-h-0">
-            
+
             {/* 배경 그라데이션 */}
             <div
               className="absolute inset-0 rounded-b-xl"
@@ -383,7 +383,7 @@ export default function SavingsPage() {
                     {stage.stage}
                   </span>
                   <span className="text-[10px] text-[#555]">{stage.diseases[0].name}</span>
-                  <span className="text-[10px] text-[#FF6B6B] ml-auto" style={{ fontWeight: 500 }}>
+                  <span className="text-[10px] text-[var(--app-danger)] ml-auto" style={{ fontWeight: 500 }}>
                     {stage.diseases[0].cost}
                   </span>
                 </div>
@@ -469,7 +469,7 @@ export default function SavingsPage() {
                       {si === currentStageIdx && (
                         <span
                           className="ml-auto text-[10px] px-2 py-0.5 rounded-full text-white"
-                          style={{ background: "#FF6B6B", fontWeight: 600 }}
+                          style={{ background: "var(--app-danger)", fontWeight: 600 }}
                         >
                           현재 나이
                         </span>
@@ -493,7 +493,7 @@ export default function SavingsPage() {
                           </div>
                           <span
                             className="text-[13px]"
-                            style={{ color: "#FF6B6B", fontWeight: 600 }}
+                            style={{ color: "var(--app-danger)", fontWeight: 600 }}
                           >
                             {d.cost}
                           </span>
@@ -511,7 +511,7 @@ export default function SavingsPage() {
               >
                 <p className="text-[13px] text-[#444] leading-relaxed">
                   <span style={{ fontWeight: 700, color: pet.color }}>💡 저축 TIP</span><br />
-                  {suggestion.text} <span style={{ fontWeight: 600, color: "#FF6B6B" }}>{suggestion.disease}</span> 발생률이
+                  {suggestion.text} <span style={{ fontWeight: 600, color: "var(--app-danger)" }}>{suggestion.disease}</span> 발생률이
                   높아요. 예상 치료비 기준 <span style={{ fontWeight: 700 }}>{suggestion.amount}</span> 적립을 권장합니다.
                 </p>
                 <button

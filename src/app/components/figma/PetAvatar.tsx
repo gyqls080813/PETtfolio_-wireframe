@@ -69,8 +69,8 @@ export default function PetAvatar({
                         className="w-full h-full object-contain drop-shadow-sm"
                     />
                 ) : (
-                    <div className="w-full h-full bg-[#F5E6D0] rounded-2xl flex items-center justify-center">
-                        <span className="text-[#D4A574] text-xs font-bold">
+                    <div className="w-full h-full bg-[var(--app-primary-light)] rounded-2xl flex items-center justify-center">
+                        <span className="text-[var(--app-primary)] text-xs font-bold">
                             {pet.charAt(0).toUpperCase()}
                         </span>
                     </div>
@@ -82,7 +82,7 @@ export default function PetAvatar({
     // Default circular avatar
     return (
         <div
-            className={`${sizeClass} rounded-full overflow-hidden shrink-0 ${border ? "ring-2 ring-[#E8D5C0] ring-offset-1 ring-offset-[#FFF8EE]" : ""
+            className={`${sizeClass} rounded-full overflow-hidden shrink-0 ${border ? "ring-2 ring-[var(--app-border)] ring-offset-1 ring-offset-[var(--app-bg-main)]" : ""
                 } ${className}`}
         >
             {photoUrl ? (
@@ -92,8 +92,8 @@ export default function PetAvatar({
                     className="w-full h-full object-cover"
                 />
             ) : (
-                <div className="w-full h-full bg-[#F5E6D0] flex items-center justify-center">
-                    <span className="text-[#D4A574] text-xs font-bold">
+                <div className="w-full h-full bg-[var(--app-primary-light)] flex items-center justify-center">
+                    <span className="text-[var(--app-primary)] text-xs font-bold">
                         {pet.charAt(0).toUpperCase()}
                     </span>
                 </div>

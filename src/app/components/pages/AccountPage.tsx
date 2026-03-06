@@ -101,8 +101,8 @@ export default function AccountPage() {
           <div className="px-1 pt-1 mb-2 flex items-center gap-3">
             <img src={pomeImg} alt="pet" className="w-[48px] h-[48px] object-contain drop-shadow-md" />
             <div>
-              <h2 className="text-[20px] font-extrabold text-[#3D3229] mb-1 tracking-tight">내 페이 관리</h2>
-              <p className="text-[13px] text-[#B4A08A] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
+              <h2 className="text-[20px] font-extrabold text-[var(--app-text-main)] mb-1 tracking-tight">내 페이 관리</h2>
+              <p className="text-[13px] text-[var(--app-text-tertiary)] font-medium tracking-tight">목적에 맞게 잔액을 나누어 써보세요</p>
             </div>
           </div>
 
@@ -118,26 +118,26 @@ export default function AccountPage() {
           >
             {/* Shared Pay Card */}
             <div
-              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "shared" || selectedAccount === "all" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[#D4A574] lg:scale-[1.02] z-10" : "border border-[#E8D5C0] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[#E8D5C0]"}`}
+              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "shared" || selectedAccount === "all" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[var(--app-primary)] lg:scale-[1.02] z-10" : "border border-[var(--app-border)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[var(--app-border)]"}`}
               onClick={() => setSelectedAccount("shared")}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex flex-col">
-                  <span className="text-[12px] text-[#5C4A3A] font-semibold mb-0.5">초코네 가족</span>
-                  <span className="text-[13px] text-[#B4A08A] font-medium underline decoration-1 underline-offset-4 decoration-[#E8D5C0]">공동 페이 가상계좌 110-123-456789</span>
+                  <span className="text-[12px] text-[var(--app-text-secondary)] font-semibold mb-0.5">초코네 가족</span>
+                  <span className="text-[13px] text-[var(--app-text-tertiary)] font-medium underline decoration-1 underline-offset-4 decoration-[var(--app-border)]">공동 페이 가상계좌 110-123-456789</span>
                 </div>
               </div>
               <div className="flex items-end gap-1 mb-5">
-                <div className="text-[28px] text-[#3D3229] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>580,000</div>
-                <div className="text-[18px] text-[#3D3229] font-bold pb-0.5">원</div>
+                <div className="text-[28px] text-[var(--app-text-main)] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>580,000</div>
+                <div className="text-[18px] text-[var(--app-text-main)] font-bold pb-0.5">원</div>
               </div>
               <div className="flex gap-2.5">
-                <button className="flex-1 py-3 bg-[#F5E6D0] text-[#6B4F3A] rounded-[12px] text-[14px] font-bold hover:bg-[#E8D5C0] transition-colors">
+                <button className="flex-1 py-3 bg-[var(--app-primary-light)] text-[#6B4F3A] rounded-[12px] text-[14px] font-bold hover:bg-[var(--app-border)] transition-colors">
                   채우기
                 </button>
                 <button
                   className="flex-1 py-3 text-white rounded-[12px] text-[14px] font-bold hover:opacity-90 shadow-[0_2px_6px_rgba(245,158,11,0.3)] transition-all active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}
+                  style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}
                 >
                   보내기
                 </button>
@@ -146,26 +146,26 @@ export default function AccountPage() {
 
             {/* Emergency Pay Card */}
             <div
-              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "emergency" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[#D4A574] lg:scale-[1.02] z-10" : "border border-[#E8D5C0] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[#E8D5C0]"}`}
+              className={`snap-center shrink-0 w-[90vw] sm:w-[80vw] lg:w-auto bg-white rounded-[20px] p-5 cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedAccount === "emergency" ? "shadow-[0_8px_30px_rgba(245,158,11,0.15)] border-[1.5px] border-[var(--app-primary)] lg:scale-[1.02] z-10" : "border border-[var(--app-border)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)] hover:border-[var(--app-border)]"}`}
               onClick={() => setSelectedAccount("emergency")}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex flex-col">
-                  <span className="text-[12px] text-[#5C4A3A] font-semibold mb-0.5">예비 자금</span>
-                  <span className="text-[13px] text-[#B4A08A] font-medium underline decoration-1 underline-offset-4 decoration-[#E8D5C0]">비상금 페이 가상계좌 110-987-654321</span>
+                  <span className="text-[12px] text-[var(--app-text-secondary)] font-semibold mb-0.5">예비 자금</span>
+                  <span className="text-[13px] text-[var(--app-text-tertiary)] font-medium underline decoration-1 underline-offset-4 decoration-[var(--app-border)]">비상금 페이 가상계좌 110-987-654321</span>
                 </div>
               </div>
               <div className="flex items-end gap-1 mb-5">
-                <div className="text-[28px] text-[#3D3229] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>2,150,000</div>
-                <div className="text-[18px] text-[#3D3229] font-bold pb-0.5">원</div>
+                <div className="text-[28px] text-[var(--app-text-main)] tracking-tight" style={{ fontWeight: 800, lineHeight: 1, fontFamily: "'Nunito', sans-serif" }}>2,150,000</div>
+                <div className="text-[18px] text-[var(--app-text-main)] font-bold pb-0.5">원</div>
               </div>
               <div className="flex gap-2.5">
-                <button className="flex-1 py-3 bg-[#F5E6D0] text-[#6B4F3A] rounded-[12px] text-[14px] font-bold hover:bg-[#E8D5C0] transition-colors">
+                <button className="flex-1 py-3 bg-[var(--app-primary-light)] text-[#6B4F3A] rounded-[12px] text-[14px] font-bold hover:bg-[var(--app-border)] transition-colors">
                   채우기
                 </button>
                 <button
                   className="flex-1 py-3 text-white rounded-[12px] text-[14px] font-bold hover:opacity-90 shadow-[0_2px_6px_rgba(245,158,11,0.3)] transition-all active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}
+                  style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}
                 >
                   보내기
                 </button>
@@ -175,50 +175,50 @@ export default function AccountPage() {
 
           {/* Mobile Carousel Indicators */}
           <div className="flex lg:hidden justify-center gap-2 mb-2">
-            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "shared" || selectedAccount === "all" ? "bg-[#D4A574]" : "bg-[#E8D5C0]"}`} />
-            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "emergency" ? "bg-[#D4A574]" : "bg-[#E8D5C0]"}`} />
+            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "shared" || selectedAccount === "all" ? "bg-[var(--app-primary)]" : "bg-[var(--app-border)]"}`} />
+            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${selectedAccount === "emergency" ? "bg-[var(--app-primary)]" : "bg-[var(--app-border)]"}`} />
           </div>
         </div>
 
         {/* Right Column: Transaction History */}
         <div className="lg:col-span-7 relative flex flex-col h-[550px] lg:h-auto lg:min-h-[100%]">
-          <div className="lg:absolute lg:inset-0 bg-white rounded-2xl border border-[#E8D5C0] p-6 flex flex-col h-full">
+          <div className="lg:absolute lg:inset-0 bg-white rounded-2xl border border-[var(--app-border)] p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-1 -ml-2">
                 <button
                   onClick={() => setSelectedAccount("shared")}
                   disabled={selectedAccount === "shared"}
-                  className={`p-1 rounded-full transition-colors ${selectedAccount === "shared" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
+                  className={`p-1 rounded-full transition-colors ${selectedAccount === "shared" ? "opacity-30 cursor-not-allowed" : "hover:bg-[var(--app-bg-main)] active:bg-[var(--app-primary-light)]"}`}
                 >
-                  <ChevronLeft className="w-6 h-6 text-[#3D3229]" />
+                  <ChevronLeft className="w-6 h-6 text-[var(--app-text-main)]" />
                 </button>
 
-                <span className="text-[19px] text-[#3D3229] font-bold min-w-[85px] text-center select-none">
+                <span className="text-[19px] text-[var(--app-text-main)] font-bold min-w-[85px] text-center select-none">
                   {selectedAccount === "emergency" ? "비상금 페이" : "공동 페이"}
                 </span>
 
                 <button
                   onClick={() => setSelectedAccount("emergency")}
                   disabled={selectedAccount === "emergency"}
-                  className={`p-1 rounded-full transition-colors ${selectedAccount === "emergency" ? "opacity-30 cursor-not-allowed" : "hover:bg-[#FFF8EE] active:bg-[#F5E6D0]"}`}
+                  className={`p-1 rounded-full transition-colors ${selectedAccount === "emergency" ? "opacity-30 cursor-not-allowed" : "hover:bg-[var(--app-bg-main)] active:bg-[var(--app-primary-light)]"}`}
                 >
-                  <ChevronRight className="w-6 h-6 text-[#3D3229]" />
+                  <ChevronRight className="w-6 h-6 text-[var(--app-text-main)]" />
                 </button>
               </div>
 
-              <button className="flex items-center gap-1.5 text-[14px] text-[#B4A08A] font-medium hover:text-[#5C4A3A] transition-colors">
+              <button className="flex items-center gap-1.5 text-[14px] text-[var(--app-text-tertiary)] font-medium hover:text-[var(--app-text-secondary)] transition-colors">
                 5분 전 <RefreshCcw className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
 
             <div className="space-y-1 overflow-y-auto pr-2 flex-1 min-h-0">
-              <div className="text-[14px] text-[#B4A08A] font-medium mb-3 pl-1">최근 내역</div>
+              <div className="text-[14px] text-[var(--app-text-tertiary)] font-medium mb-3 pl-1">최근 내역</div>
               {filteredHistory.length > 0 ? (
                 filteredHistory.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between py-3.5 px-2 hover:bg-[#FFF8EE] rounded-2xl transition-colors cursor-pointer group -mx-2">
+                  <div key={tx.id} className="flex items-center justify-between py-3.5 px-2 hover:bg-[var(--app-bg-main)] rounded-2xl transition-colors cursor-pointer group -mx-2">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                        <div className={`w-full h-full ${tx.type === "in" ? "bg-[#E8F5E4]" : "bg-[#FFF8EE]"} flex items-center justify-center`}>
+                        <div className={`w-full h-full ${tx.type === "in" ? "bg-[#E8F5E4]" : "bg-[var(--app-bg-main)]"} flex items-center justify-center`}>
                           <img
                             src={catStickerMap[tx.cat] || (tx.type === "in" ? stickerThumbsup : stickerSad)}
                             alt={tx.cat}
@@ -227,18 +227,18 @@ export default function AccountPage() {
                         </div>
                       </div>
                       <div>
-                        <div className="text-[16px] text-[#3D3229] font-semibold mb-0.5">{tx.desc}</div>
-                        <div className="flex items-center gap-1.5 text-[14px] text-[#B4A08A]">
+                        <div className="text-[16px] text-[var(--app-text-main)] font-semibold mb-0.5">{tx.desc}</div>
+                        <div className="flex items-center gap-1.5 text-[14px] text-[var(--app-text-tertiary)]">
                           <span>{tx.date}</span>
                           <span>12:00</span>
                         </div>
                       </div>
                     </div>
                     <div className="text-right flex flex-col items-end justify-center">
-                      <span className={`text-[16px] font-bold ${tx.type === "in" ? "text-[#A8C5A0]" : "text-[#3D3229]"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
+                      <span className={`text-[16px] font-bold ${tx.type === "in" ? "text-[var(--app-success)]" : "text-[var(--app-text-main)]"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
                         {tx.type === "out" ? tx.amount.replace('-', '') : tx.amount.replace('+', '')} 원
                       </span>
-                      <span className="text-[14px] text-[#B4A08A] mt-0.5">잔액 0 원</span>
+                      <span className="text-[14px] text-[var(--app-text-tertiary)] mt-0.5">잔액 0 원</span>
                     </div>
                   </div>
                 ))

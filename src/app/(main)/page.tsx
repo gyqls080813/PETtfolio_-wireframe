@@ -38,21 +38,21 @@ export default function HomePage() {
             <div className="flex gap-2">
                 <div
                     onClick={() => setSelectedPet("전체")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "전체" ? "bg-gradient-to-r from-[#D4A574] to-[#C4956A] text-white shadow-md" : "bg-[#FFFDF8] border border-[#E8D5C0] text-[#8B7355] hover:border-[#D4A574]/40"}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "전체" ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-md" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
                     style={selectedPet === "전체" ? { boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)" } : {}}
                 >
                     <span className="text-[13px]" style={{ fontWeight: selectedPet === "전체" ? 600 : 500 }}>전체</span>
                 </div>
                 <div
                     onClick={() => setSelectedPet("초코")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "초코" ? "bg-[#F5E6D0] border border-[#D4A574]/50 text-[#6B4F3A]" : "bg-[#FFFDF8] border border-[#E8D5C0] text-[#8B7355] hover:border-[#D4A574]/40"}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "초코" ? "bg-[var(--app-primary-light)] border border-[var(--app-primary)]/50 text-[#6B4F3A]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
                 >
                     <PetAvatar pet="choco" size="xs" border={false} />
                     <span className="text-[13px]" style={{ fontWeight: selectedPet === "초코" ? 600 : 500 }}>초코</span>
                 </div>
                 <div
                     onClick={() => setSelectedPet("나비")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "나비" ? "bg-[#E8DFD0] border border-[#C4A684]/50 text-[#5C4A3A]" : "bg-[#FFFDF8] border border-[#E8D5C0] text-[#8B7355] hover:border-[#C4A684]/40"}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "나비" ? "bg-[#E8DFD0] border border-[#C4A684]/50 text-[var(--app-text-secondary)]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[#C4A684]/40"}`}
                 >
                     <PetAvatar pet="nabi" size="xs" border={false} />
                     <span className="text-[13px]" style={{ fontWeight: selectedPet === "나비" ? 600 : 500 }}>나비</span>
@@ -62,10 +62,10 @@ export default function HomePage() {
             {/* Main Content Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
                 {/* Left Column: Pay Overview */}
-                <div className="bg-[#F9F0E4] rounded-3xl border border-[#E8D5C0] p-4 flex flex-col h-full">
+                <div className="bg-[var(--app-bg-secondary)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col h-full">
                     <div
                         className="rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between mb-4 flex-none"
-                        style={{ background: "linear-gradient(135deg, #D4A574, #C4956A, #B8865A)" }}
+                        style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark), #B8865A)" }}
                     >
                         <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16" />
                         <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full blur-2xl -ml-10 -mb-10" />
@@ -109,42 +109,42 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex items-center gap-1.5 mb-3 px-1">
-                        <span className="text-[13px] text-[#5C4A3A]" style={{ fontWeight: 600 }}>연결된 계좌</span>
+                        <span className="text-[13px] text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>연결된 계좌</span>
                     </div>
 
                     <div className="flex-1 flex flex-col gap-2">
-                        <div className="bg-[#FFFDF8] rounded-2xl border border-[#E8D5C0] p-4 cursor-pointer hover:border-[#A8C5A0]/40 transition-colors flex items-center justify-between group flex-1" onClick={() => router.push("/accounts")}>
+                        <div className="bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)] p-4 cursor-pointer hover:border-[var(--app-success)]/40 transition-colors flex items-center justify-between group flex-1" onClick={() => router.push("/accounts")}>
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#A8C5A0]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <PiggyBank className="w-5 h-5 text-[#A8C5A0]" strokeWidth={1.5} />
+                                <div className="w-10 h-10 rounded-full bg-[var(--app-success)]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <PiggyBank className="w-5 h-5 text-[var(--app-success)]" strokeWidth={1.5} />
                                 </div>
                                 <div>
-                                    <div className="text-[13px] text-[#B4A08A] mb-0.5">비상금 계좌</div>
-                                    <div className="text-[18px] text-[#3D3229]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>₩ 2,150,000</div>
+                                    <div className="text-[13px] text-[var(--app-text-tertiary)] mb-0.5">비상금 계좌</div>
+                                    <div className="text-[18px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>₩ 2,150,000</div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end justify-between h-full py-1">
                                 <ChevronRight className="w-4 h-4 text-[#D9C8B4]" />
                                 <div className="flex items-center gap-0.5 mt-auto">
-                                    <ArrowDownRight className="w-3 h-3 text-[#A8C5A0]" />
-                                    <span className="text-[11px] text-[#A8C5A0] font-medium">안전 수준</span>
+                                    <ArrowDownRight className="w-3 h-3 text-[var(--app-success)]" />
+                                    <span className="text-[11px] text-[var(--app-success)] font-medium">안전 수준</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-[#FFFDF8] rounded-2xl border border-[#E8D5C0] p-4 cursor-pointer hover:border-[#D4A574]/40 transition-colors flex items-center justify-between group flex-1" onClick={() => router.push("/accounts")}>
+                        <div className="bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)] p-4 cursor-pointer hover:border-[var(--app-primary)]/40 transition-colors flex items-center justify-between group flex-1" onClick={() => router.push("/accounts")}>
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#F5E6D0] flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <Wallet className="w-5 h-5 text-[#D4A574]" strokeWidth={1.5} />
+                                <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <Wallet className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
                                 </div>
                                 <div>
-                                    <div className="text-[13px] text-[#B4A08A] mb-0.5">공동 관리 계좌</div>
-                                    <div className="text-[18px] text-[#3D3229]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>₩ 580,000</div>
+                                    <div className="text-[13px] text-[var(--app-text-tertiary)] mb-0.5">공동 관리 계좌</div>
+                                    <div className="text-[18px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>₩ 580,000</div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end justify-between h-full py-1">
                                 <ChevronRight className="w-4 h-4 text-[#D9C8B4]" />
-                                <div className="text-[11px] text-[#B4A08A] mt-auto">이번달 입금: ₩200,000</div>
+                                <div className="text-[11px] text-[var(--app-text-tertiary)] mt-auto">이번달 입금: ₩200,000</div>
                             </div>
                         </div>
                     </div>
@@ -152,22 +152,22 @@ export default function HomePage() {
 
                 {/* Right Column */}
                 <div className="flex flex-col gap-3 h-full">
-                    <div className="bg-[#FFFDF8] rounded-3xl border border-[#E8D5C0] p-4 flex-none">
+                    <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex-none">
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-[14px] text-[#3D3229]" style={{ fontWeight: 600 }}>
-                                <Calendar className="w-3.5 h-3.5 inline mr-1.5 text-[#D4A574]" strokeWidth={1.5} />
+                            <h3 className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 600 }}>
+                                <Calendar className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]" strokeWidth={1.5} />
                                 예정된 지출
                             </h3>
-                            <button className="text-[11px] text-[#D4A574]" onClick={() => router.push("/supplies")}>더보기</button>
+                            <button className="text-[11px] text-[var(--app-primary)]" onClick={() => router.push("/supplies")}>더보기</button>
                         </div>
                         <div className="space-y-2">
                             {upcomingExpenses.map((exp, i) => (
-                                <div key={i} className="flex items-center justify-between p-2.5 bg-[#FFF8EE] rounded-2xl">
+                                <div key={i} className="flex items-center justify-between p-2.5 bg-[var(--app-bg-main)] rounded-2xl">
                                     <div className="flex items-center gap-2.5">
                                         <PetAvatar pet={exp.petId} size="xs" border={true} />
                                         <div>
-                                            <div className="text-[13px] text-[#5C4A3A]">{exp.label}</div>
-                                            <div className="text-[10px] text-[#B4A08A]">{exp.pet} · {exp.date}</div>
+                                            <div className="text-[13px] text-[var(--app-text-secondary)]">{exp.label}</div>
+                                            <div className="text-[10px] text-[var(--app-text-tertiary)]">{exp.pet} · {exp.date}</div>
                                         </div>
                                     </div>
                                     <span className="text-[13px] text-[#E07C6A]" style={{ fontWeight: 500, fontFamily: "'Nunito', sans-serif" }}>-₩{exp.amount}</span>
@@ -176,14 +176,14 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    <div className="bg-[#FFFDF8] rounded-3xl border border-[#E8D5C0] p-4 flex flex-col flex-1">
-                        <h3 className="text-[14px] text-[#3D3229] mb-3" style={{ fontWeight: 600 }}>
-                            <Target className="w-3.5 h-3.5 inline mr-1.5 text-[#D4A574]" strokeWidth={1.5} />
+                    <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col flex-1">
+                        <h3 className="text-[14px] text-[var(--app-text-main)] mb-3" style={{ fontWeight: 600 }}>
+                            <Target className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]" strokeWidth={1.5} />
                             개체별 추천 목표 달성률
                         </h3>
                         <div className="flex items-center justify-center gap-4 flex-1">
                             {[
-                                { pet: "초코", pct: 64, color: "#D4A574", trackColor: "#F5EDDF", goal: "5,000,000", current: "3,200,000", petId: "choco", img: pomeImg },
+                                { pet: "초코", pct: 64, color: "var(--app-primary)", trackColor: "#F5EDDF", goal: "5,000,000", current: "3,200,000", petId: "choco", img: pomeImg },
                                 { pet: "나비", pct: 45, color: "#E8C5A0", trackColor: "#F5EDDF", goal: "3,000,000", current: "1,350,000", petId: "nabi", img: catImg },
                             ].filter(item => selectedPet === "전체" || item.pet === selectedPet).map((item, i) => {
                                 const radius = 58;
@@ -191,29 +191,29 @@ export default function HomePage() {
                                 const strokeDashoffset = circumference - (item.pct / 100) * circumference;
                                 const isHigh = item.pct > 50;
                                 return (
-                                    <div key={i} className="flex flex-col items-center bg-[#FFF8EE] rounded-2xl p-3 flex-1 border border-[#E8D5C0]/50 hover:shadow-md transition-shadow">
+                                    <div key={i} className="flex flex-col items-center bg-[var(--app-bg-main)] rounded-2xl p-3 flex-1 border border-[var(--app-border)]/50 hover:shadow-md transition-shadow">
                                         <div className="relative w-[140px] h-[140px] flex items-center justify-center">
                                             <svg className="absolute inset-0 -rotate-90" viewBox="0 0 140 140">
                                                 <circle cx="70" cy="70" r={radius} fill="none" stroke={item.trackColor} strokeWidth="8" />
-                                                <circle cx="70" cy="70" r={radius} fill="none" stroke={isHigh ? "#A8C5A0" : item.color} strokeWidth="8" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} style={{ transition: "stroke-dashoffset 1s ease-in-out" }} />
+                                                <circle cx="70" cy="70" r={radius} fill="none" stroke={isHigh ? "var(--app-success)" : item.color} strokeWidth="8" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} style={{ transition: "stroke-dashoffset 1s ease-in-out" }} />
                                             </svg>
                                             <div className="relative z-10 w-[80px] h-[80px]">
                                                 <img src={typeof item.img === "string" ? item.img : item.img.src} alt={item.pet} className="w-full h-full object-contain drop-shadow-md" />
                                             </div>
-                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] z-20" style={{ fontWeight: 700, background: isHigh ? "#A8C5A0" : item.color }}>
+                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-white text-[11px] z-20" style={{ fontWeight: 700, background: isHigh ? "var(--app-success)" : item.color }}>
                                                 {item.pct}%
                                             </div>
                                         </div>
-                                        <span className="text-[15px] text-[#3D3229] mt-2" style={{ fontWeight: 700 }}>{item.pet}</span>
-                                        <span className="text-[11px] text-[#B4A08A] mb-2">{isHigh ? "잘하고 있어요! 🎉" : "조금 더 힘내요 💪"}</span>
-                                        <div className="w-full bg-[#FFFDF8] rounded-xl p-2 border border-[#E8D5C0]/30 space-y-1">
+                                        <span className="text-[15px] text-[var(--app-text-main)] mt-2" style={{ fontWeight: 700 }}>{item.pet}</span>
+                                        <span className="text-[11px] text-[var(--app-text-tertiary)] mb-2">{isHigh ? "잘하고 있어요! 🎉" : "조금 더 힘내요 💪"}</span>
+                                        <div className="w-full bg-[var(--app-bg-main)] rounded-xl p-2 border border-[var(--app-border)]/30 space-y-1">
                                             <div className="flex justify-between text-[11px]">
-                                                <span className="text-[#B4A08A]">모인 금액</span>
-                                                <span className="text-[#3D3229]" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>₩{item.current}</span>
+                                                <span className="text-[var(--app-text-tertiary)]">모인 금액</span>
+                                                <span className="text-[var(--app-text-main)]" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>₩{item.current}</span>
                                             </div>
                                             <div className="flex justify-between text-[11px]">
-                                                <span className="text-[#B4A08A]">목표</span>
-                                                <span className="text-[#B4A08A]" style={{ fontFamily: "'Nunito', sans-serif" }}>₩{item.goal}</span>
+                                                <span className="text-[var(--app-text-tertiary)]">목표</span>
+                                                <span className="text-[var(--app-text-tertiary)]" style={{ fontFamily: "'Nunito', sans-serif" }}>₩{item.goal}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -228,7 +228,7 @@ export default function HomePage() {
             <button
                 onClick={() => setIsQrModalOpen(true)}
                 className="fixed bottom-6 left-1/2 -translate-x-1/2 lg:bottom-10 lg:left-[280px] lg:translate-x-0 w-14 h-14 text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group shadow-lg"
-                style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", boxShadow: "0 8px 20px rgba(212,165,116,0.4)" }}
+                style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", boxShadow: "0 8px 20px rgba(212,165,116,0.4)" }}
             >
                 <QrCode className="w-6 h-6" strokeWidth={1.5} />
             </button>
@@ -252,14 +252,14 @@ export default function HomePage() {
                         <div className="px-6 pb-6 flex flex-col items-stretch">
                             <div className="bg-[#FFFDF5] rounded-[20px] p-4 flex items-center justify-between mb-8 border border-[#F3EAD5]">
                                 <div className="flex items-center gap-3">
-                                    <Wallet className="w-5 h-5 text-[#D4A574]" strokeWidth={2} />
+                                    <Wallet className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={2} />
                                     <div className="flex flex-col">
                                         <span className="text-[12px] text-[#9CA3AF]" style={{ fontWeight: 500 }}>공동 관리 지갑</span>
                                         <span className="text-[16px] text-[#1F2937] leading-tight mt-0.5" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>1,250,000원</span>
                                     </div>
                                 </div>
                                 <div className="bg-[#FDF2E3] px-3 py-1.5 rounded-full">
-                                    <span className="text-[12px] text-[#D4A574]" style={{ fontWeight: 600 }}>결제용</span>
+                                    <span className="text-[12px] text-[var(--app-primary)]" style={{ fontWeight: 600 }}>결제용</span>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center mb-6">

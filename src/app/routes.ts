@@ -9,6 +9,7 @@ import AccountPage from "./components/pages/AccountPage";
 import SavingsPage from "./components/pages/SavingsPage";
 import ReportPage from "./components/pages/ReportPage";
 import SuppliesPage from "./components/pages/SuppliesPage";
+import HealthPage from "./components/pages/HealthPage";
 import MyPage from "./components/pages/MyPage";
 
 export const router = createBrowserRouter([
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
       { path: "savings", Component: SavingsPage },
       { path: "reports", Component: ReportPage },
       { path: "supplies", Component: SuppliesPage },
+      { path: "health", Component: HealthPage },
       { path: "mypage", Component: MyPage },
     ],
   },

@@ -6,43 +6,43 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#FFF8EE] flex items-center justify-center p-4" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--app-bg-main)] flex items-center justify-center p-4" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
       <div className="w-full max-w-[400px]">
         {/* Logo + Character */}
         <div className="flex flex-col items-center mb-6">
           <PetCharacter type="dog" size="lg" mood="happy" />
-          <h1 className="text-[24px] text-[#3D3229] mt-2" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>pawwallet</h1>
-          <p className="text-[14px] text-[#8B7355] mt-1">반려동물 금융 관리 서비스</p>
+          <h1 className="text-[24px] text-[var(--app-text-main)] mt-2" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>Petfolio</h1>
+          <p className="text-[14px] text-[var(--app-text-sub)] mt-1">반려동물 금융 관리 서비스</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-[#FFFDF8] rounded-3xl border border-[#E8D5C0] p-6 space-y-4 shadow-sm" style={{ boxShadow: "0 4px 20px rgba(180, 150, 110, 0.08)" }}>
+        <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-6 space-y-4 shadow-sm" style={{ boxShadow: "0 4px 20px rgba(180, 150, 110, 0.08)" }}>
           <div>
-            <label className="text-[13px] text-[#8B7355] mb-1.5 block">이메일</label>
-            <div className="flex items-center gap-2 border border-[#E8D5C0] rounded-2xl px-3 py-2.5 bg-[#FFF8EE]">
+            <label className="text-[13px] text-[var(--app-text-sub)] mb-1.5 block">이메일</label>
+            <div className="flex items-center gap-2 border border-[var(--app-border)] rounded-2xl px-3 py-2.5 bg-[var(--app-bg-main)]">
               <Mail className="w-4 h-4 text-[#C4A684]" />
               <input
                 type="email"
                 placeholder="example@email.com"
-                className="flex-1 bg-transparent outline-none text-[14px] text-[#3D3229] placeholder:text-[#C4B8A4]"
+                className="flex-1 bg-transparent outline-none text-[14px] text-[var(--app-text-main)] placeholder:text-[#C4B8A4]"
               />
             </div>
           </div>
           <div>
-            <label className="text-[13px] text-[#8B7355] mb-1.5 block">비밀번호</label>
-            <div className="flex items-center gap-2 border border-[#E8D5C0] rounded-2xl px-3 py-2.5 bg-[#FFF8EE]">
+            <label className="text-[13px] text-[var(--app-text-sub)] mb-1.5 block">비밀번호</label>
+            <div className="flex items-center gap-2 border border-[var(--app-border)] rounded-2xl px-3 py-2.5 bg-[var(--app-bg-main)]">
               <Lock className="w-4 h-4 text-[#C4A684]" />
               <input
                 type="password"
                 placeholder="비밀번호 입력"
-                className="flex-1 bg-transparent outline-none text-[14px] text-[#3D3229] placeholder:text-[#C4B8A4]"
+                className="flex-1 bg-transparent outline-none text-[14px] text-[var(--app-text-main)] placeholder:text-[#C4B8A4]"
               />
             </div>
           </div>
 
           <button
             className="w-full py-3 text-white rounded-2xl text-[15px] font-semibold hover:opacity-90 transition-opacity active:scale-[0.99]"
-            style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)" }}
+            style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}
             onClick={() => navigate("/")}
           >
             로그인
@@ -50,15 +50,15 @@ export default function LoginPage() {
 
           <div className="relative py-3">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E8D5C0]" />
+              <div className="w-full border-t border-[var(--app-border)]" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-[#FFFDF8] px-3 text-[12px] text-[#B4A08A]">또는</span>
+              <span className="bg-[var(--app-bg-main)] px-3 text-[12px] text-[var(--app-text-tertiary)]">또는</span>
             </div>
           </div>
 
           <button
-            className="w-full py-3 border border-[#E8D5C0] rounded-2xl text-[14px] text-[#5C4A3A] flex items-center justify-center gap-2 hover:bg-[#FFF8EE] transition-colors"
+            className="w-full py-3 border border-[var(--app-border)] rounded-2xl text-[14px] text-[var(--app-text-secondary)] flex items-center justify-center gap-2 hover:bg-[var(--app-bg-main)] transition-colors"
             onClick={() => navigate("/")}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -72,9 +72,9 @@ export default function LoginPage() {
         </div>
 
         <div className="flex items-center justify-center gap-1 mt-5">
-          <span className="text-[13px] text-[#8B7355]">계정이 없으신가요?</span>
+          <span className="text-[13px] text-[var(--app-text-sub)]">계정이 없으신가요?</span>
           <button
-            className="text-[13px] text-[#D4A574] hover:underline"
+            className="text-[13px] text-[var(--app-primary)] hover:underline"
             onClick={() => navigate("/register")}
           >
             회원가입

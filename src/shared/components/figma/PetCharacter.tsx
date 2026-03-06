@@ -38,12 +38,12 @@ export default function PetCharacter({
                 {/* Body */}
                 <ellipse cx="100" cy="115" rx="65" ry="60" fill="#E8C5A0" />
                 {/* Head */}
-                <circle cx="100" cy="85" r="55" fill="#D4A574" />
+                <circle cx="100" cy="85" r="55" fill="var(--app-primary)" />
                 {/* Inner face */}
-                <circle cx="100" cy="90" r="42" fill="#F5E6D0" />
+                <circle cx="100" cy="90" r="42" fill="var(--app-primary-light)" />
                 {/* Floppy ears */}
-                <ellipse cx="52" cy="60" rx="20" ry="32" fill="#C4956A" transform="rotate(-15 52 60)" />
-                <ellipse cx="148" cy="60" rx="20" ry="32" fill="#C4956A" transform="rotate(15 148 60)" />
+                <ellipse cx="52" cy="60" rx="20" ry="32" fill="var(--app-primary-dark)" transform="rotate(-15 52 60)" />
+                <ellipse cx="148" cy="60" rx="20" ry="32" fill="var(--app-primary-dark)" transform="rotate(15 148 60)" />
                 {/* Inner ears */}
                 <ellipse cx="54" cy="62" rx="12" ry="20" fill="#E8C5A0" transform="rotate(-15 54 62)" />
                 <ellipse cx="146" cy="62" rx="12" ry="20" fill="#E8C5A0" transform="rotate(15 146 62)" />
@@ -55,15 +55,15 @@ export default function PetCharacter({
                     </>
                 ) : mood === "wink" ? (
                     <>
-                        <circle cx="82" cy="82" r="5" fill="#3D3229" />
+                        <circle cx="82" cy="82" r="5" fill="var(--app-text-main)" />
                         <circle cx="80" cy="80" r="2" fill="white" />
                         <path d="M112 84 Q118 80 124 84" stroke="#5C4033" strokeWidth="3" strokeLinecap="round" fill="none" />
                     </>
                 ) : (
                     <>
-                        <circle cx="82" cy="82" r="5" fill="#3D3229" />
+                        <circle cx="82" cy="82" r="5" fill="var(--app-text-main)" />
                         <circle cx="80" cy="80" r="2" fill="white" />
-                        <circle cx="118" cy="82" r="5" fill="#3D3229" />
+                        <circle cx="118" cy="82" r="5" fill="var(--app-text-main)" />
                         <circle cx="116" cy="80" r="2" fill="white" />
                     </>
                 )}
@@ -83,15 +83,15 @@ export default function PetCharacter({
                 <circle cx="70" cy="96" r="8" fill="#E8A0A0" opacity="0.35" />
                 <circle cx="130" cy="96" r="8" fill="#E8A0A0" opacity="0.35" />
                 {/* Tail */}
-                <path d="M155 130 Q175 100 165 85" stroke="#C4956A" strokeWidth="8" strokeLinecap="round" fill="none" />
+                <path d="M155 130 Q175 100 165 85" stroke="var(--app-primary-dark)" strokeWidth="8" strokeLinecap="round" fill="none" />
                 {/* Paws */}
-                <ellipse cx="75" cy="160" rx="15" ry="10" fill="#D4A574" />
-                <ellipse cx="125" cy="160" rx="15" ry="10" fill="#D4A574" />
+                <ellipse cx="75" cy="160" rx="15" ry="10" fill="var(--app-primary)" />
+                <ellipse cx="125" cy="160" rx="15" ry="10" fill="var(--app-primary)" />
                 {/* Paw pads */}
-                <circle cx="71" cy="160" r="3.5" fill="#C4956A" />
-                <circle cx="79" cy="160" r="3.5" fill="#C4956A" />
-                <circle cx="121" cy="160" r="3.5" fill="#C4956A" />
-                <circle cx="129" cy="160" r="3.5" fill="#C4956A" />
+                <circle cx="71" cy="160" r="3.5" fill="var(--app-primary-dark)" />
+                <circle cx="79" cy="160" r="3.5" fill="var(--app-primary-dark)" />
+                <circle cx="121" cy="160" r="3.5" fill="var(--app-primary-dark)" />
+                <circle cx="129" cy="160" r="3.5" fill="var(--app-primary-dark)" />
             </svg>
         );
     }
@@ -107,7 +107,7 @@ export default function PetCharacter({
             className={className}
         >
             {/* Body */}
-            <ellipse cx="100" cy="118" rx="58" ry="55" fill="#F5E6D0" />
+            <ellipse cx="100" cy="118" rx="58" ry="55" fill="var(--app-primary-light)" />
             {/* Head */}
             <circle cx="100" cy="88" r="52" fill="#E8C5A0" />
             {/* Inner face */}
@@ -126,15 +126,15 @@ export default function PetCharacter({
                 </>
             ) : mood === "wink" ? (
                 <>
-                    <ellipse cx="84" cy="84" rx="5" ry="6" fill="#3D3229" />
+                    <ellipse cx="84" cy="84" rx="5" ry="6" fill="var(--app-text-main)" />
                     <circle cx="82" cy="82" r="2" fill="white" />
                     <path d="M112 86 Q118 82 124 86" stroke="#5C4033" strokeWidth="3" strokeLinecap="round" fill="none" />
                 </>
             ) : (
                 <>
-                    <ellipse cx="82" cy="84" rx="5" ry="6" fill="#3D3229" />
+                    <ellipse cx="82" cy="84" rx="5" ry="6" fill="var(--app-text-main)" />
                     <circle cx="80" cy="82" r="2" fill="white" />
-                    <ellipse cx="118" cy="84" rx="5" ry="6" fill="#3D3229" />
+                    <ellipse cx="118" cy="84" rx="5" ry="6" fill="var(--app-text-main)" />
                     <circle cx="116" cy="82" r="2" fill="white" />
                 </>
             )}
@@ -164,10 +164,10 @@ export default function PetCharacter({
             <ellipse cx="78" cy="162" rx="14" ry="9" fill="#E8C5A0" />
             <ellipse cx="122" cy="162" rx="14" ry="9" fill="#E8C5A0" />
             {/* Paw pads */}
-            <circle cx="74" cy="162" r="3" fill="#D4A574" />
-            <circle cx="82" cy="162" r="3" fill="#D4A574" />
-            <circle cx="118" cy="162" r="3" fill="#D4A574" />
-            <circle cx="126" cy="162" r="3" fill="#D4A574" />
+            <circle cx="74" cy="162" r="3" fill="var(--app-primary)" />
+            <circle cx="82" cy="162" r="3" fill="var(--app-primary)" />
+            <circle cx="118" cy="162" r="3" fill="var(--app-primary)" />
+            <circle cx="126" cy="162" r="3" fill="var(--app-primary)" />
         </svg>
     );
 }

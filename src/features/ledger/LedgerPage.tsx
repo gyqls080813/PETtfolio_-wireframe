@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion } from "motion/react";
 import {
   ChevronLeft,
@@ -35,14 +35,14 @@ import stickerSnack from "../../assets/pome_snack.png";
 import stickerToys from "../../assets/pome_toys.png";
 
 const categories = [
-  { name: "사료", color: "#D4A574" },
-  { name: "간식", color: "#E17055" },
-  { name: "위생/소모품", color: "#A8C5A0" },
+  { name: "사료", color: "var(--app-primary)" },
+  { name: "간식", color: "var(--app-warning)" },
+  { name: "위생/소모품", color: "var(--app-success)" },
   { name: "병원/의료", color: "#EF4444" },
   { name: "약/영양제", color: "#FDCB6E" },
   { name: "미용", color: "#FD79A8" },
   { name: "용품", color: "#74B9FF" },
-  { name: "돌봄/서비스", color: "#C4956A" },
+  { name: "돌봄/서비스", color: "var(--app-primary-dark)" },
   { name: "보험/저축", color: "#8B5CF6" },
   { name: "기타", color: "#B2BEC3" },
 ];
@@ -75,9 +75,9 @@ export default function LedgerPage() {
   const constraintsRef = useRef<HTMLDivElement>(null);
 
   const topCategories = [
-    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "#D4A574", sizeText: 14, img: stickerEating },
+    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "var(--app-primary)", sizeText: 14, img: stickerEating },
     { id: 2, name: "병원/의료", size: 95, top: "52%", left: "62%", color: "#EF4444", sizeText: 12, img: stickerHospital },
-    { id: 3, name: "간식", size: 85, top: "75%", left: "38%", color: "#E17055", sizeText: 12, img: stickerSnack },
+    { id: 3, name: "간식", size: 85, top: "75%", left: "38%", color: "var(--app-warning)", sizeText: 12, img: stickerSnack },
     { id: 4, name: "용품", size: 80, top: "60%", left: "15%", color: "#74B9FF", sizeText: 11, img: stickerToys },
     { id: 5, name: "미용", size: 75, top: "22%", left: "68%", color: "#FD79A8", sizeText: 11, img: stickerGrooming },
   ];
@@ -121,21 +121,21 @@ export default function LedgerPage() {
         <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full relative">
           {/* Header */}
           <div className="px-5 pt-4">
-            <h2 className="text-[18px] font-bold text-[#3D3229] flex items-center gap-1.5 mb-3">
+            <h2 className="text-[18px] font-bold text-[var(--app-text-main)] flex items-center gap-1.5 mb-3">
               12월 내 소비
-              <ChevronDown className="w-5 h-5 text-[#B4A08A]" strokeWidth={1.5} />
+              <ChevronDown className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
             </h2>
 
             {/* Summary */}
-            <div className="py-3 border-b border-[#E8D5C0] flex justify-between items-center">
+            <div className="py-3 border-b border-[var(--app-border)] flex justify-between items-center">
               <div>
                 <div className="flex items-center gap-4 mb-1">
                   <span className="text-[13px] text-[#8B7355] w-8">소비</span>
-                  <span className="text-[17px] font-bold text-[#3D3229]" style={{ fontFamily: "'Nunito', sans-serif" }}>1,625,560 원</span>
+                  <span className="text-[17px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>1,625,560 원</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-[13px] text-[#8B7355] w-8">저금</span>
-                  <span className="text-[17px] font-bold text-[#A8C5A0]" style={{ fontFamily: "'Nunito', sans-serif" }}>2,746,059 원</span>
+                  <span className="text-[17px] font-bold text-[var(--app-success)]" style={{ fontFamily: "'Nunito', sans-serif" }}>2,746,059 원</span>
                 </div>
               </div>
               <ChevronRight className="w-5 h-5 text-[#D9C8B4]" strokeWidth={1.5} />
@@ -146,7 +146,7 @@ export default function LedgerPage() {
           <div className="px-5 pb-4 pt-2 flex-1 flex flex-col">
             <div className="grid grid-cols-7 text-center mb-1">
               {["일", "월", "화", "수", "목", "금", "토"].map((d) => (
-                <div key={d} className="text-[13px] text-[#B4A08A] font-medium py-2">{d}</div>
+                <div key={d} className="text-[13px] text-[var(--app-text-tertiary)] font-medium py-2">{d}</div>
               ))}
             </div>
 
@@ -154,7 +154,7 @@ export default function LedgerPage() {
               {calendarDays.map((day, i) => (
                 <div
                   key={i}
-                  className={`min-h-[72px] flex flex-col items-center rounded-xl transition-colors relative pt-1 ${day ? "cursor-pointer hover:bg-[#F9F0E4]" : ""}`}
+                  className={`min-h-[72px] flex flex-col items-center rounded-xl transition-colors relative pt-1 ${day ? "cursor-pointer hover:bg-[var(--app-bg-secondary)]" : ""}`}
                   onClick={() => day && setSelectedDay(day)}
                 >
                   {day && (
@@ -171,7 +171,7 @@ export default function LedgerPage() {
 
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[13px] ${day === 31
                         ? "bg-[#F5E6D0] text-[#6B4F3A] font-bold"
-                        : "text-[#5C4A3A]"
+                        : "text-[var(--app-text-secondary)]"
                         }`}>
                         {day}
                       </div>
@@ -179,12 +179,12 @@ export default function LedgerPage() {
                       {/* Daily amounts */}
                       <div className="mt-0.5 space-y-[1px]">
                         {calData[day]?.exp && (
-                          <div className="text-[10px] text-[#B4A08A] font-medium leading-none">
+                          <div className="text-[10px] text-[var(--app-text-tertiary)] font-medium leading-none">
                             -{calData[day].exp.toLocaleString()}
                           </div>
                         )}
                         {calData[day]?.inc && (
-                          <div className="text-[10px] text-[#A8C5A0] font-medium leading-none">
+                          <div className="text-[10px] text-[var(--app-success)] font-medium leading-none">
                             +{calData[day].inc.toLocaleString()}
                           </div>
                         )}
@@ -204,7 +204,7 @@ export default function LedgerPage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
               >
-                <div className="flex justify-between items-center p-5 border-b border-[#E8D5C0]">
+                <div className="flex justify-between items-center p-5 border-b border-[var(--app-border)]">
                   <div className="flex items-center gap-3">
                     {/* 해당 날짜의 스티커가 있으면 크게 표시 */}
                     {calendarStickers[selectedDay as number] && (
@@ -215,17 +215,17 @@ export default function LedgerPage() {
                       />
                     )}
                     <div>
-                      <h3 className="text-[18px] font-bold text-[#3D3229]">
+                      <h3 className="text-[18px] font-bold text-[var(--app-text-main)]">
                         12월 {selectedDay}일 상세 내역
                       </h3>
                       {calendarStickers[selectedDay as number] && (
-                        <span className="text-[12px] text-[#B4A08A] mt-0.5 inline-block">
-                          오늘의 활동: <span className="text-[#D4A574] font-semibold">{calendarStickers[selectedDay as number].label}</span>
+                        <span className="text-[12px] text-[var(--app-text-tertiary)] mt-0.5 inline-block">
+                          오늘의 활동: <span className="text-[var(--app-primary)] font-semibold">{calendarStickers[selectedDay as number].label}</span>
                         </span>
                       )}
                     </div>
                   </div>
-                  <button onClick={() => setSelectedDay(null)} className="text-[#B4A08A] hover:text-[#5C4A3A]">
+                  <button onClick={() => setSelectedDay(null)} className="text-[var(--app-text-tertiary)] hover:text-[var(--app-text-secondary)]">
                     <X className="w-6 h-6" strokeWidth={1.5} />
                   </button>
                 </div>
@@ -241,65 +241,65 @@ export default function LedgerPage() {
                     </div>
                     {calData[selectedDay as number]?.exp ? (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center bg-[#FFF8EE] p-3 rounded-xl border border-[#E8D5C0]">
+                        <div className="flex justify-between items-center bg-[var(--app-bg-tertiary)] p-3 rounded-xl border border-[var(--app-border)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                               <img src={getImgSrc(stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
-                              <div className="text-[14px] font-bold text-[#3D3229]">지출</div>
-                              <div className="text-[12px] text-[#B4A08A]">오후 2:30</div>
+                              <div className="text-[14px] font-bold text-[var(--app-text-main)]">지출</div>
+                              <div className="text-[12px] text-[var(--app-text-tertiary)]">오후 2:30</div>
                             </div>
                           </div>
-                          <div className="text-[15px] font-bold text-[#3D3229]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                          <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
                             {calData[selectedDay as number]?.exp?.toLocaleString()}원
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <p className="text-[13px] text-[#B4A08A] text-center py-5 bg-[#FFF8EE] rounded-xl border border-[#E8D5C0] border-dashed">소비 내역이 없습니다.</p>
+                      <p className="text-[13px] text-[var(--app-text-tertiary)] text-center py-5 bg-[var(--app-bg-tertiary)] rounded-xl border border-[var(--app-border)] border-dashed">소비 내역이 없습니다.</p>
                     )}
                   </div>
 
                   {/* 저금 내역 */}
                   <div>
                     <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-[15px] font-bold text-[#A8C5A0]">저금 내역</h4>
-                      <span className="text-[14px] font-semibold text-[#A8C5A0]">
+                      <h4 className="text-[15px] font-bold text-[var(--app-success)]">저금 내역</h4>
+                      <span className="text-[14px] font-semibold text-[var(--app-success)]">
                         +{calData[selectedDay as number]?.inc?.toLocaleString() || 0}원
                       </span>
                     </div>
                     {calData[selectedDay as number]?.inc ? (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center bg-[#FFF8EE] p-3 rounded-xl border border-[#E8D5C0]">
+                        <div className="flex justify-between items-center bg-[var(--app-bg-tertiary)] p-3 rounded-xl border border-[var(--app-border)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                               <img src={getImgSrc(stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
-                              <div className="text-[14px] font-bold text-[#3D3229]">수입/저축</div>
-                              <div className="text-[12px] text-[#B4A08A]">오전 10:00</div>
+                              <div className="text-[14px] font-bold text-[var(--app-text-main)]">수입/저축</div>
+                              <div className="text-[12px] text-[var(--app-text-tertiary)]">오전 10:00</div>
                             </div>
                           </div>
-                          <div className="text-[15px] font-bold text-[#3D3229]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                          <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
                             {calData[selectedDay as number]?.inc?.toLocaleString()}원
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <p className="text-[13px] text-[#B4A08A] text-center py-5 bg-[#FFF8EE] rounded-xl border border-[#E8D5C0] border-dashed">저금 내역이 없습니다.</p>
+                      <p className="text-[13px] text-[var(--app-text-tertiary)] text-center py-5 bg-[var(--app-bg-tertiary)] rounded-xl border border-[var(--app-border)] border-dashed">저금 내역이 없습니다.</p>
                     )}
                   </div>
                 </div>
 
-                <div className="p-4 border-t border-[#E8D5C0] bg-[#FFF8EE] flex gap-3">
+                <div className="p-4 border-t border-[var(--app-border)] bg-[var(--app-bg-tertiary)] flex gap-3">
                   <button
                     onClick={() => {
                       setSelectedDay(null);
                       setShowAdd(true);
                     }}
                     className="flex-1 flex items-center justify-center gap-2 py-3.5 text-white rounded-xl font-bold text-[15px] hover:opacity-90 active:scale-[0.98] transition-all"
-                    style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
+                    style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
                   >
                     <Plus className="w-5 h-5" />
                     소비 내역 추가
@@ -320,17 +320,14 @@ export default function LedgerPage() {
           {/* Cash Flow Chart */}
           <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[17px] font-bold text-[#3D3229]">분석 보기</h3>
-              <button className="text-[12px] text-[#B4A08A] flex items-center gap-0.5">
-                통계보기 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
-              </button>
+              <h3 className="text-[17px] font-bold text-[var(--app-text-main)]">분석 보기</h3>
             </div>
 
             <div className="h-[160px]">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={cashFlowData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E8D5C0" vertical={false} />
-                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#B4A08A" }} axisLine={false} tickLine={false} dy={10} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" vertical={false} />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--app-text-tertiary)" }} axisLine={false} tickLine={false} dy={10} />
                   <YAxis tick={{ fontSize: 10, fill: "#D9C8B4" }} axisLine={false} tickLine={false} tickFormatter={(v) => v === 0 ? "0" : `${(v / 1000000).toFixed(1)}M`} />
                   <Tooltip
                     contentStyle={{ fontSize: 11, borderRadius: 10, border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
@@ -339,9 +336,9 @@ export default function LedgerPage() {
                       return [`₩${Math.abs(value).toLocaleString()}`, label];
                     }}
                   />
-                  <Bar dataKey="savings" fill="#D4A574" radius={[5, 5, 0, 0]} barSize={16} stackId="stack" />
-                  <Bar dataKey="expense" fill="#E8D5C0" radius={[0, 0, 5, 5]} barSize={16} stackId="stack" />
-                  <Line type="monotone" dataKey="balance" stroke="#B4A08A" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3, fill: "#fff", stroke: "#B4A08A", strokeWidth: 2 }} activeDot={{ r: 5, fill: "#D4A574", stroke: "#fff", strokeWidth: 2 }} />
+                  <Bar dataKey="savings" fill="var(--app-primary)" radius={[5, 5, 0, 0]} barSize={16} stackId="stack" />
+                  <Bar dataKey="expense" fill="var(--app-border)" radius={[0, 0, 5, 5]} barSize={16} stackId="stack" />
+                  <Line type="monotone" dataKey="balance" stroke="var(--app-text-tertiary)" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3, fill: "#fff", stroke: "var(--app-text-tertiary)", strokeWidth: 2 }} activeDot={{ r: 5, fill: "var(--app-primary)", stroke: "#fff", strokeWidth: 2 }} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -349,7 +346,7 @@ export default function LedgerPage() {
 
           {/* Category Bubble Chart */}
           <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-0">
-            <h3 className="text-[17px] font-bold text-[#3D3229] mb-4">카테고리별 분포 (Top 5)</h3>
+            <h3 className="text-[17px] font-bold text-[var(--app-text-main)] mb-4">카테고리별 분포 (Top 5)</h3>
 
             <div ref={constraintsRef} className="relative w-full max-w-[280px] aspect-square mx-auto flex-1 min-h-0 my-2">
               {topCategories.map((cat, i) => (
@@ -429,8 +426,8 @@ function AddModal({ onClose }: { onClose: () => void }) {
       >
         {/* 헤더 */}
         <div className="flex justify-between items-center px-5 pt-5 pb-3">
-          <h3 className="text-[18px] font-bold text-[#3D3229]">새 지출 추가</h3>
-          <button onClick={onClose} className="text-[#B4A08A] hover:text-[#5C4A3A] transition-colors">
+          <h3 className="text-[18px] font-bold text-[var(--app-text-main)]">새 지출 추가</h3>
+          <button onClick={onClose} className="text-[var(--app-text-tertiary)] hover:text-[var(--app-text-secondary)] transition-colors">
             <X className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
@@ -439,7 +436,7 @@ function AddModal({ onClose }: { onClose: () => void }) {
 
           {/* 카테고리 */}
           <div>
-            <p className="text-[13px] font-bold text-[#5C4A3A] mb-2">카테고리 선택</p>
+            <p className="text-[13px] font-bold text-[var(--app-text-secondary)] mb-2">카테고리 선택</p>
             <div className="flex flex-wrap gap-2">
               {MODAL_CATEGORIES.map((c) => {
                 const active = selCat === c.name;
@@ -449,9 +446,9 @@ function AddModal({ onClose }: { onClose: () => void }) {
                     onClick={() => setSelCat(c.name)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] border transition-all"
                     style={{
-                      background: active ? "#D4A574" : "#FFF8EE",
-                      borderColor: active ? "#D4A574" : "#E8D5C0",
-                      color: active ? "#fff" : "#5C4A3A",
+                      background: active ? "var(--app-primary)" : "var(--app-bg-tertiary)",
+                      borderColor: active ? "var(--app-primary)" : "var(--app-border)",
+                      color: active ? "#fff" : "var(--app-text-secondary)",
                       fontWeight: active ? 600 : 400,
                     }}
                   >
@@ -465,17 +462,17 @@ function AddModal({ onClose }: { onClose: () => void }) {
 
           {/* 금액 */}
           <div>
-            <p className="text-[13px] font-bold text-[#5C4A3A] mb-2">금액</p>
+            <p className="text-[13px] font-bold text-[var(--app-text-secondary)] mb-2">금액</p>
             <div className="relative">
               <input
                 type="number"
                 value={amount || ""}
                 onChange={(e) => setAmount(Number(e.target.value))}
                 placeholder="0"
-                className="w-full p-3.5 rounded-xl bg-[#FFF8EE] border border-[#E8D5C0] focus:outline-none focus:border-[#D4A574] focus:bg-white text-[18px] font-bold transition-colors pr-10"
+                className="w-full p-3.5 rounded-xl bg-[var(--app-bg-tertiary)] border border-[var(--app-border)] focus:outline-none focus:border-[var(--app-primary)] focus:bg-white text-[18px] font-bold transition-colors pr-10"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               />
-              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[14px] font-bold text-[#B4A08A]">원</span>
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[14px] font-bold text-[var(--app-text-tertiary)]">원</span>
             </div>
             <div className="flex gap-2 mt-2">
               {[10000, 30000, 50000, 100000].map((n) => (
@@ -493,40 +490,40 @@ function AddModal({ onClose }: { onClose: () => void }) {
 
           {/* 내용 */}
           <div>
-            <p className="text-[13px] font-bold text-[#5C4A3A] mb-2">내용</p>
+            <p className="text-[13px] font-bold text-[var(--app-text-secondary)] mb-2">내용</p>
             <input
               type="text"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="지출 내용을 입력하세요"
-              className="w-full p-3.5 rounded-xl bg-[#FFF8EE] border border-[#E8D5C0] focus:outline-none focus:border-[#D4A574] focus:bg-white transition-colors text-[14px]"
+              className="w-full p-3.5 rounded-xl bg-[var(--app-bg-tertiary)] border border-[var(--app-border)] focus:outline-none focus:border-[var(--app-primary)] focus:bg-white transition-colors text-[14px]"
             />
           </div>
 
           {/* 반려동물 + 날짜 */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-[13px] font-bold text-[#5C4A3A] mb-2">반려동물</p>
+              <p className="text-[13px] font-bold text-[var(--app-text-secondary)] mb-2">반려동물</p>
               <div className="relative">
                 <select
                   value={pet}
                   onChange={(e) => setPet(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-[#FFF8EE] border border-[#E8D5C0] focus:outline-none focus:border-[#D4A574] text-[14px] appearance-none pr-8"
+                  className="w-full p-3 rounded-xl bg-[var(--app-bg-tertiary)] border border-[var(--app-border)] focus:outline-none focus:border-[var(--app-primary)] text-[14px] appearance-none pr-8"
                 >
                   <option>초코</option>
                   <option>나비</option>
                   <option>전체</option>
                 </select>
-                <ChevronDown className="w-4 h-4 text-[#B4A08A] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-4 h-4 text-[var(--app-text-tertiary)] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
             <div>
-              <p className="text-[13px] font-bold text-[#5C4A3A] mb-2">날짜</p>
+              <p className="text-[13px] font-bold text-[var(--app-text-secondary)] mb-2">날짜</p>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full p-3 rounded-xl bg-[#FFF8EE] border border-[#E8D5C0] focus:outline-none focus:border-[#D4A574] text-[14px]"
+                className="w-full p-3 rounded-xl bg-[var(--app-bg-tertiary)] border border-[var(--app-border)] focus:outline-none focus:border-[var(--app-primary)] text-[14px]"
               />
             </div>
           </div>
@@ -536,14 +533,14 @@ function AddModal({ onClose }: { onClose: () => void }) {
         <div className="px-5 pb-5 flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-3.5 rounded-xl border border-[#E8D5C0] text-[15px] font-bold text-[#5C4A3A] hover:bg-[#FFF8EE] transition-colors"
+            className="flex-1 py-3.5 rounded-xl border border-[var(--app-border)] text-[15px] font-bold text-[var(--app-text-secondary)] hover:bg-[var(--app-bg-tertiary)] transition-colors"
           >
             취소
           </button>
           <button
             onClick={onClose}
             className="flex-1 py-3.5 text-white rounded-xl font-bold text-[15px] hover:opacity-90 active:scale-[0.98] transition-all"
-            style={{ background: "linear-gradient(135deg, #D4A574, #C4956A)", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
+            style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
           >
             저장하기
           </button>
