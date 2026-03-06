@@ -10,7 +10,7 @@ import {
   Plus,
   X,
 } from "lucide-react";
-import PetCharacter from "../figma/PetCharacter";
+import PetAvatar from "../../../shared/components/figma/PetAvatar";
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
@@ -101,7 +101,7 @@ export default function OnboardingPage() {
                   }`}
                 onClick={() => setPetType("dog")}
               >
-                <PetCharacter type="dog" size="sm" mood="happy" />
+                <PetAvatar pet="choco" size="sm" mood="happy" fullBody />
                 <span className="text-[14px] text-[var(--app-text-main)] mt-1">강아지</span>
               </button>
               <button
@@ -109,7 +109,7 @@ export default function OnboardingPage() {
                   }`}
                 onClick={() => setPetType("cat")}
               >
-                <PetCharacter type="cat" size="sm" mood="happy" />
+                <PetAvatar pet="nabi" size="sm" mood="happy" fullBody />
                 <span className="text-[14px] text-[var(--app-text-main)] mt-1">고양이</span>
               </button>
             </div>
@@ -175,7 +175,7 @@ export default function OnboardingPage() {
               <ChevronLeft className="w-4 h-4" /> 이전
             </button>
             <div className="text-center mb-5">
-              <PetCharacter type={petType === "cat" ? "cat" : "dog"} size="md" mood="excited" className="mx-auto" />
+              <PetAvatar pet={petType === "cat" ? "nabi" : "choco"} size="md" mood="happy" className="mx-auto" fullBody />
               <h2 className="text-[20px] text-[var(--app-text-main)] mt-2" style={{ fontWeight: 700 }}>건강 정보 (선택)</h2>
               <p className="text-[13px] text-[var(--app-text-sub)] mt-1">나중에 마이페이지에서 수정할 수 있어요</p>
             </div>

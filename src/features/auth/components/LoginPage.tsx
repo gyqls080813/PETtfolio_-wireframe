@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { Mail, Lock } from "lucide-react";
-import PetCharacter from "../figma/PetCharacter";
+import PetAvatar from "../../../shared/components/figma/PetAvatar";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[400px]">
         {/* Logo + Character */}
         <div className="flex flex-col items-center mb-6">
-          <PetCharacter type="dog" size="lg" mood="happy" />
+          <PetAvatar pet="choco" size="lg" mood="happy" fullBody />
           <h1 className="text-[24px] text-[var(--app-text-main)] mt-2" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>Petfolio</h1>
           <p className="text-[14px] text-[var(--app-text-sub)] mt-1">반려동물 금융 관리 서비스</p>
         </div>

@@ -1,10 +1,9 @@
 {
-  "/(main)/ledger/page": "app/(main)/ledger/page.js",
-  "/(main)/page": "app/(main)/page.js",
   "/(main)/accounts/page": "app/(main)/accounts/page.js",
-  "/(main)/savings/page": "app/(main)/savings/page.js",
+  "/(main)/page": "app/(main)/page.js",
   "/(main)/reports/page": "app/(main)/reports/page.js",
-  "/(main)/health/page": "app/(main)/health/page.js",
-  "/(main)/supplies/page": "app/(main)/supplies/page.js",
-  "/(main)/mypage/page": "app/(main)/mypage/page.js"
+  "/(main)/ledger/page": "app/(main)/ledger/page.js",
+  "/(main)/mypage/page": "app/(main)/mypage/page.js",
+  "/(main)/savings/page": "app/(main)/savings/page.js",
+  "/(main)/health/page": "app/(main)/health/page.js"
 }

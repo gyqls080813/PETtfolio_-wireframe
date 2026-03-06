@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import dogImg from "../../assets/pome.png";
+import MobileBottomNav from "./MobileBottomNav";
 
 const navItems = [
   { to: "/", icon: Home, label: "홈" },
@@ -20,7 +21,6 @@ const navItems = [
   { to: "/savings", icon: PiggyBank, label: "저축 관리" },
   { to: "/reports", icon: BarChart3, label: "리포트" },
   { to: "/supplies", icon: Package, label: "소모품" },
-  { to: "/mypage", icon: User, label: "마이페이지" },
 ];
 
 export default function Layout() {
@@ -39,9 +39,9 @@ export default function Layout() {
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
 
   return (
-    <div className="flex h-screen w-full bg-[var(--app-bg-tertiary)] overflow-hidden" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+    <div className="flex h-screen w-full bg-[var(--app-bg-tertiary)] overflow-hidden relative" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
       {/* Sidebar */}
-      <aside className={`flex flex-col bg-[var(--app-bg-main)] border-r border-[var(--app-border)] shrink-0 transition-[width] duration-300 overflow-hidden z-20 ${isCollapsed ? 'w-[76px]' : 'w-[240px]'}`}>
+      <aside className={`hidden lg:flex flex-col bg-[var(--app-bg-main)] border-r border-[var(--app-border)] shrink-0 transition-[width] duration-300 overflow-hidden z-20 ${isCollapsed ? 'w-[76px]' : 'w-[240px]'}`}>
         <div className={`flex h-[60px] items-center border-b border-[var(--app-border)] shrink-0 ${isCollapsed ? 'justify-center px-0' : 'px-4 gap-2'}`}>
           <button onClick={() => setIsCollapsed(!isCollapsed)} className="p-1.5 text-[#8B7355] hover:bg-[var(--app-bg-secondary)] rounded-xl shrink-0 transition-colors">
             <Menu className="w-6 h-6" />
@@ -62,14 +62,14 @@ export default function Layout() {
             </div>
           )}
         </div>
-        <nav className={`flex-1 py-4 space-y-1.5 overflow-y-auto custom-scrollbar ${isCollapsed ? 'px-2' : 'px-3'}`}>
+        <nav className={`flex-1 py-4 space-y-1.5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isCollapsed ? 'px-2' : 'px-3'}`}>
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.to === "/"}
               className={`flex transition-all ${isCollapsed ? 'flex-col items-center justify-center gap-1 py-3 rounded-[16px]' : 'items-center gap-3 px-3 py-2.5 rounded-[16px]'} ${isActive(item.to)
-                ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-sm"
+                ? "bg-[var(--app-highlight)] text-[var(--app-highlight-text)] shadow-sm"
                 : "text-[#8B7355] hover:bg-[var(--app-bg-secondary)] hover:text-[#6B4F3A]"
                 }`}
               style={isActive(item.to) && !isCollapsed ? { boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)" } : {}}
@@ -81,7 +81,7 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-        <div className={`pb-6 pt-3 mt-auto border-t border-[var(--app-border)] bg-[var(--app-bg-main)] shrink-0 ${isCollapsed ? 'px-2 flex flex-col items-center' : 'px-3'}`}>
+        <div className={`hidden lg:flex pb-6 pt-3 mt-auto border-t border-[var(--app-border)] bg-[var(--app-bg-main)] shrink-0 ${isCollapsed ? 'px-2 flex-col items-center' : 'px-3'}`}>
           <div
             className={`flex items-center gap-2 py-2.5 rounded-[16px] hover:bg-[var(--app-bg-secondary)] transition-colors cursor-pointer w-full ${isCollapsed ? 'justify-center px-0' : 'px-3'}`}
             onClick={() => navigate("/mypage")}
@@ -121,14 +121,26 @@ export default function Layout() {
               <Bell className="w-5 h-5 text-[#8B7355]" strokeWidth={2} />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--app-danger)] rounded-full border border-white" />
             </button>
+            {/* Mobile Profile */}
+            <div
+              className="flex lg:hidden items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--app-primary)] to-[var(--app-primary-dark)] shadow-sm cursor-pointer ml-1"
+              onClick={() => navigate("/mypage")}
+            >
+              <span className="text-white text-[13px]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>
+                R
+              </span>
+            </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 custom-scrollbar relative">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 custom-scrollbar relative">
           <Outlet />
         </main>
       </div>
+
+      {/* Mobile Bottom App Bar Navigation */}
+      <MobileBottomNav items={navItems} onItemClick={(item) => navigate(item.to || "")} onQrClick={() => alert("QR 결제 오픈")} isActive={isActive} />
     </div>
   );
 }

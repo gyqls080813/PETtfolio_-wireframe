@@ -12,6 +12,7 @@ import {
   ChevronDown,
   X,
 } from "lucide-react";
+import SwipeCarousel from "../../../shared/components/SwipeCarousel";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -33,6 +34,8 @@ import stickerGrooming from "../../../assets/pome_grooming.png";
 import stickerHospital from "../../../assets/pome_hospital.png";
 import stickerSnack from "../../../assets/pome_snack.png";
 import stickerToys from "../../../assets/pome_toys.png";
+
+const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
 
 const categories = [
   { name: "사료", color: "var(--app-primary)" },
@@ -94,7 +97,7 @@ export default function LedgerPage() {
   };
 
   // 날짜별 펫 스티커 매핑 (활동 유형에 따라 다른 스티커)
-  const calendarStickers: Record<number, { img: string; label: string }> = {
+  const calendarStickers: Record<number, { img: any; label: string }> = {
     1: { img: stickerGrooming, label: "미용" },
     2: { img: stickerThumbsup, label: "저축" },
     3: { img: stickerHospital, label: "검진" },
@@ -114,7 +117,7 @@ export default function LedgerPage() {
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-5 items-stretch">
+      <div className="hidden lg:grid grid-cols-[1.1fr_1fr] gap-5 items-stretch">
         {/* ═══ Left Column: Calendar Box ═══ */}
         <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full relative">
           {/* Header */}
@@ -207,7 +210,7 @@ export default function LedgerPage() {
                     {/* 해당 날짜의 스티커가 있으면 크게 표시 */}
                     {calendarStickers[selectedDay as number] && (
                       <img
-                        src={calendarStickers[selectedDay as number].img}
+                        src={getImgSrc(calendarStickers[selectedDay as number].img)}
                         alt={calendarStickers[selectedDay as number].label}
                         className="w-[64px] h-[64px] object-contain drop-shadow-md"
                       />
@@ -242,7 +245,7 @@ export default function LedgerPage() {
                         <div className="flex justify-between items-center bg-[var(--app-bg-main)] p-3 rounded-xl border border-[var(--app-border)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={stickerSad} alt="지출" className="w-8 h-8 object-contain" />
+                              <img src={getImgSrc(stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[var(--app-text-main)]">지출</div>
@@ -272,7 +275,7 @@ export default function LedgerPage() {
                         <div className="flex justify-between items-center bg-[var(--app-bg-main)] p-3 rounded-xl border border-[var(--app-border)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={stickerThumbsup} alt="저금" className="w-8 h-8 object-contain" />
+                              <img src={getImgSrc(stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[var(--app-text-main)]">수입/저축</div>
@@ -369,7 +372,7 @@ export default function LedgerPage() {
                 >
                   {/* 스티커 이미지 */}
                   <img
-                    src={cat.img}
+                    src={getImgSrc(cat.img)}
                     alt={cat.name}
                     className="object-contain drop-shadow-sm"
                     style={{ width: cat.size * 0.55, height: cat.size * 0.55 }}
@@ -386,6 +389,158 @@ export default function LedgerPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Swipe Carousel */}
+      <div className="block lg:hidden h-[calc(100vh-[var(--safe-area-bottom,0px)]-210px)]">
+        <SwipeCarousel
+          views={[
+            // View 1: Calendar 
+            <div key="cal" className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full w-full relative">
+              {/* Header */}
+              <div className="px-5 pt-4">
+                <h2 className="text-[18px] font-bold text-[var(--app-text-main)] flex items-center gap-1.5 mb-3">
+                  12월 내 소비
+                  <ChevronDown className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
+                </h2>
+
+                {/* Summary */}
+                <div className="py-3 border-b border-[var(--app-border)] flex justify-between items-center">
+                  <div>
+                    <div className="flex items-center gap-4 mb-1">
+                      <span className="text-[13px] text-[var(--app-text-sub)] w-8">소비</span>
+                      <span className="text-[17px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>1,625,560 원</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-[13px] text-[var(--app-text-sub)] w-8">저금</span>
+                      <span className="text-[17px] font-bold text-[var(--app-success)]" style={{ fontFamily: "'Nunito', sans-serif" }}>2,746,059 원</span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-[#D9C8B4]" strokeWidth={1.5} />
+                </div>
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="px-5 pb-4 pt-2 flex-1 flex flex-col min-h-0">
+                <div className="grid grid-cols-7 text-center mb-1 shrink-0">
+                  {["일", "월", "화", "수", "목", "금", "토"].map((d) => (
+                    <div key={d} className="text-[13px] text-[var(--app-text-tertiary)] font-medium py-2">{d}</div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-7 text-center gap-y-0.5 flex-1 min-h-[0px] overflow-y-auto">
+                  {calendarDays.map((day, i) => (
+                    <div
+                      key={i}
+                      className={`min-h-[60px] flex flex-col items-center rounded-xl transition-colors relative pt-1 ${day ? "cursor-pointer hover:bg-[var(--app-bg-secondary)]" : ""}`}
+                      onClick={() => day && setSelectedDay(day)}
+                    >
+                      {day && (
+                        <>
+                          {/* 펫 스티커 */}
+                          {calendarStickers[day] && (
+                            <img
+                              src={calendarStickers[day].img}
+                              alt={calendarStickers[day].label}
+                              className="w-[28px] h-[28px] object-contain absolute -top-1 -right-1 drop-shadow-sm z-10 pointer-events-none"
+                              style={{ opacity: 0.9 }}
+                            />
+                          )}
+
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[12px] ${day === 31
+                            ? "bg-[var(--app-primary-light)] text-[#6B4F3A] font-bold"
+                            : "text-[var(--app-text-secondary)]"
+                            }`}>
+                            {day}
+                          </div>
+
+                          <div className="mt-0.5 space-y-[1px]">
+                            {calData[day]?.exp && (
+                              <div className="text-[9px] text-[var(--app-text-tertiary)] font-medium leading-none">
+                                -{calData[day].exp.toLocaleString()}
+                              </div>
+                            )}
+                            {calData[day]?.inc && (
+                              <div className="text-[9px] text-[var(--app-success)] font-medium leading-none">
+                                +{calData[day].inc.toLocaleString()}
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>,
+
+            // View 2: Analysis & Distribution Charts
+            <div key="charts" className="flex flex-col gap-4 h-full w-full overflow-y-auto pb-6">
+              {/* Cash Flow Chart */}
+              <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 shrink-0">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[17px] font-bold text-[var(--app-text-main)]">분석 보기</h3>
+                  <button className="text-[12px] text-[var(--app-text-tertiary)] flex items-center gap-0.5">
+                    통계보기 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
+                  </button>
+                </div>
+                <div className="h-[160px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={cashFlowData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" vertical={false} />
+                      <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--app-text-tertiary)" }} axisLine={false} tickLine={false} dy={10} />
+                      <YAxis tick={{ fontSize: 10, fill: "#D9C8B4" }} axisLine={false} tickLine={false} tickFormatter={(v) => v === 0 ? "0" : `${(v / 1000000).toFixed(1)}M`} />
+                      <Tooltip
+                        contentStyle={{ fontSize: 11, borderRadius: 10, border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+                        formatter={(value: number, name: string) => {
+                          const label = name === "savings" ? "저금" : name === "expense" ? "소비" : "잔고";
+                          return [`₩${Math.abs(value).toLocaleString()}`, label];
+                        }}
+                      />
+                      <Bar dataKey="savings" fill="var(--app-primary)" radius={[5, 5, 0, 0]} barSize={16} stackId="stack" />
+                      <Bar dataKey="expense" fill="var(--app-border)" radius={[0, 0, 5, 5]} barSize={16} stackId="stack" />
+                      <Line type="monotone" dataKey="balance" stroke="var(--app-text-tertiary)" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3, fill: "#fff", stroke: "var(--app-text-tertiary)", strokeWidth: 2 }} activeDot={{ r: 5, fill: "var(--app-primary)", stroke: "#fff", strokeWidth: 2 }} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Category Bubble Chart */}
+              <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-[300px]">
+                <h3 className="text-[17px] font-bold text-[var(--app-text-main)] mb-4">카테고리별 분포 (Top 5)</h3>
+                <div className="relative w-full max-w-[280px] aspect-square mx-auto flex-1 min-h-0 my-2">
+                  {topCategories.map((cat, i) => (
+                    <motion.div
+                      key={cat.id}
+                      className="absolute bg-white rounded-full flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.06)] overflow-hidden"
+                      style={{
+                        width: cat.size,
+                        height: cat.size,
+                        top: cat.top,
+                        left: cat.left,
+                        border: `2px solid ${cat.color}30`,
+                        zIndex: 10 + i,
+                      }}
+                    >
+                      <img
+                        src={getImgSrc(cat.img)}
+                        alt={cat.name}
+                        className="object-contain drop-shadow-sm"
+                        style={{ width: cat.size * 0.55, height: cat.size * 0.55 }}
+                      />
+                      <span
+                        className="font-bold tracking-tight leading-none -mt-0.5"
+                        style={{ color: cat.color, fontSize: cat.sizeText }}
+                      >
+                        {cat.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ]}
+        />
       </div>
     </div>
   );
