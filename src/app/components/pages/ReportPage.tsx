@@ -1,4 +1,4 @@
-﻿import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import {
   PieChart,
   Pie,
@@ -16,11 +16,12 @@ import {
   Package,
 } from "lucide-react";
 
-// 펫 커스텀 스티커 이미지
 import pomeImg from "../../../assets/pome.png";
-import catImg from "../../../assets/cat-character.png";
-import stickerThumbsup from "../../../assets/pome_thumbsup.png";
-import stickerSad from "../../../assets/pome_sad.png";
+import catImg from "../../../assets/cat.png";
+import pomeThumbsup from "../../../assets/pome_thumbsup.png";
+import pomeSad from "../../../assets/pome_sad.png";
+import catThumbsup from "../../../assets/cat_thumbsup.png";
+import catSad from "../../../assets/cat_sad.png";
 
 const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
@@ -306,9 +307,10 @@ export default function ReportPage() {
     </div>
   );
 
-  const rank1Img = selectedPet === "나비" ? catImg : stickerThumbsup;
-  const rank2Img = selectedPet === "나비" ? catImg : pomeImg;
-  const rank3Img = selectedPet === "나비" ? catImg : stickerSad;
+  const isCat = selectedPet === "나비" || selectedPet === "고양이";
+  const rank1Img = isCat ? catThumbsup : pomeThumbsup;
+  const rank2Img = isCat ? catImg : pomeImg;
+  const rank3Img = isCat ? catSad : pomeSad;
 
   const RankingCard = (
     <div className="bg-white rounded-2xl border border-[var(--app-border)] p-3 flex-1 min-h-0 flex flex-col">

@@ -1,4 +1,4 @@
-﻿import {
+import {
   Plus,
   ArrowUpRight,
   ArrowDownLeft,
@@ -22,6 +22,16 @@ import stickerGrooming from "../../../assets/pome_grooming.png";
 import stickerHospital from "../../../assets/pome_hospital.png";
 import stickerSnack from "../../../assets/pome_snack.png";
 
+// 고양이 스티커 이미지
+import catThumbsup from "../../../assets/cat_thumbsup.png";
+import catSad from "../../../assets/cat_sad.png";
+import catEating from "../../../assets/cat_eating.png";
+import catGrooming from "../../../assets/cat_grooming.png";
+import catHospital from "../../../assets/cat_hospital.png";
+import catSnack from "../../../assets/cat_snack.png";
+
+import PetAvatar from "../../../shared/components/figma/PetAvatar";
+
 const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 const txHistoryData = [
@@ -35,16 +45,17 @@ const txHistoryData = [
 ];
 
 // 카테고리별 스티커 매핑
-const catStickerMap: Record<string, string> = {
-  "사료": stickerEating,
-  "간식": stickerSnack,
-  "미용": stickerGrooming,
-  "병원": stickerHospital,
-  "충전": stickerThumbsup,
-  "이체": stickerSad,
-};
+const getCatStickerMap = (isCat: boolean): Record<string, any> => ({
+  "사료": isCat ? catEating : stickerEating,
+  "간식": isCat ? catSnack : stickerSnack,
+  "미용": isCat ? catGrooming : stickerGrooming,
+  "병원": isCat ? catHospital : stickerHospital,
+  "충전": isCat ? catThumbsup : stickerThumbsup,
+  "이체": isCat ? catSad : stickerSad,
+});
 
 export default function AccountPage() {
+  const [selectedPet, setSelectedPet] = useState<string>("전체");
   const [showCreate, setShowCreate] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<"all" | "shared" | "emergency">("shared");
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -93,9 +104,35 @@ export default function AccountPage() {
   }, [selectedAccount]);
 
   const filteredHistory = txHistoryData.filter(tx => selectedAccount === "all" || tx.account === selectedAccount);
+  const isCat = selectedPet === "나비" || selectedPet === "고양이";
+  const currentStickerMap = getCatStickerMap(isCat);
 
   return (
-    <div className="pt-2">
+    <div className="pt-2 space-y-5">
+      {/* Pet Selector */}
+      <div className="flex gap-2">
+        <div
+          onClick={() => setSelectedPet("전체")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "전체" ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-md" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
+        >
+          <span className="text-[13px]" style={{ fontWeight: selectedPet === "전체" ? 600 : 500 }}>전체</span>
+        </div>
+        <div
+          onClick={() => setSelectedPet("초코")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "초코" || selectedPet === "강아지" ? "bg-[var(--app-primary-light)] border border-[var(--app-primary)]/50 text-[#6B4F3A]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
+        >
+          <PetAvatar pet="choco" size="xs" border={false} />
+          <span className="text-[13px]" style={{ fontWeight: selectedPet === "초코" ? 600 : 500 }}>초코</span>
+        </div>
+        <div
+          onClick={() => setSelectedPet("나비")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "나비" || selectedPet === "고양이" ? "bg-[#E8DFD0] border border-[#C4A684]/50 text-[var(--app-text-secondary)]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[#C4A684]/40"}`}
+        >
+          <PetAvatar pet="nabi" size="xs" border={false} />
+          <span className="text-[13px]" style={{ fontWeight: selectedPet === "나비" ? 600 : 500 }}>나비</span>
+        </div>
+      </div>
+
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* Left Column: Account Cards */}
@@ -222,7 +259,7 @@ export default function AccountPage() {
                       <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
                         <div className={`w-full h-full ${tx.type === "in" ? "bg-[#E8F5E4]" : "bg-[var(--app-bg-main)]"} flex items-center justify-center`}>
                           <img
-                            src={getImgSrc(catStickerMap[tx.cat] || (tx.type === "in" ? stickerThumbsup : stickerSad))}
+                            src={getImgSrc(currentStickerMap[tx.cat] || (tx.type === "in" ? (isCat ? catThumbsup : stickerThumbsup) : (isCat ? catSad : stickerSad)))}
                             alt={tx.cat}
                             className="w-9 h-9 object-contain"
                           />
@@ -246,7 +283,7 @@ export default function AccountPage() {
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-[#D9C8B4]">
-                  <img src={getImgSrc(stickerSad)} alt="없음" className="w-16 h-16 object-contain mb-4 opacity-60" />
+                  <img src={getImgSrc(isCat ? catSad : stickerSad)} alt="없음" className="w-16 h-16 object-contain mb-4 opacity-60" />
                   <p className="text-[15px] font-medium">해당 페이의 거래 내역이 없습니다.</p>
                 </div>
               )}

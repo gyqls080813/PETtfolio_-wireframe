@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion } from "motion/react";
 import {
   ChevronLeft,
@@ -11,6 +11,9 @@ import {
   Tag,
   ChevronDown,
   X,
+  PlusCircle,
+  Receipt,
+  Pencil,
 } from "lucide-react";
 import SwipeCarousel from "../../../shared/components/SwipeCarousel";
 import {
@@ -34,6 +37,17 @@ import stickerGrooming from "../../../assets/pome_grooming.png";
 import stickerHospital from "../../../assets/pome_hospital.png";
 import stickerSnack from "../../../assets/pome_snack.png";
 import stickerToys from "../../../assets/pome_toys.png";
+
+// 고양이 스티커 이미지
+import catThumbsup from "../../../assets/cat_thumbsup.png";
+import catSad from "../../../assets/cat_sad.png";
+import catEating from "../../../assets/cat_eating.png";
+import catGrooming from "../../../assets/cat_grooming.png";
+import catHospital from "../../../assets/cat_hospital.png";
+import catSnack from "../../../assets/cat_snack.png";
+import catToys from "../../../assets/cat_toys.png";
+
+import PetAvatar from "../../../shared/components/figma/PetAvatar";
 
 const getImgSrc = (img: any) => typeof img === 'string' ? img : img?.src || img;
 
@@ -71,61 +85,107 @@ const daysInMonth = 31;
 const startDay = 6;
 
 export default function LedgerPage() {
+  const [selectedPet, setSelectedPet] = useState<string>("전체");
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  
+  // Modals state
   const [showAdd, setShowAdd] = useState(false);
-  const constraintsRef = useRef<HTMLDivElement>(null);
+  const [showPendingModal, setShowPendingModal] = useState(false);
+  const [editTransaction, setEditTransaction] = useState<any>(null); // For Add/Edit Modal
+  
+  const isCat = selectedPet === "나비" || selectedPet === "고양이";
 
-  const topCategories = [
-    { id: 1, name: "사료", size: 110, top: "15%", left: "32%", color: "var(--app-primary)", sizeText: 14, img: stickerEating },
-    { id: 2, name: "병원/의료", size: 95, top: "52%", left: "62%", color: "#EF4444", sizeText: 12, img: stickerHospital },
-    { id: 3, name: "간식", size: 85, top: "75%", left: "38%", color: "var(--app-warning)", sizeText: 12, img: stickerSnack },
-    { id: 4, name: "용품", size: 80, top: "60%", left: "15%", color: "#74B9FF", sizeText: 11, img: stickerToys },
-    { id: 5, name: "미용", size: 75, top: "22%", left: "68%", color: "#FD79A8", sizeText: 11, img: stickerGrooming },
-  ];
-
-  const calendarDays: (number | null)[] = [];
-  for (let i = 0; i < startDay; i++) calendarDays.push(null);
-  for (let i = 1; i <= daysInMonth; i++) calendarDays.push(i);
-
-  const calData: Record<number, { exp?: number; inc?: number }> = {
+  // State for Calendar Data to allow dynamic updates
+  const [calData, setCalData] = useState<Record<number, { exp?: number; inc?: number }>>({
     1: { exp: 1200 }, 2: { exp: 20000, inc: 2530688 }, 3: { exp: 100000, inc: 2 },
     5: { exp: 4999 }, 6: { exp: 102110 },
     8: { exp: 326000 }, 9: { inc: 10000 }, 10: { exp: 17000 }, 11: { exp: 2400 }, 12: { inc: 11000 }, 13: { exp: 6000 }, 14: { exp: 22000 },
     15: { exp: 14200 }, 16: { exp: 30000 }, 17: { inc: 103507 }, 18: { inc: 2 }, 19: { exp: 54842, inc: 5400 }, 20: { exp: 126484 }, 21: { exp: 10000 },
     22: { exp: 14000 }, 23: { exp: 14000 }, 24: { inc: 50460 }, 25: { exp: 6500 }, 26: { exp: 110000 }, 27: { exp: 49390, inc: 24500 }, 28: { inc: 9500 },
     29: { exp: 2900 }, 31: { exp: 5300, inc: 1000 },
-  };
+  });
+
+  // New Data: Recent Purchases (replaces category bubble chart)
+  const [recentPurchases, setRecentPurchases] = useState([
+    { id: 101, date: "2023-12-05", store: "펫프렌즈", amount: 45000, category: "사료" },
+    { id: 102, date: "2023-12-10", store: "동물병원", amount: 150000, category: "병원/의료" },
+    { id: 103, date: "2023-12-15", store: "쿠팡", amount: 12500, category: "간식" },
+    { id: 104, date: "2023-12-22", store: "멍멍토이", amount: 32000, category: "용품" },
+    { id: 105, date: "2023-12-28", store: "이마트", amount: 18000, category: "위생/소모품" },
+  ]);
+
+  // New Data: Pending Transactions (from the + button)
+  const [pendingTransactions, setPendingTransactions] = useState([
+    { id: 201, date: "2023-12-01", store: "네이버펫", amount: 28000, category: "사료" },
+    { id: 202, date: "2023-12-08", store: "동물약국", amount: 35000, category: "약/영양제" },
+    { id: 203, date: "2023-12-19", store: "바잇미", amount: 15000, category: "간식" },
+  ]);
+
+  const calendarDays: (number | null)[] = [];
+  for (let i = 0; i < startDay; i++) calendarDays.push(null);
+  for (let i = 1; i <= daysInMonth; i++) calendarDays.push(i);
 
   // 날짜별 펫 스티커 매핑 (활동 유형에 따라 다른 스티커)
   const calendarStickers: Record<number, { img: any; label: string }> = {
-    1: { img: stickerGrooming, label: "미용" },
-    2: { img: stickerThumbsup, label: "저축" },
-    3: { img: stickerHospital, label: "검진" },
-    5: { img: stickerEating, label: "간식" },
-    6: { img: stickerSad, label: "과소비" },
-    8: { img: stickerSad, label: "과소비" },
-    9: { img: stickerThumbsup, label: "저축" },
-    12: { img: stickerThumbsup, label: "저축" },
-    14: { img: stickerEating, label: "사료" },
-    17: { img: stickerThumbsup, label: "저축" },
-    20: { img: stickerSad, label: "과소비" },
-    24: { img: stickerThumbsup, label: "저축" },
-    26: { img: stickerHospital, label: "병원" },
-    27: { img: stickerEating, label: "간식" },
-    31: { img: stickerGrooming, label: "미용" },
+    1: { img: isCat ? catGrooming : stickerGrooming, label: "미용" },
+    2: { img: isCat ? catThumbsup : stickerThumbsup, label: "저축" },
+    3: { img: isCat ? catHospital : stickerHospital, label: "검진" },
+    5: { img: isCat ? catEating : stickerEating, label: "간식" },
+    6: { img: isCat ? catSad : stickerSad, label: "과소비" },
+    8: { img: isCat ? catSad : stickerSad, label: "과소비" },
+    9: { img: isCat ? catThumbsup : stickerThumbsup, label: "저축" },
+    12: { img: isCat ? catThumbsup : stickerThumbsup, label: "저축" },
+    14: { img: isCat ? catEating : stickerEating, label: "사료" },
+    17: { img: isCat ? catThumbsup : stickerThumbsup, label: "저축" },
+    20: { img: isCat ? catSad : stickerSad, label: "과소비" },
+    24: { img: isCat ? catThumbsup : stickerThumbsup, label: "저축" },
+    26: { img: isCat ? catHospital : stickerHospital, label: "병원" },
+    27: { img: isCat ? catEating : stickerEating, label: "간식" },
+    31: { img: isCat ? catGrooming : stickerGrooming, label: "미용" },
   };
 
   return (
     <div className="space-y-5">
+      {/* Pet Selector */}
+      <div className="flex gap-2">
+        <div
+          onClick={() => setSelectedPet("전체")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "전체" ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-md" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
+        >
+          <span className="text-[13px]" style={{ fontWeight: selectedPet === "전체" ? 600 : 500 }}>전체</span>
+        </div>
+        <div
+          onClick={() => setSelectedPet("초코")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "초코" || selectedPet === "강아지" ? "bg-[var(--app-primary-light)] border border-[var(--app-primary)]/50 text-[#6B4F3A]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
+        >
+          <PetAvatar pet="choco" size="xs" border={false} />
+          <span className="text-[13px]" style={{ fontWeight: selectedPet === "초코" ? 600 : 500 }}>초코</span>
+        </div>
+        <div
+          onClick={() => setSelectedPet("나비")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "나비" || selectedPet === "고양이" ? "bg-[#E8DFD0] border border-[#C4A684]/50 text-[var(--app-text-secondary)]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[#C4A684]/40"}`}
+        >
+          <PetAvatar pet="nabi" size="xs" border={false} />
+          <span className="text-[13px]" style={{ fontWeight: selectedPet === "나비" ? 600 : 500 }}>나비</span>
+        </div>
+      </div>
       <div className="hidden lg:grid grid-cols-[1.1fr_1fr] gap-5 items-stretch">
         {/* ═══ Left Column: Calendar Box ═══ */}
         <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full relative">
           {/* Header */}
           <div className="px-5 pt-4">
-            <h2 className="text-[18px] font-bold text-[var(--app-text-main)] flex items-center gap-1.5 mb-3">
-              12월 내 소비
-              <ChevronDown className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-[18px] font-bold text-[var(--app-text-main)] flex items-center gap-1.5">
+                12월 내 소비
+                <ChevronDown className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
+              </h2>
+              <button 
+                onClick={() => setShowPendingModal(true)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--app-bg-main)] text-[var(--app-text-tertiary)] hover:bg-[var(--app-primary-light)] hover:text-[var(--app-primary)] transition-colors border border-[var(--app-border)]"
+              >
+                <Plus className="w-5 h-5" strokeWidth={2} />
+              </button>
+            </div>
 
             {/* Summary */}
             <div className="py-3 border-b border-[var(--app-border)] flex justify-between items-center">
@@ -245,7 +305,7 @@ export default function LedgerPage() {
                         <div className="flex justify-between items-center bg-[var(--app-bg-main)] p-3 rounded-xl border border-[var(--app-border)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={getImgSrc(stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
+                              <img src={getImgSrc(isCat ? catSad : stickerSad)} alt="지출" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[var(--app-text-main)]">지출</div>
@@ -275,7 +335,7 @@ export default function LedgerPage() {
                         <div className="flex justify-between items-center bg-[var(--app-bg-main)] p-3 rounded-xl border border-[var(--app-border)]">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
-                              <img src={getImgSrc(stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
+                              <img src={getImgSrc(isCat ? catThumbsup : stickerThumbsup)} alt="저금" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
                               <div className="text-[14px] font-bold text-[var(--app-text-main)]">수입/저축</div>
@@ -310,9 +370,45 @@ export default function LedgerPage() {
             </div>
           )}
 
-          {/* Add Modal */}
+          {/* Add/Edit Modal */}
           {showAdd && (
-            <AddModal onClose={() => setShowAdd(false)} />
+            <AddModal 
+               initData={editTransaction} 
+               onSave={(data) => {
+                 // Add to calData for visuals
+                 const d = new Date(data.date).getDate();
+                 setCalData(prev => ({
+                   ...prev,
+                   [d]: {
+                     ...prev[d],
+                     exp: (prev[d]?.exp || 0) + data.amount
+                   }
+                 }));
+                 // If pending, remove from pending list
+                 if (data.isPending) {
+                   setPendingTransactions(prev => prev.filter(p => p.id !== data.id));
+                 }
+                 setEditTransaction(null);
+                 setShowAdd(false);
+               }}
+               onClose={() => {
+                 setEditTransaction(null);
+                 setShowAdd(false);
+               }} 
+            />
+          )}
+
+          {/* Pending Transactions Modal */}
+          {showPendingModal && (
+            <PendingTransactionsModal 
+              transactions={pendingTransactions} 
+              onClose={() => setShowPendingModal(false)}
+              onSelect={(tx) => {
+                setEditTransaction({...tx, isPending: true});
+                setShowPendingModal(false);
+                setShowAdd(true);
+              }}
+            />
           )}
         </div>
 
@@ -348,43 +444,35 @@ export default function LedgerPage() {
             </div>
           </div>
 
-          {/* Category Bubble Chart */}
-          <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-0">
-            <h3 className="text-[17px] font-bold text-[var(--app-text-main)] mb-4">카테고리별 분포 (Top 5)</h3>
-
-            <div ref={constraintsRef} className="relative w-full max-w-[280px] aspect-square mx-auto flex-1 min-h-0 my-2">
-              {topCategories.map((cat, i) => (
-                <motion.div
-                  key={cat.id}
-                  drag
-                  dragConstraints={constraintsRef}
-                  whileDrag={{ scale: 1.1, zIndex: 50, cursor: "grabbing" }}
-                  whileHover={{ scale: 1.05 }}
-                  className="absolute bg-white rounded-full flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.06)] cursor-grab overflow-hidden"
-                  style={{
-                    width: cat.size,
-                    height: cat.size,
-                    top: cat.top,
-                    left: cat.left,
-                    border: `2px solid ${cat.color}30`,
-                    zIndex: 10 + i,
+          {/* Recent Purchase History */}
+          <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-[300px]">
+            <h3 className="text-[17px] font-bold text-[var(--app-text-main)] mb-4">최근 구매 기록</h3>
+            <div className="flex-1 overflow-y-auto space-y-2 pr-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+              {recentPurchases.map((tx) => (
+                <div
+                  key={tx.id}
+                  onClick={() => {
+                    setEditTransaction({...tx});
+                    setShowAdd(true);
                   }}
+                  className="flex justify-between items-center bg-[var(--app-bg-main)] hover:bg-[var(--app-bg-secondary)] p-3 rounded-xl border border-[var(--app-border)] cursor-pointer transition-colors"
                 >
-                  {/* 스티커 이미지 */}
-                  <img
-                    src={getImgSrc(cat.img)}
-                    alt={cat.name}
-                    className="object-contain drop-shadow-sm"
-                    style={{ width: cat.size * 0.55, height: cat.size * 0.55 }}
-                  />
-                  {/* 카테고리 라벨 */}
-                  <span
-                    className="font-bold tracking-tight leading-none -mt-0.5"
-                    style={{ color: cat.color, fontSize: cat.sizeText }}
-                  >
-                    {cat.name}
-                  </span>
-                </motion.div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-[var(--app-border)]">
+                      <Receipt className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <div className="text-[14px] font-bold text-[var(--app-text-main)] flex items-center gap-2">
+                        {tx.store}
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--app-primary-light)] text-[#6B4F3A]">{tx.category}</span>
+                      </div>
+                      <div className="text-[12px] text-[var(--app-text-tertiary)] mt-0.5">{tx.date}</div>
+                    </div>
+                  </div>
+                  <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                    -{tx.amount.toLocaleString()}원
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -399,10 +487,18 @@ export default function LedgerPage() {
             <div key="cal" className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full w-full relative">
               {/* Header */}
               <div className="px-5 pt-4">
-                <h2 className="text-[18px] font-bold text-[var(--app-text-main)] flex items-center gap-1.5 mb-3">
-                  12월 내 소비
-                  <ChevronDown className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
-                </h2>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-[18px] font-bold text-[var(--app-text-main)] flex items-center gap-1.5">
+                    12월 내 소비
+                    <ChevronDown className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
+                  </h2>
+                  <button 
+                    onClick={() => setShowPendingModal(true)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--app-bg-main)] text-[var(--app-text-tertiary)] hover:bg-[var(--app-primary-light)] hover:text-[var(--app-primary)] transition-colors border border-[var(--app-border)]"
+                  >
+                    <Plus className="w-5 h-5" strokeWidth={2} />
+                  </button>
+                </div>
 
                 {/* Summary */}
                 <div className="py-3 border-b border-[var(--app-border)] flex justify-between items-center">
@@ -505,36 +601,35 @@ export default function LedgerPage() {
                 </div>
               </div>
 
-              {/* Category Bubble Chart */}
+              {/* Recent Purchase History */}
               <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] p-5 flex flex-col flex-1 min-h-[300px]">
-                <h3 className="text-[17px] font-bold text-[var(--app-text-main)] mb-4">카테고리별 분포 (Top 5)</h3>
-                <div className="relative w-full max-w-[280px] aspect-square mx-auto flex-1 min-h-0 my-2">
-                  {topCategories.map((cat, i) => (
-                    <motion.div
-                      key={cat.id}
-                      className="absolute bg-white rounded-full flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.06)] overflow-hidden"
-                      style={{
-                        width: cat.size,
-                        height: cat.size,
-                        top: cat.top,
-                        left: cat.left,
-                        border: `2px solid ${cat.color}30`,
-                        zIndex: 10 + i,
+                <h3 className="text-[17px] font-bold text-[var(--app-text-main)] mb-4">최근 구매 기록</h3>
+                <div className="flex-1 overflow-y-auto space-y-2 pr-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                  {recentPurchases.map((tx) => (
+                    <div
+                      key={tx.id}
+                      onClick={() => {
+                        setEditTransaction({...tx});
+                        setShowAdd(true);
                       }}
+                      className="flex justify-between items-center bg-[var(--app-bg-main)] hover:bg-[var(--app-bg-secondary)] p-3 rounded-xl border border-[var(--app-border)] cursor-pointer transition-colors"
                     >
-                      <img
-                        src={getImgSrc(cat.img)}
-                        alt={cat.name}
-                        className="object-contain drop-shadow-sm"
-                        style={{ width: cat.size * 0.55, height: cat.size * 0.55 }}
-                      />
-                      <span
-                        className="font-bold tracking-tight leading-none -mt-0.5"
-                        style={{ color: cat.color, fontSize: cat.sizeText }}
-                      >
-                        {cat.name}
-                      </span>
-                    </motion.div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-[var(--app-border)]">
+                          <Receipt className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                        </div>
+                        <div>
+                          <div className="text-[14px] font-bold text-[var(--app-text-main)] flex items-center gap-2">
+                            {tx.store}
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--app-primary-light)] text-[#6B4F3A]">{tx.category}</span>
+                          </div>
+                          <div className="text-[12px] text-[var(--app-text-tertiary)] mt-0.5">{tx.date}</div>
+                        </div>
+                      </div>
+                      <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                        -{tx.amount.toLocaleString()}원
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -560,13 +655,13 @@ const MODAL_CATEGORIES = [
   { name: "돌봄/서비스", emoji: "🏠" },
 ];
 
-function AddModal({ onClose }: { onClose: () => void }) {
-  const [selCat, setSelCat] = useState("사료");
-  const [amount, setAmount] = useState(0);
-  const [content, setContent] = useState("");
+function AddModal({ initData, onSave, onClose }: { initData?: any; onSave: (data: any) => void; onClose: () => void }) {
+  const [selCat, setSelCat] = useState(initData?.category || "사료");
+  const [amount, setAmount] = useState(initData?.amount || 0);
+  const [content, setContent] = useState(initData?.store || "");
   const [pet, setPet] = useState("초코");
   const today = new Date().toISOString().split("T")[0];
-  const [date, setDate] = useState(today);
+  const [date, setDate] = useState(initData?.date || today);
 
   const addAmount = (n: number) => setAmount((v) => v + n);
 
@@ -694,12 +789,68 @@ function AddModal({ onClose }: { onClose: () => void }) {
             취소
           </button>
           <button
-            onClick={onClose}
+            onClick={() => onSave({ id: initData?.id, date, amount, category: selCat, store: content, isPending: initData?.isPending })}
             className="flex-1 py-3.5 text-white rounded-xl font-bold text-[15px] hover:opacity-90 active:scale-[0.98] transition-all"
             style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
           >
             저장하기
           </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   미등록 거래 기록 (Pending Transactions) 모달
+════════════════════════════════════════════ */
+function PendingTransactionsModal({ transactions, onSelect, onClose }: { transactions: any[], onSelect: (tx: any) => void, onClose: () => void }) {
+  return (
+    <div
+      className="absolute inset-0 bg-black/40 flex items-center justify-center z-50 p-5 backdrop-blur-sm"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+      >
+        <div className="flex justify-between items-center px-5 pt-5 pb-3 border-b border-[var(--app-border)]">
+          <div>
+            <h3 className="text-[18px] font-bold text-[var(--app-text-main)]">미반영 거래 기록</h3>
+            <span className="text-[12px] text-[var(--app-text-tertiary)] mt-0.5 block">가계부에 아직 등록되지 않은 내역입니다.</span>
+          </div>
+          <button onClick={onClose} className="text-[var(--app-text-tertiary)] hover:text-[var(--app-text-secondary)] transition-colors">
+            <X className="w-5 h-5" strokeWidth={2} />
+          </button>
+        </div>
+
+        <div className="p-5 flex-1 overflow-y-auto space-y-2">
+          {transactions.length > 0 ? transactions.map((tx) => (
+            <div
+              key={tx.id}
+              onClick={() => onSelect(tx)}
+              className="flex justify-between items-center bg-[var(--app-bg-main)] hover:bg-[var(--app-bg-secondary)] p-3 rounded-xl border border-[var(--app-border)] cursor-pointer transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-[var(--app-border)]">
+                  <Receipt className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <div className="text-[14px] font-bold text-[var(--app-text-main)] flex items-center gap-2">
+                    {tx.store}
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--app-primary-light)] text-[#6B4F3A]">{tx.category}</span>
+                  </div>
+                  <div className="text-[12px] text-[var(--app-text-tertiary)] mt-0.5">{tx.date}</div>
+                </div>
+              </div>
+              <div className="text-[15px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                -{tx.amount.toLocaleString()}원
+              </div>
+            </div>
+          )) : (
+            <p className="text-[13px] text-[var(--app-text-tertiary)] text-center py-5">모든 거래 내역이 등록되었습니다.</p>
+          )}
         </div>
       </motion.div>
     </div>

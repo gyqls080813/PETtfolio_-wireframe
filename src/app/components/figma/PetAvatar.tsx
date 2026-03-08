@@ -22,23 +22,14 @@ const sizeMap = {
     xl: "w-28 h-28",
 };
 
-/** Base avatar photos (close-up face) */
-const petPhotos: Record<string, string> = {
-    choco: "/pets/choco.png",
-    nabi: "/pets/nabi.png",
-};
+import pomeImg from "../../../../assets/pome.png";
+import catImg from "../../../../assets/cat.png";
+import pomeHappy from "../../../../assets/pome_thumbsup.png";
+import catHappy from "../../../../assets/cat_thumbsup.png";
+import pomeSleepy from "../../../../assets/pome_sad.png";
+import catSleepy from "../../../../assets/cat_sad.png";
 
-/** Mood-based full body photos */
-const petMoodPhotos: Record<string, Record<string, string>> = {
-    choco: {
-        happy: "/pets/choco_happy.png",
-        sleepy: "/pets/choco_sleepy.png",
-    },
-    nabi: {
-        happy: "/pets/nabi_happy.png",
-        sleepy: "/pets/nabi_sleepy.png",
-    },
-};
+const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 export default function PetAvatar({
     pet,
@@ -48,13 +39,21 @@ export default function PetAvatar({
     border = true,
     fullBody = false,
 }: PetAvatarProps) {
-    // Pick the right photo based on mood
-    let photoUrl: string | undefined;
-    if (mood !== "default" && petMoodPhotos[pet]?.[mood]) {
-        photoUrl = petMoodPhotos[pet][mood];
+    // Pick the right photo based on pet and mood
+    let photoUrl: any;
+    if (pet === "choco" || pet === "강아지") {
+        if (mood === "happy") photoUrl = pomeHappy;
+        else if (mood === "sleepy") photoUrl = pomeSleepy;
+        else photoUrl = pomeImg;
+    } else if (pet === "nabi" || pet === "고양이") {
+        if (mood === "happy") photoUrl = catHappy;
+        else if (mood === "sleepy") photoUrl = catSleepy;
+        else photoUrl = catImg;
     } else {
-        photoUrl = petPhotos[pet];
+        photoUrl = pomeImg;
     }
+    
+    const resolvedSrc = photoUrl ? getImgSrc(photoUrl) : undefined;
 
     const sizeClass = sizeMap[size] ?? sizeMap.sm;
 
@@ -62,9 +61,9 @@ export default function PetAvatar({
     if (fullBody) {
         return (
             <div className={`${sizeClass} shrink-0 ${className}`}>
-                {photoUrl ? (
+                {resolvedSrc ? (
                     <img
-                        src={photoUrl}
+                        src={resolvedSrc}
                         alt={`${pet} ${mood}`}
                         className="w-full h-full object-contain drop-shadow-sm"
                     />
@@ -85,9 +84,9 @@ export default function PetAvatar({
             className={`${sizeClass} rounded-full overflow-hidden shrink-0 ${border ? "ring-2 ring-[var(--app-border)] ring-offset-1 ring-offset-[var(--app-bg-main)]" : ""
                 } ${className}`}
         >
-            {photoUrl ? (
+            {resolvedSrc ? (
                 <img
-                    src={photoUrl}
+                    src={resolvedSrc}
                     alt={`${pet} ${mood}`}
                     className="w-full h-full object-cover"
                 />

@@ -1,4 +1,3 @@
-﻿import { useState } from "react";
 import {
   Plus,
   Edit3,
@@ -13,6 +12,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+
+import pomeBasic from "../../../assets/pome.png";
+import pomeHappy from "../../../assets/pome_eating.png";
+import catBasic from "../../../assets/cat.png";
+import catHappy from "../../../assets/cat_eating.png";
+
+const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 const supplies = [
   {
@@ -98,8 +104,10 @@ export default function SuppliesPage() {
 
   const getPetSticker = (pet: string, category: string) => {
     const isHappy = category === "사료" || category === "간식";
-    const petEn = pet === "초코" ? "choco" : pet === "나비" ? "nabi" : "choco";
-    return `/pets/${petEn}${isHappy ? "_happy" : ""}.png`;
+    if (pet === "나비") {
+        return getImgSrc(isHappy ? catHappy : catBasic);
+    }
+    return getImgSrc(isHappy ? pomeHappy : pomeBasic);
   };
 
   const DAY_WIDTH = 56; // Pixels per day

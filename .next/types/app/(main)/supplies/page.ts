@@ -1,4 +1,4 @@
-// File: C:\Users\SSAFY\Desktop\PETtfolio_-wireframe\src\app\(main)\supplies\page.tsx
+// File: C:\Users\gyqls\OneDrive\바탕 화면\PETtfolio_-wireframe\src\app\(main)\supplies\page.tsx
 import * as entry from '../../../../../src/app/(main)/supplies/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

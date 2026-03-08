@@ -12,6 +12,12 @@ import {
 } from "lucide-react";
 import { useSetAtom } from "jotai";
 import { showAddSupplyModalAtom } from "../store";
+import pomeBasic from "../../../assets/pome.png";
+import pomeHappy from "../../../assets/pome_eating.png";
+import catBasic from "../../../assets/cat.png";
+import catHappy from "../../../assets/cat_eating.png";
+
+const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 const supplies = [
     {
@@ -94,8 +100,10 @@ export function SuppliesTimeline() {
 
     const getPetSticker = (pet: string, category: string) => {
         const isHappy = category === "사료" || category === "간식";
-        const petEn = pet === "초코" ? "choco" : pet === "나비" ? "nabi" : "choco";
-        return `/pets/${petEn}${isHappy ? "_happy" : ""}.png`;
+        if (pet === "나비") {
+            return getImgSrc(isHappy ? catHappy : catBasic);
+        }
+        return getImgSrc(isHappy ? pomeHappy : pomeBasic);
     };
 
     // Configure timeline for the current month window

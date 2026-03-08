@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
@@ -7,17 +7,49 @@ import {
   HeartPulse,
   Info,
   CheckCircle2,
-  CalendarDays
+  CalendarDays,
+  CheckSquare,
+  Square
 } from "lucide-react";
 import pome from "../../assets/pome.png";
-import catImg from "../../assets/cat-character.png";
+import cat from "../../assets/cat.png";
+
+import pomeBaby from "../../assets/pome_baby.png";
+import pomeYouth from "../../assets/pome_youth.png";
+import pomeMiddle from "../../assets/pome_middle.png";
+import pomeSenior from "../../assets/pome_senior.png";
+
+import catBaby from "../../assets/cat_baby.png";
+import catYouth from "../../assets/cat_youth.png";
+import catMiddle from "../../assets/cat_middle.png";
+import catSenior from "../../assets/cat_senior.png";
+
+const lifeCycleImages: Record<string, any[]> = {
+  choco: [pomeBaby, pomeYouth, pomeMiddle, pomeSenior],
+  nabi: [catBaby, catYouth, catMiddle, catSenior],
+};
+
+const guideCoords: Record<string, { top: string, left: string, label: string }[][]> = {
+  choco: [
+    [ { label: "예방접종(전신)", top: "35%", left: "30%" }, { label: "사상충(내부)", top: "60%", left: "45%" }, { label: "사회화(행동)", top: "25%", left: "70%" } ],
+    [ { label: "슬개골(다리)", top: "80%", left: "35%" }, { label: "치석(구강)", top: "30%", left: "45%" }, { label: "산책(활동량)", top: "75%", left: "75%" } ],
+    [ { label: "심장(가슴)", top: "50%", left: "40%" }, { label: "체중(복부)", top: "65%", left: "55%" }, { label: "종합검진(전신)", top: "25%", left: "25%" } ],
+    [ { label: "백내장(안구)", top: "25%", left: "55%" }, { label: "소화(위장)", top: "65%", left: "45%" }, { label: "관절 무리(다리)", top: "85%", left: "40%" } ]
+  ],
+  nabi: [
+    [ { label: "종합백신(전신)", top: "35%", left: "30%" }, { label: "환경적응(행동)", top: "25%", left: "70%" }, { label: "양치(구강)", top: "30%", left: "45%" } ],
+    [ { label: "비뇨기(하복부)", top: "75%", left: "55%" }, { label: "음수량(구강)", top: "30%", left: "40%" }, { label: "사냥놀이(활동)", top: "50%", left: "75%" } ],
+    [ { label: "신부전(신장)", top: "60%", left: "55%" }, { label: "갑상선(목)", top: "40%", left: "50%" }, { label: "관절(다리)", top: "85%", left: "40%" } ],
+    [ { label: "소화기관(복부)", top: "65%", left: "50%" }, { label: "심/호흡(가슴)", top: "50%", left: "40%" }, { label: "건강검진(전신)", top: "25%", left: "25%" } ]
+  ]
+};
 
 const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 /* ───────────── 반려동물 데이터 ───────────── */
 const pets = [
   { id: "choco", name: "초코", icon: Dog, color: "var(--app-primary)", breed: "말티즈", age: 3, img: pome },
-  { id: "nabi", name: "나비", icon: Cat, color: "var(--app-success)", breed: "코리안숏헤어", age: 7, img: catImg },
+  { id: "nabi", name: "나비", icon: Cat, color: "var(--app-success)", breed: "코리안숏헤어", age: 7, img: cat },
 ];
 
 /* ───────────── 생애주기별 가이드 데이터 ───────────── */
@@ -98,8 +130,26 @@ export default function SavingsPage() {
   const guide = lifeCycleGuideByPet[activePet];
   const current = currentStatusByPet[activePet];
 
-  /* 현재 나이에 해당하는 stage index 찾기 */
-  const currentStageIdx = activePet === "choco" ? 1 : 2; // 초코=청년기, 나비=중년기
+  /* 현재 나이에 해당하는 stage index 도출 */
+  const defaultStageIdx = activePet === "choco" ? 1 : 2; // 초코=청년기, 나비=중년기
+  const currentStageIdx = defaultStageIdx;
+
+  // 탭 선택을 위한 selectedStageIdx
+  const [selectedStageIdx, setSelectedStageIdx] = useState(defaultStageIdx);
+
+  // 펫 종류가 바뀌면 초기화
+  useEffect(() => {
+    setSelectedStageIdx(activePet === "choco" ? 1 : 2);
+  }, [activePet]);
+
+  // 스케줄링(체크리스트) 상태 관리
+  // key 형태: `${petId}-${stageIdx}-${taskIdx}`
+  const [checkedTasks, setCheckedTasks] = useState<Record<string, boolean>>({});
+
+  const toggleTask = (pId: string, sIdx: number, tIdx: number) => {
+    const key = `${pId}-${sIdx}-${tIdx}`;
+    setCheckedTasks(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
     <div className="flex flex-col gap-3 h-full min-h-max lg:h-full lg:min-h-0 lg:overflow-hidden pb-20 lg:pb-0">
@@ -233,60 +283,137 @@ export default function SavingsPage() {
            </div>
         </div>
 
-         {/* 오른쪽: 생애주기별 규칙 기반 리스트 (새로운 가이드 레이아웃) */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col lg:h-full min-h-[400px] lg:min-h-0 overflow-hidden shadow-sm">
-          {/* 상단 타이틀 */}
-          <div className="flex items-center gap-2 px-5 pt-5 pb-3 shrink-0 border-b border-[var(--app-bg-secondary)]">
-            <HeartPulse className="w-4 h-4 text-[var(--app-primary-dark)]" />
-            <h3 className="text-[15px] lg:text-[15px] text-[#222]" style={{ fontWeight: 700 }}>
-              {pet.name} 생애주기 맞춤 정보
-            </h3>
+        {/* 오른쪽: 생애주기별 해부상/포인트 가이드 */}
+        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col lg:h-full min-h-[500px] lg:min-h-0 overflow-hidden shadow-sm">
+          {/* 상단 타이틀 & 탭 */}
+          <div className="px-5 pt-5 pb-4 border-b border-[var(--app-bg-secondary)] shrink-0">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <HeartPulse className="w-4 h-4 text-[var(--app-primary-dark)]" />
+                <h3 className="text-[15px] text-[#222]" style={{ fontWeight: 700 }}>
+                  {pet.name} 연령별 건강 지도
+                </h3>
+              </div>
+              <span className="text-[11px] text-white px-2.5 py-1 rounded-full" style={{ background: stageColors[currentStageIdx], fontWeight: 600 }}>
+                현재 나이: {guide[currentStageIdx].stage}
+              </span>
+            </div>
+
+            {/* 연령 탭 */}
+            <div className="flex items-center gap-2">
+              {guide.map((st, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedStageIdx(idx)}
+                  className="flex-1 py-2 text-[12px] font-bold rounded-lg transition-colors border"
+                  style={{
+                    background: selectedStageIdx === idx ? stageColors[idx] : "transparent",
+                    color: selectedStageIdx === idx ? "#fff" : "#888",
+                    borderColor: selectedStageIdx === idx ? stageColors[idx] : "#EAEAEA"
+                  }}
+                >
+                  {st.stage}
+                </button>
+              ))}
+            </div>
           </div>
           
-          <div className="flex-1 overflow-y-auto custom-scrollbar bg-[var(--app-bg-secondary)] p-4 space-y-4">
-            {guide.map((stage, idx) => (
-               <div 
-                 key={idx} 
-                 className={`flex flex-col bg-white rounded-2xl p-4 border transition-shadow ${currentStageIdx === idx ? 'border-[var(--app-primary)] shadow-md relative' : 'border-[#EAEAEA] shadow-sm'}`}
-               >
-                 {currentStageIdx === idx && (
-                    <div className="absolute top-4 right-4 bg-[var(--app-primary)] text-white px-2.5 py-1 rounded-full text-[10px] font-bold shadow-sm">
-                      현재 단계
-                    </div>
-                 )}
-                 <div className="flex items-center gap-3 mb-3">
-                   <div 
-                     className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                     style={{ background: `${stageColors[idx]}20` }}
-                   >
-                      <CalendarDays className="w-5 h-5" style={{ color: stageColors[idx] }} />
-                   </div>
-                   <div>
-                     <h4 className="text-[14px] text-[#222]" style={{ fontWeight: 700 }}>
-                       {stage.stage} <span className="text-[11px] text-[#888] font-normal ml-1 border border-[#DDD] rounded px-1.5 py-0.5">{stage.ageRange}</span>
-                     </h4>
-                     <p className="text-[11px] text-[#6B4F3A] mt-0.5 font-bold">{stage.title}</p>
-                   </div>
-                 </div>
-
-                 <div className="bg-[#FAF9F6] p-3 rounded-xl border border-[#F2EFE9] mb-3">
-                    <p className="text-[12px] text-[#555] leading-relaxed">
-                      {stage.description}
-                    </p>
-                 </div>
+          <div className="flex-1 overflow-y-auto w-full custom-scrollbar bg-[#FAFAF8]" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            <div className="relative w-full min-h-full flex flex-col items-center p-6 pb-24">
+              
+              {/* Content Container */}
+              <div className="flex flex-col lg:flex-row w-full max-w-[800px] gap-10 lg:gap-16 items-center lg:items-center justify-center relative z-10 shrink-0 mb-6 mt-4">
                  
-                 <ul className="space-y-1.5 px-1">
-                   {stage.points.map((point, pIdx) => (
-                      <li key={pIdx} className="flex items-start gap-2 text-[12px] text-[#444] leading-snug">
-                         <CheckCircle2 className="w-3.5 h-3.5 text-[var(--app-primary)] shrink-0 mt-[1.5px]" />
-                         <span>{point}</span>
-                      </li>
-                   ))}
-                 </ul>
-               </div>
-            ))}
-          </div>
+                 {/* Left: Checklist */}
+                 <div className="w-full lg:w-[320px] shrink-0 flex flex-col gap-4 order-2 lg:order-1">
+                   <div className="flex items-center justify-between mb-1 px-1">
+                     <span className="text-[13px] font-bold text-[#444] bg-white px-2 py-0.5 rounded shadow-sm">필수 체크리스트 목록</span>
+                     <span className="text-[11px] text-white bg-[#444] px-2 py-0.5 rounded-full font-bold">
+                       {guide[selectedStageIdx].points.filter((_, i) => checkedTasks[`${pet.id}-${selectedStageIdx}-${i}`]).length} / {guide[selectedStageIdx].points.length} 완료
+                     </span>
+                   </div>
+                   
+                   {guide[selectedStageIdx].points.map((pointText, pIdx) => {
+                     const isChecked = checkedTasks[`${pet.id}-${selectedStageIdx}-${pIdx}`];
+                     const label = guideCoords[pet.id][selectedStageIdx][pIdx].label;
+                     return (
+                       <div 
+                         key={pIdx}
+                         onClick={() => toggleTask(pet.id, selectedStageIdx, pIdx)}
+                         className={`checklist-card flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all shrink-0 ${isChecked ? 'bg-[var(--app-success)]/10 border-[var(--app-success)]/40 shadow-sm' : 'bg-white border-[#EAEAEA] shadow-sm hover:border-[var(--app-primary)]/50'}`}
+                       >
+                         <button className="mt-0.5 shrink-0 transition-colors">
+                           {isChecked ? (
+                             <CheckSquare className="w-5 h-5 text-[var(--app-success)]" />
+                           ) : (
+                             <Square className="w-5 h-5 text-[#CCC]" />
+                           )}
+                         </button>
+                         <div className="flex-1 flex flex-col gap-1">
+                           <span className={`text-[12px] font-bold ${isChecked ? 'text-[var(--app-success)]' : 'text-[#444]'}`}>
+                             {label}
+                           </span>
+                           <span className={`text-[12px] leading-snug ${isChecked ? 'text-[#888]' : 'text-[#555]'}`}>
+                             {pointText}
+                           </span>
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
 
+                 {/* Right: Image & Hotspots */}
+                 <div className="relative w-[200px] lg:w-[280px] aspect-square flex items-center justify-center shrink-0 order-1 lg:order-2">
+                    <img
+                      src={getImgSrc(lifeCycleImages[pet.id][selectedStageIdx])}
+                      alt={guide[selectedStageIdx].stage}
+                      className="w-full h-full object-contain pointer-events-none drop-shadow-sm"
+                      style={{ opacity: 0.5, filter: "grayscale(10%) saturate(120%)" }}
+                    />
+
+                    {/* 포인트(Hotspots) 영구 라벨 표시 */}
+                    {guideCoords[pet.id][selectedStageIdx].map((coord, pIdx) => {
+                      const isChecked = checkedTasks[`${pet.id}-${selectedStageIdx}-${pIdx}`];
+                      const pColor = isChecked ? "var(--app-success)" : stageColors[selectedStageIdx];
+                      return (
+                        <div 
+                          key={pIdx}
+                          className="absolute z-10 flex flex-col items-center"
+                          style={{ top: coord.top, left: coord.left, transform: "translate(-50%, -50%)" }}
+                        >
+                          <div className="anatomy-dot relative flex items-center justify-center w-5 h-5 mb-1">
+                             <span className={`absolute inline-flex h-full w-full rounded-full opacity-30 ${isChecked ? '' : 'animate-pulse'}`} style={{ backgroundColor: pColor }}></span>
+                             <span className="relative inline-flex rounded-full w-3 h-3 shadow-md" style={{ backgroundColor: pColor }}></span>
+                          </div>
+                          
+                          {/* 라벨 (항상 켜져 있음) */}
+                           <div 
+                             className="whitespace-nowrap px-1.5 py-0.5 rounded shadow-sm text-[9px] lg:text-[10px] font-bold transition-colors" 
+                             style={{ 
+                               backgroundColor: isChecked ? "var(--app-success)" : "white", 
+                               color: isChecked ? "white" : pColor, 
+                               border: isChecked ? "none" : `1px solid ${pColor}40` 
+                             }}
+                           >
+                             {coord.label}
+                           </div>
+                        </div>
+                      );
+                    })}
+                 </div>
+              </div>
+              
+              {/* 하단 요약 설명 박스 */}
+              <div className="w-full max-w-[800px] bg-white/70 rounded-xl p-4 border border-[#F0F0F0] mt-auto z-10 shrink-0">
+                 <div className="flex gap-2">
+                   <CheckCircle2 className="w-4 h-4 shrink-0 mt-[2px]" style={{ color: stageColors[selectedStageIdx] }} />
+                   <p className="text-[12px] text-[#555] leading-relaxed font-medium">
+                     {guide[selectedStageIdx].description}
+                   </p>
+                 </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

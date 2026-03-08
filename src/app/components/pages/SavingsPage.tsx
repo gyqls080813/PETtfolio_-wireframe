@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import {
   AlertTriangle,
   Sparkles,
@@ -10,8 +10,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 import pome from "../../../assets/pome.png";
+import cat from "../../../assets/cat.png";
 
 /* ───────────── 반려동물 데이터 ───────────── */
+const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
+
 const pets = [
   { id: "choco", name: "초코", icon: Dog, color: "var(--app-primary)", breed: "말티즈", age: 3 },
   { id: "nabi", name: "나비", icon: Cat, color: "var(--app-success)", breed: "코리안숏헤어", age: 7 },
@@ -279,7 +282,7 @@ export default function SavingsPage() {
             {/* 강아지 이미지 */}
             <div className="relative z-10 flex items-end justify-center flex-1">
               <img
-                src={pome}
+                src={getImgSrc(activePet === "nabi" ? cat : pome)}
                 alt="반려동물 캐릭터"
                 className="object-contain drop-shadow-md"
                 style={{ height: "350px", maxHeight: "100%" }}

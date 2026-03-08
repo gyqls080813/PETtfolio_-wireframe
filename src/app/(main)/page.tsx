@@ -16,6 +16,7 @@ import {
   X,
   Send,
   Activity,
+  HeartPulse,
 } from "lucide-react";
 import PetCharacter from "../../shared/components/figma/PetCharacter";
 import PetAvatar from "../../shared/components/figma/PetAvatar";
@@ -51,7 +52,7 @@ const upcomingExpenses = [
 
 export default function HomePage() {
   const router = useRouter();
-  const [selectedPet, setSelectedPet] = useState<string>("전체");
+
   // QR Code trigger via global event
   const triggerQrModal = () => {
     window.dispatchEvent(new CustomEvent("openQrModal"));
@@ -59,110 +60,39 @@ export default function HomePage() {
 
   return (
     <div className="space-y-3">
-      {/* Pet Selector */}
-      <div className="flex gap-2">
-        <div
-          onClick={() => setSelectedPet("전체")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "전체" ? "bg-gradient-to-r from-[var(--app-primary)] to-[var(--app-primary-dark)] text-white shadow-md" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
-          style={
-            selectedPet === "전체"
-              ? { boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)" }
-              : {}
-          }
-        >
-          <span
-            className="text-[13px]"
-            style={{ fontWeight: selectedPet === "전체" ? 600 : 500 }}
-          >
-            전체
-          </span>
-        </div>
-        <div
-          onClick={() => setSelectedPet("초코")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "초코" ? "bg-[var(--app-primary-light)] border border-[var(--app-primary)]/50 text-[#6B4F3A]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[var(--app-primary)]/40"}`}
-        >
-          <PetAvatar pet="choco" size="xs" border={false} />
-          <span
-            className="text-[13px]"
-            style={{ fontWeight: selectedPet === "초코" ? 600 : 500 }}
-          >
-            초코
-          </span>
-        </div>
-        <div
-          onClick={() => setSelectedPet("나비")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all ${selectedPet === "나비" ? "bg-[#E8DFD0] border border-[#C4A684]/50 text-[var(--app-text-secondary)]" : "bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[var(--app-text-sub)] hover:border-[#C4A684]/40"}`}
-        >
-          <PetAvatar pet="nabi" size="xs" border={false} />
-          <span
-            className="text-[13px]"
-            style={{ fontWeight: selectedPet === "나비" ? 600 : 500 }}
-          >
-            나비
-          </span>
-        </div>
-      </div>
-
       {/* Main Content Layout */}
-      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 lg:items-stretch">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 lg:items-stretch h-full">
+        
         {/* Left Column: Spending History & Upcoming Expenses */}
         <div className="flex flex-col gap-3 h-full">
-          {/* Spending History Section */}
-          <div className="bg-[var(--app-bg-secondary)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col flex-1 h-full">
-            <h3
-              className="text-[14px] text-[var(--app-text-main)] mb-3"
-              style={{ fontWeight: 600 }}
-            >
-              <TrendingDown
-                className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]"
-                strokeWidth={1.5}
-              />
-              나의 소비 내역
-            </h3>
-            <div className="space-y-2 flex-1">
-              <div className="flex items-center justify-between p-3 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/50">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center">
-                      <TrendingDown className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <div className="text-[13px] text-[var(--app-text-main)] font-medium">동물병원 진료비</div>
-                      <div className="text-[11px] text-[var(--app-text-tertiary)] mt-0.5">오늘 · 14:30</div>
-                    </div>
-                  </div>
-                  <span className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>-₩45,000</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/50">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center">
-                      <TrendingDown className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <div className="text-[13px] text-[var(--app-text-main)] font-medium">장난감 구매</div>
-                      <div className="text-[11px] text-[var(--app-text-tertiary)] mt-0.5">어제 · 18:20</div>
-                    </div>
-                  </div>
-                  <span className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>-₩12,000</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/50">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--app-primary-light)] flex items-center justify-center">
-                      <TrendingDown className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <div className="text-[13px] text-[var(--app-text-main)] font-medium">펫시터 예약</div>
-                      <div className="text-[11px] text-[var(--app-text-tertiary)] mt-0.5">03/03 · 09:15</div>
-                    </div>
-                  </div>
-                  <span className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>-₩35,000</span>
-              </div>
+          {/* 나의 소비 내역 (이번달 지출 금액) */}
+          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col justify-center items-center flex-none relative overflow-hidden h-[150px]">
+            {/* Background Decor */}
+            <div className="absolute -top-10 -right-10 w-24 h-24 bg-[var(--app-primary)]/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -bottom-8 -left-8 w-20 h-20 bg-[var(--app-primary)]/5 rounded-full blur-xl pointer-events-none" />
+
+            <div className="flex items-center justify-between w-full mb-2">
+              <h3 className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 600 }}>
+                <Wallet className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                나의 소비 내역
+              </h3>
+              <button 
+                className="text-[11px] font-bold text-[var(--app-primary)] px-2 py-1 rounded bg-[var(--app-primary)]/10 hover:bg-[var(--app-primary)]/20 transition-colors" 
+                onClick={() => router.push("/ledger")}
+              >
+                가계부 보기
+              </button>
             </div>
-            <button className="w-full mt-3 py-2.5 rounded-2xl bg-[var(--app-bg-main)] border border-[var(--app-border)] text-[13px] text-[var(--app-text-secondary)] font-medium hover:border-[var(--app-primary)]/40 transition-colors" onClick={() => router.push("/ledger")}>
-              전체 내역 보기
-            </button>
+            
+            <div className="flex flex-col items-center justify-center py-2 w-full h-full text-center">
+               <span className="text-[13px] text-[#888] mb-1 font-medium">이번달 지출 금액</span>
+               <div className="text-[32px] text-[#222]" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>
+                 <span className="text-[20px] mr-1">₩</span>199,000
+               </div>
+            </div>
           </div>
 
-          {/* Upcoming Expenses Section (Moved from Right Column) */}
+          {/* Upcoming Expenses Section */}
           <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex-none">
             <div className="flex items-center justify-between mb-3">
               <h3
@@ -177,7 +107,7 @@ export default function HomePage() {
               </h3>
               <button
                 className="text-[11px] text-[var(--app-primary)]"
-                onClick={() => router.push("/supplies")}
+                onClick={() => router.push("/ledger")}
               >
                 더보기
               </button>
@@ -186,7 +116,7 @@ export default function HomePage() {
               {upcomingExpenses.map((exp, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-2.5 bg-[var(--app-bg-main)] rounded-2xl border border-[var(--app-border)]/30"
+                  className="flex items-center justify-between p-2.5 bg-[#FAFAFA] rounded-2xl border border-[var(--app-border)]/30"
                 >
                   <div className="flex items-center gap-2.5">
                     <PetAvatar pet={exp.petId} size="xs" border={true} />
@@ -216,67 +146,70 @@ export default function HomePage() {
 
         {/* Right Column: Life-Cycle Guide */}
         <div className="flex flex-col gap-3 h-full">
-          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-5 flex flex-col flex-1 h-full relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--app-primary-light)] rounded-full blur-3xl opacity-30 -mr-16 -mt-16" />
-            <h3
-              className="text-[15px] text-[var(--app-text-main)] mb-1 relative z-10"
-              style={{ fontWeight: 700 }}
-            >
-              <Activity
-                className="w-4 h-4 inline mr-1.5 text-[var(--app-primary)]"
-                strokeWidth={2}
-              />
-              반려동물 생애주기 가이드
+          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col flex-1 overflow-hidden h-auto lg:h-[330px]">
+            <h3 className="text-[14px] text-[var(--app-text-main)] mb-3 shrink-0" style={{ fontWeight: 600 }}>
+              <HeartPulse className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]" strokeWidth={1.5} />
+              우리 아이 생애주기 맞춤 질병 가이드
             </h3>
-            <p className="text-[12px] text-[var(--app-text-tertiary)] mb-5 relative z-10">
-              나이와 건강 상태에 맞춘 맞춤형 케어 팁을 확인하세요.
-            </p>
-            
-            <div className="space-y-3 flex-1 overflow-y-auto pr-1 custom-scrollbar relative z-10">
-              {/* Dog Guide */}
-              <div className="p-4 rounded-2xl border border-[var(--app-border)]/60 bg-[#FAFAFA] hover:border-[var(--app-primary)]/40 transition-colors">
-                <div className="flex justify-between items-start mb-2">
-                   <div className="flex items-center gap-1.5">
-                     <span className="text-[14px] font-bold text-[#6B4F3A]">강아지 (시니어)</span>
-                   </div>
-                   <span className="bg-[#E8C5A0]/30 text-[#6B4F3A] text-[10px] px-2 py-0.5 rounded-full font-semibold">초코</span>
+
+            <div className="relative w-full flex-1 flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-1 px-1 h-full" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+              {/* 1st Card: Choco (Dog) - Youth */}
+              <div className="snap-center shrink-0 w-full min-w-full flex items-center justify-between relative cursor-pointer gap-3 lg:gap-6 px-1" onClick={() => router.push("/savings")}>
+                
+                {/* Speech Bubble (Left) */}
+                <div className="relative bg-white rounded-[24px] border-[1.5px] border-[#4C3B2B] p-4 lg:p-5 shadow-sm flex-1 z-20">
+                  <div className="inline-block bg-[#83C594] text-white text-[11px] font-bold px-3 py-1 rounded-full mb-3 shadow-sm">
+                    현재 청년기 (3~6세)
+                  </div>
+                  <div className="text-[15px] lg:text-[17px] font-bold text-[#222] leading-[1.4] mb-3 tracking-tight">
+                    저 요즘 슬개골이<br />자꾸 신경 쓰여요 😥
+                  </div>
+                  <div className="bg-[#FAF8F5] rounded-xl p-3 text-[12px] lg:text-[13px] text-[#555] leading-relaxed border border-[#F0EBE1]">
+                    말티즈 <span className="font-bold text-[#4C3B2B]">3세</span>는 슬개골 탈구 방지를 위해 미끄럼 방지 등 일상 관리를 꼭 챙겨주세요.
+                  </div>
+
+                  {/* Tail pointing right */}
+                  <div className="absolute top-[50%] -right-[13.5px] -translate-y-1/2 w-0 h-0 border-t-[10px] border-b-[10px] border-l-[14px] border-t-transparent border-b-transparent border-l-[#4C3B2B]">
+                    <div className="absolute -top-[8.5px] -left-[16px] w-0 h-0 border-t-[8.5px] border-b-[8.5px] border-l-[12px] border-t-transparent border-b-transparent border-l-white" />
+                  </div>
                 </div>
-                <div className="text-[12px] text-[var(--app-text-main)] leading-relaxed mb-3">
-                  노령견은 관절 건강과 정기적인 치아 관리가 중요합니다. 과도한 산책보다는 가벼운 걷기 운동을 꾸준히 해주시고, 연 1~2회 종합 건강 검진을 권장합니다.
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#관절영양제</span>
-                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#치석제거</span>
-                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#가벼운산책</span>
+
+                {/* Character (Right) */}
+                <div className="relative z-10 shrink-0 w-[110px] lg:w-[150px] flex justify-end items-end h-[180px] lg:h-[220px]">
+                  <img src={typeof pomeImg === 'string' ? pomeImg : pomeImg?.src} alt="Choco" className="w-full h-auto object-contain drop-shadow-lg" />
                 </div>
               </div>
 
-              {/* Cat Guide */}
-              <div className="p-4 rounded-2xl border border-[var(--app-border)]/60 bg-[#FAFAFA] hover:border-[#C4A684]/40 transition-colors">
-                <div className="flex justify-between items-start mb-2">
-                   <div className="flex items-center gap-1.5">
-                     <span className="text-[14px] font-bold text-[#6B4F3A]">고양이 (성묘)</span>
-                   </div>
-                   <span className="bg-[#E8C5A0]/30 text-[#6B4F3A] text-[10px] px-2 py-0.5 rounded-full font-semibold">나비</span>
+              {/* 2nd Card: Nabi (Cat) - Middle Age */}
+              <div className="snap-center shrink-0 w-full min-w-full flex items-center justify-between relative cursor-pointer gap-3 lg:gap-6 px-1" onClick={() => router.push("/savings")}>
+                
+                {/* Speech Bubble (Left) */}
+                <div className="relative bg-white rounded-[24px] border-[1.5px] border-[#4C3B2B] p-4 lg:p-5 shadow-sm flex-1 z-20">
+                  <div className="inline-block bg-[#83C594] text-white text-[11px] font-bold px-3 py-1 rounded-full mb-3 shadow-sm">
+                    현재 중년기 (7~10세)
+                  </div>
+                  <div className="text-[15px] lg:text-[17px] font-bold text-[#222] leading-[1.4] mb-3 tracking-tight">
+                    신장이 좀 약해지는<br />나이가 됐어요 🐾
+                  </div>
+                  <div className="bg-[#FAF8F5] rounded-xl p-3 text-[12px] lg:text-[13px] text-[#555] leading-relaxed border border-[#F0EBE1]">
+                    코리안숏헤어 <span className="font-bold text-[#4C3B2B]">7세</span>는 만성 신부전 예방을 위해 습식 사료로 음수량을 늘려주세요.
+                  </div>
+
+                  {/* Tail pointing right */}
+                  <div className="absolute top-[50%] -right-[13.5px] -translate-y-1/2 w-0 h-0 border-t-[10px] border-b-[10px] border-l-[14px] border-t-transparent border-b-transparent border-l-[#4C3B2B]">
+                    <div className="absolute -top-[8.5px] -left-[16px] w-0 h-0 border-t-[8.5px] border-b-[8.5px] border-l-[12px] border-t-transparent border-b-transparent border-l-white" />
+                  </div>
                 </div>
-                <div className="text-[12px] text-[var(--app-text-main)] leading-relaxed mb-3">
-                  활동량이 줄어드는 시기이므로 비만에 주의해야 합니다. 수분 섭취를 늘리기 위해 습식 사료 빈도를 높이고, 스트레스 해소를 위해 캣타워와 사냥 놀이를 규칙적으로 제공하세요.
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#체중관리</span>
-                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#음수량늘리기</span>
-                  <span className="px-2 py-1 bg-white border border-[#E5E5E5] rounded-lg text-[10px] text-[var(--app-text-secondary)]">#사냥놀이</span>
+
+                {/* Character (Right) */}
+                <div className="relative z-10 shrink-0 w-[110px] lg:w-[150px] flex justify-end items-end h-[180px] lg:h-[220px]">
+                  <img src={typeof catImg === 'string' ? catImg : catImg?.src} alt="Nabi" className="w-full h-auto object-contain drop-shadow-lg" />
                 </div>
               </div>
             </div>
-            
-            <button className="w-full mt-4 py-2.5 rounded-2xl bg-[var(--app-primary-light)] text-[13px] text-[var(--app-primary-dark)] font-bold hover:bg-[#E8C5A0]/60 transition-colors relative z-10" onClick={() => router.push("/health")}>
-              맞춤 가이드 더보기
-            </button>
           </div>
         </div>
       </div>
-
     </div>
   );
 }
