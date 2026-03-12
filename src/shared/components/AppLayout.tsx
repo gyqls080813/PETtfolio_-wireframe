@@ -16,6 +16,7 @@ import {
     X,
     Send,
     Wallet,
+    CreditCard,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import dogImg from "../../assets/pome.png";
@@ -23,6 +24,7 @@ import MobileBottomNav from "./MobileBottomNav";
 
 const navItems = [
     { href: "/", icon: Home, label: "홈" },
+    { href: "/transactions", icon: CreditCard, label: "거래 관리" },
     { href: "/ledger", icon: BookOpen, label: "가계부" },
     { href: "/savings", icon: Activity, label: "생애주기" },
     { href: "/reports", icon: BarChart3, label: "리포트" },
@@ -142,7 +144,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </header>
 
                 {/* Page content */}
-                <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 custom-scrollbar relative">
+                <main className="flex-1 overflow-hidden p-4 lg:p-6 pb-20 lg:pb-6 relative">
                     {children}
                 </main>
             </div>

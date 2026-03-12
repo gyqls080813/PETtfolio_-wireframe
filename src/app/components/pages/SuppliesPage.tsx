@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Plus,
   Edit3,
@@ -11,6 +12,8 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
+  X,
+  Search,
 } from "lucide-react";
 
 import pomeBasic from "../../../assets/pome.png";
@@ -96,6 +99,9 @@ export default function SuppliesPage() {
   const [filterPet, setFilterPet] = useState("전체");
   const today = new Date(2026, 2, 5); // 2026-03-05
   const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [editingSupply, setEditingSupply] = useState<any>(null);
+  const [supplyList, setSupplyList] = useState(supplies);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const parseDate = (dateStr: string) => {
     const [y, m, d] = dateStr.split('-').map(Number);
@@ -126,7 +132,7 @@ export default function SuppliesPage() {
     dateHeaders.push(d);
   }
 
-  const allTimelineItems = supplies.map(s => {
+  const allTimelineItems = supplyList.map(s => {
     const startDate = parseDate(s.lastPurchase);
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + s.cycle);
@@ -214,15 +220,6 @@ export default function SuppliesPage() {
             <option value="초코">초코</option>
             <option value="나비">나비</option>
           </select>
-
-          <button
-            className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95 ml-2"
-            style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", fontWeight: 600 }}
-            onClick={() => setShowAdd(true)}
-          >
-            <Plus className="w-4 h-4" />
-            품목 추가
-          </button>
         </div>
       </div>
 
@@ -296,7 +293,7 @@ export default function SuppliesPage() {
       )}
 
       {/* Supplies Timeline Container */}
-      <div className="border border-[var(--app-border)] rounded-2xl bg-[#FAFAFA] overflow-hidden shadow-sm flex flex-col" style={{ height: "460px" }}>
+      <div className="border border-[var(--app-border)] rounded-2xl bg-[#FAFAFA] overflow-hidden shadow-sm flex flex-col" style={{ height: "460px", minHeight: "calc(100vh - 170px)" }}>
 
         {/* Month/Day Headers (Fixed width) */}
         <div className="h-[48px] border-b border-[var(--app-border)] bg-[var(--app-bg-main)] flex w-full">
@@ -457,6 +454,126 @@ export default function SuppliesPage() {
           </button>
         </div>
       )}
+
+      {/* ═══ 소모품 관리 섹션 ═══ */}
+      <div className="bg-white rounded-2xl border border-[var(--app-border)] shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-[var(--app-border)] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Package className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+            <h3 className="text-[16px] font-bold text-[var(--app-text-main)]">소모품 관리</h3>
+            <span className="text-[11px] text-[var(--app-text-tertiary)] bg-[var(--app-bg-tertiary)] px-2 py-0.5 rounded-full font-medium">{supplyList.length}개</span>
+          </div>
+          <button
+            className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
+            style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", fontWeight: 600 }}
+            onClick={() => { setEditingSupply(null); setShowAdd(true); }}
+          >
+            <Plus className="w-4 h-4" />
+            품목 추가
+          </button>
+        </div>
+
+        {/* 검색 */}
+        <div className="px-5 py-3 border-b border-[var(--app-border)] bg-[var(--app-bg-main)]">
+          <div className="relative">
+            <Search className="w-4 h-4 text-[var(--app-text-tertiary)] absolute left-3 top-1/2 -translate-y-1/2" strokeWidth={2} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="품목명, 카테고리 검색..."
+              className="w-full pl-9 pr-3 py-2 text-[13px] rounded-xl border border-[var(--app-border)] bg-white focus:border-[var(--app-primary)] focus:ring-1 focus:ring-[var(--app-primary)]/30 outline-none transition-all placeholder:text-[var(--app-text-tertiary)]"
+            />
+          </div>
+        </div>
+
+        {/* 품목 카드 그리드 */}
+        <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {supplyList
+            .filter(s => {
+              if (!searchQuery.trim()) return true;
+              const q = searchQuery.toLowerCase();
+              return s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q) || s.pet.toLowerCase().includes(q);
+            })
+            .map((item) => {
+              const daysLeft = Math.ceil((parseDate(item.lastPurchase).getTime() + item.cycle * 86400000 - today.getTime()) / 86400000);
+              const isUrgent = daysLeft <= 7;
+              const isExpired = daysLeft <= 0;
+              const petTheme = getPetTheme(item.pet);
+
+              return (
+                <div
+                  key={item.id}
+                  className={`rounded-2xl border p-4 flex flex-col relative group transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer ${
+                    isExpired ? 'border-[var(--app-danger)]/30 bg-[#FFF8F8]' : isUrgent ? 'border-[var(--app-warning)]/30 bg-[#FFFCF5]' : 'border-[var(--app-border)] bg-white'
+                  }`}
+                  onClick={() => { setEditingSupply(item); setShowAdd(true); }}
+                >
+                  {/* 상태 뱃지 */}
+                  {(isExpired || isUrgent) && (
+                    <div className={`absolute top-2 right-2 text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                      isExpired ? 'bg-[var(--app-danger)]/10 text-[var(--app-danger)]' : 'bg-[var(--app-warning)]/10 text-[var(--app-warning)]'
+                    }`}>
+                      {isExpired ? '소진됨' : `${daysLeft}일 남음`}
+                    </div>
+                  )}
+
+                  {/* 펫 아이콘 + 카테고리 */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: petTheme.bg, border: `1px solid ${petTheme.border}` }}>
+                      <img src={getPetSticker(item.pet, item.category)} alt={item.pet} className="w-6 h-6 rounded-full object-cover" />
+                    </div>
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: petTheme.bg, color: petTheme.color }}>
+                      {item.category}
+                    </span>
+                  </div>
+
+                  {/* 품목명 */}
+                  <h4 className="text-[13px] font-bold text-[var(--app-text-main)] mb-1 line-clamp-2 leading-tight">{item.name}</h4>
+
+                  {/* 가격 */}
+                  <div className="text-[14px] font-bold text-[var(--app-text-main)] mt-auto" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                    {item.price.toLocaleString()}원
+                  </div>
+
+                  {/* 주기 정보 */}
+                  <div className="text-[10px] text-[var(--app-text-tertiary)] mt-1">
+                    {item.pet} · {item.cycle}일 주기
+                  </div>
+
+                  {/* 호버 액션 */}
+                  <div className="absolute bottom-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      className="w-6 h-6 rounded-full bg-white border border-[var(--app-border)] flex items-center justify-center hover:bg-[#F5F0E6] transition-colors"
+                      onClick={(e) => { e.stopPropagation(); setEditingSupply(item); setShowAdd(true); }}
+                      title="수정"
+                    >
+                      <Edit3 className="w-3 h-3 text-[#A09080]" />
+                    </button>
+                    <button
+                      className="w-6 h-6 rounded-full bg-white border border-[var(--app-border)] flex items-center justify-center hover:bg-[#FFF0F0] transition-colors"
+                      onClick={(e) => { e.stopPropagation(); setSupplyList(prev => prev.filter(s => s.id !== item.id)); }}
+                      title="삭제"
+                    >
+                      <Trash2 className="w-3 h-3 text-[var(--app-danger)]" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+          {/* 품목 추가 카드 (+ 버튼) */}
+          <div
+            className="rounded-2xl border-2 border-dashed border-[var(--app-border)] p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[var(--app-primary)]/40 hover:bg-[var(--app-primary)]/5 transition-all min-h-[160px]"
+            onClick={() => { setEditingSupply(null); setShowAdd(true); }}
+          >
+            <div className="w-10 h-10 rounded-full bg-[var(--app-primary)]/10 flex items-center justify-center">
+              <Plus className="w-5 h-5 text-[var(--app-primary)]" />
+            </div>
+            <span className="text-[12px] font-semibold text-[var(--app-text-tertiary)]">품목 추가</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

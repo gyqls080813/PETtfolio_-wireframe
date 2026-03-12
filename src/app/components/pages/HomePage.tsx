@@ -16,6 +16,10 @@ import {
   X,
   Send,
   HeartPulse,
+  Trophy,
+  Crown,
+  Medal,
+  BarChart3,
 } from "lucide-react";
 import PetCharacter from "../figma/PetCharacter";
 import PetAvatar from "../figma/PetAvatar";
@@ -31,19 +35,25 @@ const upcomingExpenses = [
   { label: "미용", date: "03/20", amount: "50,000", pet: "초코", petId: "choco", icon: Dog },
 ];
 
+const memberRanking = [
+  { name: "김집사", expense: 690000, rank: 1, medal: "🥇" },
+  { name: "이집사", expense: 247000, rank: 2, medal: "🥈" },
+  { name: "박집사", expense: 123000, rank: 3, medal: "🥉" },
+];
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   return (
-    <div className="space-y-3 lg:pt-2">
+    <div className="space-y-5">
 
       {/* ── Desktop Grid Layout ── */}
-      <div className="hidden lg:grid grid-cols-2 gap-3 items-stretch">
-        <div className="flex flex-col gap-3 h-full">
+      <div className="hidden lg:grid grid-cols-2 gap-5 items-stretch" style={{ minHeight: "calc(100vh - 130px)" }}>
+        <div className="flex flex-col gap-5 h-full">
           {/* Hero Wallet Card */}
           <div
-            className="rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between mb-4 flex-none"
+            className="rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between flex-1"
             style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark), #B8865A)" }}
           >
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16" />
@@ -88,7 +98,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 mb-3 px-1">
+          <div className="flex items-center gap-1.5 mb-3 px-1 shrink-0">
             <span className="text-[13px] text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>연결된 계좌</span>
           </div>
 
@@ -140,9 +150,9 @@ export default function HomePage() {
         </div>
 
         {/* Right Column */}
-        <div className="flex flex-col gap-3 h-full" >
+        <div className="flex flex-col gap-5 h-full" >
           {/* 나의 소비 내역 (이번달 지출 금액) */}
-          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col justify-center items-center flex-none relative overflow-hidden" >
+          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex flex-col justify-center items-center flex-1 relative overflow-hidden" >
             {/* Background Decor */}
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-[var(--app-primary)]/5 rounded-full blur-2xl pointer-events-none" />
             <div className="absolute -bottom-8 -left-8 w-20 h-20 bg-[var(--app-primary)]/5 rounded-full blur-xl pointer-events-none" />
@@ -165,6 +175,37 @@ export default function HomePage() {
                <div className="text-[32px] text-[#222]" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>
                  <span className="text-[20px] mr-1">₩</span>199,000
                </div>
+            </div>
+          </div>
+
+          {/* 리포트 랭킹 요약 */}
+          <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex-none cursor-pointer hover:border-[var(--app-primary)]/40 transition-colors" onClick={() => navigate("/reports")}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 600 }}>
+                <Trophy className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                집사 랭킹
+              </h3>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--app-primary)]/10 text-[var(--app-primary)] font-bold">상위 15%</span>
+                <button className="text-[11px] text-[var(--app-primary)] font-bold" onClick={(e) => { e.stopPropagation(); navigate("/reports"); }}>리포트</button>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              {memberRanking.map((m) => (
+                <div key={m.rank} className={`flex items-center justify-between p-2 rounded-xl ${
+                  m.rank === 1 ? 'bg-gradient-to-r from-[#FDF8F0] to-[#FFF5E6] border border-[var(--app-primary)]/20' : 'bg-[var(--app-bg-tertiary)]'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[16px] leading-none">{m.medal}</span>
+                    <span className={`text-[13px] ${m.rank === 1 ? 'font-bold text-[var(--app-text-main)]' : 'font-medium text-[var(--app-text-secondary)]'}`}>
+                      {m.name}
+                    </span>
+                  </div>
+                  <span className="text-[12px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                    {m.expense.toLocaleString()}원
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -255,7 +296,7 @@ export default function HomePage() {
       </div>
 
       {/* Main Content Layout - Mobile Swipe Carousel */}
-      <div className="block lg:hidden h-[calc(100vh-230px)]" >
+      <div className="block lg:hidden h-[calc(100vh-210px)]" >
         <SwipeCarousel
           views={[
             // View 1: My Wallet & Connected Accounts
@@ -369,6 +410,36 @@ export default function HomePage() {
                    <div className="text-[32px] text-[#222]" style={{ fontWeight: 800, fontFamily: "'Nunito', sans-serif" }}>
                      <span className="text-[20px] mr-1">₩</span>199,000
                    </div>
+                </div>
+              </div>
+
+              {/* 리포트 랭킹 요약 (Mobile) */}
+              <div className="bg-[var(--app-bg-main)] rounded-3xl border border-[var(--app-border)] p-4 flex-none cursor-pointer" onClick={() => navigate("/reports")}>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[14px] text-[var(--app-text-main)]" style={{ fontWeight: 600 }}>
+                    <Trophy className="w-3.5 h-3.5 inline mr-1.5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                    집사 랭킹
+                  </h3>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--app-primary)]/10 text-[var(--app-primary)] font-bold">상위 15%</span>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  {memberRanking.map((m) => (
+                    <div key={m.rank} className={`flex items-center justify-between p-2 rounded-xl ${
+                      m.rank === 1 ? 'bg-gradient-to-r from-[#FDF8F0] to-[#FFF5E6] border border-[var(--app-primary)]/20' : 'bg-[var(--app-bg-tertiary)]'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[16px] leading-none">{m.medal}</span>
+                        <span className={`text-[13px] ${m.rank === 1 ? 'font-bold text-[var(--app-text-main)]' : 'font-medium text-[var(--app-text-secondary)]'}`}>
+                          {m.name}
+                        </span>
+                      </div>
+                      <span className="text-[12px] font-bold text-[var(--app-text-main)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                        {m.expense.toLocaleString()}원
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -15,11 +15,28 @@ import {
   UserMinus,
   UserPlus,
   ChevronRight,
+  ChevronDown,
   Plus,
   Camera,
   Shield,
   Heart,
+  CreditCard,
+  X,
 } from "lucide-react";
+
+interface CardInfo {
+  id: number;
+  alias: string;
+  number: string;
+  company: string;
+  expiry: string;
+  color: string;
+}
+
+const initialCards: CardInfo[] = [
+  { id: 1, alias: "토스 체크카드", number: "****-****-****-1234", company: "토스뱅크", expiry: "12/28", color: "#3182F6" },
+  { id: 2, alias: "삼성카드", number: "****-****-****-5678", company: "삼성카드", expiry: "06/27", color: "#1428A0" },
+];
 
 const pets = [
   {
@@ -60,8 +77,43 @@ export default function MyPage() {
   const [showAddPet, setShowAddPet] = useState(false);
   const [showEditPet, setShowEditPet] = useState(false);
 
+  // Card management states
+  const [cards, setCards] = useState<CardInfo[]>(initialCards);
+  const [showCardSection, setShowCardSection] = useState(false);
+  const [showAddCard, setShowAddCard] = useState(false);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+
+  const handleDeleteCard = (cardId: number) => {
+    setCards(prev => prev.filter(c => c.id !== cardId));
+    if (cards.length <= 1) setIsDeleteMode(false);
+  };
+
+  const handleAddCard = () => {
+    const newId = cards.length > 0 ? Math.max(...cards.map(c => c.id)) + 1 : 1;
+    const colors = ["#FF6B35", "#7C3AED", "#059669", "#DC2626", "#0891B2"];
+    setCards(prev => [...prev, {
+      id: newId,
+      alias: "새 카드",
+      number: `****-****-****-${String(Math.floor(1000 + Math.random() * 9000))}`,
+      company: "카드사",
+      expiry: "01/29",
+      color: colors[newId % colors.length],
+    }]);
+    setShowAddCard(false);
+  };
+
   return (
     <div className="space-y-5">
+      {/* Shake animation style */}
+      <style>{`
+        @keyframes card-shake {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(-1.5deg); }
+          75% { transform: rotate(1.5deg); }
+        }
+        .card-shaking { animation: card-shake 0.3s ease-in-out infinite; }
+      `}</style>
+
       {/* Profile Card */}
       <div className="bg-white rounded-2xl border border-[var(--app-border)] p-5 flex items-center gap-4">
         <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}>
@@ -101,6 +153,92 @@ export default function MyPage() {
       {/* Account Management */}
       {tab === "account" && (
         <div className="bg-white rounded-2xl border border-[var(--app-border)] divide-y divide-[var(--app-border)]">
+          {/* 거래 카드 관리 */}
+          <div>
+            <button
+              className="w-full flex items-center justify-between px-5 py-4 hover:bg-[var(--app-bg-main)] transition-colors"
+              onClick={() => { setShowCardSection(!showCardSection); setIsDeleteMode(false); }}
+            >
+              <div className="flex items-center gap-3">
+                <CreditCard className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                <span className="text-[14px] text-[var(--app-text-secondary)]" style={{ fontWeight: 500 }}>거래 카드 관리</span>
+                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-[var(--app-primary)]/10 text-[var(--app-primary)] font-bold">{cards.length}</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 text-[#D9C8B4] transition-transform duration-200 ${showCardSection ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+            </button>
+
+            {/* Expandable Card List */}
+            {showCardSection && (
+              <div className="px-5 pb-4 space-y-3">
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowAddCard(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-bold text-white rounded-lg hover:opacity-90 transition-opacity active:scale-95"
+                    style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))" }}
+                  >
+                    <Plus className="w-3.5 h-3.5" strokeWidth={2} />
+                    추가
+                  </button>
+                  <button
+                    onClick={() => setIsDeleteMode(!isDeleteMode)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-bold rounded-lg transition-all active:scale-95 ${
+                      isDeleteMode
+                        ? "bg-[#EF4444] text-white"
+                        : "border border-[#EF4444]/30 text-[#EF4444] hover:bg-[#FFF0F0]"
+                    }`}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
+                    {isDeleteMode ? "완료" : "삭제"}
+                  </button>
+                </div>
+
+                {/* Card Items */}
+                {cards.length === 0 ? (
+                  <div className="py-6 text-center text-[13px] text-[var(--app-text-tertiary)]">
+                    등록된 카드가 없습니다
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {cards.map((card) => (
+                      <div
+                        key={card.id}
+                        className={`relative flex items-center gap-3 p-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-bg-main)] ${isDeleteMode ? 'card-shaking' : ''}`}
+                      >
+                        {/* Delete X button */}
+                        {isDeleteMode && (
+                          <button
+                            onClick={() => handleDeleteCard(card.id)}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-[#EF4444] text-white rounded-full flex items-center justify-center shadow-md hover:bg-[#DC2626] transition-colors z-10"
+                          >
+                            <X className="w-3.5 h-3.5" strokeWidth={2.5} />
+                          </button>
+                        )}
+
+                        {/* Card Color Indicator */}
+                        <div
+                          className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: card.color + "20" }}
+                        >
+                          <CreditCard className="w-5 h-5" style={{ color: card.color }} strokeWidth={1.5} />
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[13px] text-[var(--app-text-main)] truncate" style={{ fontWeight: 600 }}>
+                            {card.alias}
+                          </div>
+                          <div className="text-[11px] text-[var(--app-text-tertiary)]">
+                            {card.company} · {card.number.slice(-4)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <button className="w-full flex items-center justify-between px-5 py-4 hover:bg-[var(--app-bg-main)] transition-colors">
             <div className="flex items-center gap-3">
               <Lock className="w-5 h-5 text-[var(--app-text-tertiary)]" strokeWidth={1.5} />
@@ -125,6 +263,67 @@ export default function MyPage() {
             </div>
             <ChevronRight className="w-4 h-4 text-[#D9C8B4]" strokeWidth={1.5} />
           </button>
+        </div>
+      )}
+
+      {/* Add Card Modal */}
+      {showAddCard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && setShowAddCard(false)}>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md relative shadow-xl">
+            <button className="absolute top-4 right-4 text-[#AAA] hover:text-[#333] transition-colors" onClick={() => setShowAddCard(false)}>
+              <X className="w-5 h-5" strokeWidth={2} />
+            </button>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-[var(--app-primary)]/10 flex items-center justify-center">
+                <CreditCard className="w-5 h-5 text-[var(--app-primary)]" />
+              </div>
+              <div>
+                <h3 className="text-[18px] font-bold text-[var(--app-text-main)]">카드 등록</h3>
+                <p className="text-[12px] text-[var(--app-text-tertiary)]">결제 카드 정보를 입력해주세요</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block font-semibold">카드 번호</label>
+                <input placeholder="0000-0000-0000-0000" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[var(--app-primary)] tracking-widest" style={{ fontFamily: "'Nunito', monospace" }} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block font-semibold">유효 기간</label>
+                  <input placeholder="MM/YY" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[var(--app-primary)]" style={{ fontFamily: "'Nunito', monospace" }} />
+                </div>
+                <div>
+                  <label className="text-[13px] text-[#333] mb-1 block font-semibold">CVC</label>
+                  <input placeholder="000" type="password" maxLength={3} className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[var(--app-primary)]" style={{ fontFamily: "'Nunito', monospace" }} />
+                </div>
+              </div>
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block font-semibold">카드 별칭</label>
+                <input placeholder="예: 토스 체크카드" className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none placeholder:text-[#AAA] focus:border-[var(--app-primary)]" />
+              </div>
+              <div>
+                <label className="text-[13px] text-[#333] mb-1 block font-semibold">카드사</label>
+                <select className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 bg-white text-[14px] outline-none focus:border-[var(--app-primary)]">
+                  <option>선택해주세요</option>
+                  <option>토스뱅크</option>
+                  <option>삼성카드</option>
+                  <option>현대카드</option>
+                  <option>KB국민카드</option>
+                  <option>신한카드</option>
+                  <option>우리카드</option>
+                  <option>하나카드</option>
+                  <option>카카오뱅크</option>
+                </select>
+              </div>
+            </div>
+            <button
+              className="w-full mt-6 py-3 text-white rounded-xl text-[14px] font-bold hover:opacity-90 active:scale-[0.98] transition-all"
+              style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", boxShadow: "0 4px 12px rgba(245,158,11,0.3)" }}
+              onClick={handleAddCard}
+            >
+              카드 등록하기
+            </button>
+          </div>
         </div>
       )}
 

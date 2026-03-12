@@ -140,7 +140,7 @@ export default function Layout() {
       </div>
 
       {/* Mobile Bottom App Bar Navigation */}
-      <MobileBottomNav items={navItems} onItemClick={(item) => navigate(item.to || "")} onQrClick={() => alert("QR 결제 오픈")} isActive={isActive} />
+      <MobileBottomNav items={navItems} onItemClick={(item) => navigate(item.to || "")} isActive={isActive} />
     </div>
   );
 }

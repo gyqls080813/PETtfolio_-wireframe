@@ -31,16 +31,16 @@ const lifeCycleImages: Record<string, any[]> = {
 
 const guideCoords: Record<string, { top: string, left: string, label: string }[][]> = {
   choco: [
-    [ { label: "예방접종(전신)", top: "35%", left: "30%" }, { label: "사상충(내부)", top: "60%", left: "45%" }, { label: "사회화(행동)", top: "25%", left: "70%" } ],
-    [ { label: "슬개골(다리)", top: "80%", left: "35%" }, { label: "치석(구강)", top: "30%", left: "45%" }, { label: "산책(활동량)", top: "75%", left: "75%" } ],
-    [ { label: "심장(가슴)", top: "50%", left: "40%" }, { label: "체중(복부)", top: "65%", left: "55%" }, { label: "종합검진(전신)", top: "25%", left: "25%" } ],
-    [ { label: "백내장(안구)", top: "25%", left: "55%" }, { label: "소화(위장)", top: "65%", left: "45%" }, { label: "관절 무리(다리)", top: "85%", left: "40%" } ]
+    [{ label: "예방접종(전신)", top: "35%", left: "30%" }, { label: "사상충(내부)", top: "60%", left: "45%" }, { label: "사회화(행동)", top: "25%", left: "70%" }],
+    [{ label: "슬개골(다리)", top: "80%", left: "35%" }, { label: "치석(구강)", top: "30%", left: "45%" }, { label: "산책(활동량)", top: "75%", left: "75%" }],
+    [{ label: "심장(가슴)", top: "50%", left: "40%" }, { label: "체중(복부)", top: "65%", left: "55%" }, { label: "종합검진(전신)", top: "25%", left: "25%" }],
+    [{ label: "백내장(안구)", top: "25%", left: "55%" }, { label: "소화(위장)", top: "65%", left: "45%" }, { label: "관절 무리(다리)", top: "85%", left: "40%" }]
   ],
   nabi: [
-    [ { label: "종합백신(전신)", top: "35%", left: "30%" }, { label: "환경적응(행동)", top: "25%", left: "70%" }, { label: "양치(구강)", top: "30%", left: "45%" } ],
-    [ { label: "비뇨기(하복부)", top: "75%", left: "55%" }, { label: "음수량(구강)", top: "30%", left: "40%" }, { label: "사냥놀이(활동)", top: "50%", left: "75%" } ],
-    [ { label: "신부전(신장)", top: "60%", left: "55%" }, { label: "갑상선(목)", top: "40%", left: "50%" }, { label: "관절(다리)", top: "85%", left: "40%" } ],
-    [ { label: "소화기관(복부)", top: "65%", left: "50%" }, { label: "심/호흡(가슴)", top: "50%", left: "40%" }, { label: "건강검진(전신)", top: "25%", left: "25%" } ]
+    [{ label: "종합백신(전신)", top: "35%", left: "30%" }, { label: "환경적응(행동)", top: "25%", left: "70%" }, { label: "양치(구강)", top: "30%", left: "45%" }],
+    [{ label: "비뇨기(하복부)", top: "75%", left: "55%" }, { label: "음수량(구강)", top: "30%", left: "40%" }, { label: "사냥놀이(활동)", top: "50%", left: "75%" }],
+    [{ label: "신부전(신장)", top: "60%", left: "55%" }, { label: "갑상선(목)", top: "40%", left: "50%" }, { label: "관절(다리)", top: "85%", left: "40%" }],
+    [{ label: "소화기관(복부)", top: "65%", left: "50%" }, { label: "심/호흡(가슴)", top: "50%", left: "40%" }, { label: "건강검진(전신)", top: "25%", left: "25%" }]
   ]
 };
 
@@ -58,7 +58,7 @@ const lifeCycleGuideByPet: Record<string, {
 }[]> = {
   choco: [
     {
-      stage: "유년기", ageRange: "0~2세", title: "기초 면역과 사회화 단계", 
+      stage: "유년기", ageRange: "0~2세", title: "기초 면역과 사회화 단계",
       description: "면역력이 약한 시기로 철저한 예방접종과 다양한 환경에 노출시켜주는 사회화 훈련이 가장 중요합니다.",
       points: ["기초 5차 예방접종 및 광견병 접종 완료", "월 1회 내외부 기생충(심장사상충) 예방", "다양한 사람과 강아지를 만나는 사회화 훈련"]
     },
@@ -152,7 +152,7 @@ export default function SavingsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-3 h-full min-h-max lg:h-full lg:min-h-0 lg:overflow-hidden pb-20 lg:pb-0">
+    <div className="flex flex-col gap-5 h-full min-h-max lg:h-full lg:min-h-0 lg:overflow-hidden pb-20 lg:pb-0">
 
       {/* ── 탭 행 ── */}
       <div className="flex items-center gap-2 auto-cols-max shrink-0">
@@ -178,11 +178,11 @@ export default function SavingsPage() {
         })}
       </div>
 
-      {/* ── 메인 레이아웃 (모바일: 1열 세로 스크롤, 데스크탑: 2열 가로 배치) ── */}
-      <div className="flex flex-col lg:flex-row gap-3 flex-1 lg:min-h-0 min-h-max">
+      {/* ── 메인 레이아웃 ── */}
+      <div className="flex flex-col lg:flex-row gap-5 flex-1 min-h-max" style={{ minHeight: "calc(100vh - 170px)" }}>
 
-        {/* 왼쪽: 캐릭터 + 질병 예방 가이드 (기존 오른쪽 요소 였음) */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] p-0 lg:p-0 flex flex-col justify-between w-full lg:w-96 shrink-0 relative overflow-hidden shadow-sm lg:h-full min-h-[400px] lg:min-h-0">
+        {/* 왼쪽: 캐릭터 + 질병 예방 가이드 (넓어진 패널) */}
+        <div className="bg-white rounded-xl border border-[var(--app-border)] p-0 lg:p-0 flex flex-col justify-between w-full lg:w-[480px] shrink-0 relative overflow-hidden shadow-sm lg:h-full min-h-[400px] lg:min-h-0">
           {/* 상단 타이틀 */}
           <div className="flex items-center gap-2 px-5 pt-4 pb-2 shrink-0 z-20">
             <AlertTriangle className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[var(--app-warning)]" />
@@ -208,7 +208,7 @@ export default function SavingsPage() {
               <img
                 src={getImgSrc(pet.img)}
                 alt="반려동물 캐릭터"
-                className="object-contain drop-shadow-md h-[260px] lg:h-full max-h-[85%] lg:max-h-[300px]"
+                className="object-contain drop-shadow-md h-[260px] lg:h-full max-h-[85%] lg:max-h-[400px]"
               />
             </div>
 
@@ -238,15 +238,15 @@ export default function SavingsPage() {
                     style={{ fontWeight: 600, lineHeight: 1.5 }}
                   >
                     {current.message.split("\n").map((line, i) => (
-                       <span key={i}>{line}<br/></span>
+                      <span key={i}>{line}<br /></span>
                     ))}
                   </p>
 
                   {/* 팁 텍스트 */}
                   <div className="bg-[#FAF9F6] rounded-xl p-2.5 mt-2.5">
-                     <p className="text-[11px] lg:text-[12px] text-[#6B4F3A] leading-relaxed font-medium hidden sm:block">
-                       {current.tip}
-                     </p>
+                    <p className="text-[11px] lg:text-[12px] text-[#6B4F3A] leading-relaxed font-medium hidden sm:block">
+                      {current.tip}
+                    </p>
                   </div>
                 </div>
 
@@ -280,11 +280,11 @@ export default function SavingsPage() {
                 />
               </div>
             </div>
-           </div>
+          </div>
         </div>
 
         {/* 오른쪽: 생애주기별 해부상/포인트 가이드 */}
-        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col lg:h-full min-h-[500px] lg:min-h-0 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-xl border border-[var(--app-border)] flex-1 flex flex-col lg:h-full min-h-[400px] lg:min-h-0 overflow-hidden shadow-sm">
           {/* 상단 타이틀 & 탭 */}
           <div className="px-5 pt-5 pb-4 border-b border-[var(--app-bg-secondary)] shrink-0">
             <div className="flex items-center justify-between mb-4">
@@ -317,100 +317,104 @@ export default function SavingsPage() {
               ))}
             </div>
           </div>
-          
-          <div className="flex-1 overflow-y-auto w-full custom-scrollbar bg-[#FAFAF8]" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-            <div className="relative w-full min-h-full flex flex-col items-center p-6 pb-24">
-              
-              {/* Content Container */}
-              <div className="flex flex-col lg:flex-row w-full max-w-[800px] gap-10 lg:gap-16 items-center lg:items-center justify-center relative z-10 shrink-0 mb-6 mt-4">
-                 
-                 {/* Left: Checklist */}
-                 <div className="w-full lg:w-[320px] shrink-0 flex flex-col gap-4 order-2 lg:order-1">
-                   <div className="flex items-center justify-between mb-1 px-1">
-                     <span className="text-[13px] font-bold text-[#444] bg-white px-2 py-0.5 rounded shadow-sm">필수 체크리스트 목록</span>
-                     <span className="text-[11px] text-white bg-[#444] px-2 py-0.5 rounded-full font-bold">
-                       {guide[selectedStageIdx].points.filter((_, i) => checkedTasks[`${pet.id}-${selectedStageIdx}-${i}`]).length} / {guide[selectedStageIdx].points.length} 완료
-                     </span>
-                   </div>
-                   
-                   {guide[selectedStageIdx].points.map((pointText, pIdx) => {
-                     const isChecked = checkedTasks[`${pet.id}-${selectedStageIdx}-${pIdx}`];
-                     const label = guideCoords[pet.id][selectedStageIdx][pIdx].label;
-                     return (
-                       <div 
-                         key={pIdx}
-                         onClick={() => toggleTask(pet.id, selectedStageIdx, pIdx)}
-                         className={`checklist-card flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all shrink-0 ${isChecked ? 'bg-[var(--app-success)]/10 border-[var(--app-success)]/40 shadow-sm' : 'bg-white border-[#EAEAEA] shadow-sm hover:border-[var(--app-primary)]/50'}`}
-                       >
-                         <button className="mt-0.5 shrink-0 transition-colors">
-                           {isChecked ? (
-                             <CheckSquare className="w-5 h-5 text-[var(--app-success)]" />
-                           ) : (
-                             <Square className="w-5 h-5 text-[#CCC]" />
-                           )}
-                         </button>
-                         <div className="flex-1 flex flex-col gap-1">
-                           <span className={`text-[12px] font-bold ${isChecked ? 'text-[var(--app-success)]' : 'text-[#444]'}`}>
-                             {label}
-                           </span>
-                           <span className={`text-[12px] leading-snug ${isChecked ? 'text-[#888]' : 'text-[#555]'}`}>
-                             {pointText}
-                           </span>
-                         </div>
-                       </div>
-                     );
-                   })}
-                 </div>
 
-                 {/* Right: Image & Hotspots */}
-                 <div className="relative w-[200px] lg:w-[280px] aspect-square flex items-center justify-center shrink-0 order-1 lg:order-2">
-                    <img
-                      src={getImgSrc(lifeCycleImages[pet.id][selectedStageIdx])}
-                      alt={guide[selectedStageIdx].stage}
-                      className="w-full h-full object-contain pointer-events-none drop-shadow-sm"
-                      style={{ opacity: 0.5, filter: "grayscale(10%) saturate(120%)" }}
-                    />
+          <div className="flex-1 overflow-hidden w-full relative bg-[#FAFAF8]">
+            <div className="absolute inset-0 flex flex-col">
 
-                    {/* 포인트(Hotspots) 영구 라벨 표시 */}
-                    {guideCoords[pet.id][selectedStageIdx].map((coord, pIdx) => {
-                      const isChecked = checkedTasks[`${pet.id}-${selectedStageIdx}-${pIdx}`];
-                      const pColor = isChecked ? "var(--app-success)" : stageColors[selectedStageIdx];
-                      return (
-                        <div 
-                          key={pIdx}
-                          className="absolute z-10 flex flex-col items-center"
-                          style={{ top: coord.top, left: coord.left, transform: "translate(-50%, -50%)" }}
-                        >
-                          <div className="anatomy-dot relative flex items-center justify-center w-5 h-5 mb-1">
-                             <span className={`absolute inline-flex h-full w-full rounded-full opacity-30 ${isChecked ? '' : 'animate-pulse'}`} style={{ backgroundColor: pColor }}></span>
-                             <span className="relative inline-flex rounded-full w-3 h-3 shadow-md" style={{ backgroundColor: pColor }}></span>
-                          </div>
-                          
-                          {/* 라벨 (항상 켜져 있음) */}
-                           <div 
-                             className="whitespace-nowrap px-1.5 py-0.5 rounded shadow-sm text-[9px] lg:text-[10px] font-bold transition-colors" 
-                             style={{ 
-                               backgroundColor: isChecked ? "var(--app-success)" : "white", 
-                               color: isChecked ? "white" : pColor, 
-                               border: isChecked ? "none" : `1px solid ${pColor}40` 
-                             }}
-                           >
-                             {coord.label}
-                           </div>
+              {/* Content Container — Image fills box, checklist top-right */}
+              <div className="relative w-full h-full flex-1 min-h-0">
+
+                {/* Image filling the entire box */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img
+                    src={getImgSrc(lifeCycleImages[pet.id][selectedStageIdx])}
+                    alt={guide[selectedStageIdx].stage}
+                    className="w-full h-full object-contain pointer-events-none"
+                    style={{ opacity: 0.3, filter: "grayscale(10%) saturate(120%)", padding: "16px" }}
+                  />
+
+                  {/* 포인트(Hotspots) 영구 라벨 표시 */}
+                  {guideCoords[pet.id][selectedStageIdx].map((coord, pIdx) => {
+                    const isChecked = checkedTasks[`${pet.id}-${selectedStageIdx}-${pIdx}`];
+                    const pColor = isChecked ? "var(--app-success)" : stageColors[selectedStageIdx];
+                    return (
+                      <div
+                        key={pIdx}
+                        className="absolute z-10 flex flex-col items-center"
+                        style={{ top: coord.top, left: coord.left, transform: "translate(-50%, -50%)" }}
+                      >
+                        <div className="anatomy-dot relative flex items-center justify-center w-5 h-5 mb-1">
+                          <span className={`absolute inline-flex h-full w-full rounded-full opacity-30 ${isChecked ? '' : 'animate-pulse'}`} style={{ backgroundColor: pColor }}></span>
+                          <span className="relative inline-flex rounded-full w-3 h-3 shadow-md" style={{ backgroundColor: pColor }}></span>
                         </div>
-                      );
-                    })}
-                 </div>
+
+                        {/* 라벨 */}
+                        <div
+                          className="whitespace-nowrap px-1.5 py-0.5 rounded shadow-sm text-[9px] lg:text-[10px] font-bold transition-colors"
+                          style={{
+                            backgroundColor: isChecked ? "var(--app-success)" : "white",
+                            color: isChecked ? "white" : pColor,
+                            border: isChecked ? "none" : `1px solid ${pColor}40`
+                          }}
+                        >
+                          {coord.label}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Checklist overlaid — fills entire box */}
+                  <div className="absolute inset-0 z-20 pointer-events-none p-5 pb-14 flex flex-col">
+                    <div className="w-full flex flex-col flex-1 pointer-events-auto">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-[16px] font-bold text-[#222] bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-lg shadow">필수 체크리스트 목록</span>
+                        <span className="text-[13px] text-white bg-[#333] px-3 py-1.5 rounded-full font-bold shadow">
+                          {guide[selectedStageIdx].points.filter((_, i) => checkedTasks[`${pet.id}-${selectedStageIdx}-${i}`]).length} / {guide[selectedStageIdx].points.length} 완료
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col gap-3 flex-1 justify-start">
+                        {guide[selectedStageIdx].points.map((pointText, pIdx) => {
+                          const isChecked = checkedTasks[`${pet.id}-${selectedStageIdx}-${pIdx}`];
+                          const label = guideCoords[pet.id][selectedStageIdx][pIdx].label;
+                          return (
+                            <div
+                              key={pIdx}
+                              onClick={() => toggleTask(pet.id, selectedStageIdx, pIdx)}
+                              className={`checklist-card flex items-center gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all backdrop-blur-md shadow-md flex-1 ${isChecked ? 'bg-[var(--app-success)]/15 border-[var(--app-success)]/50' : 'bg-white/95 border-[#D8D8D8] hover:border-[var(--app-primary)]/60'}`}
+                            >
+                              <button className="shrink-0 transition-colors">
+                                {isChecked ? (
+                                  <CheckSquare className="w-7 h-7 text-[var(--app-success)]" />
+                                ) : (
+                                  <Square className="w-7 h-7 text-[#AAA]" />
+                                )}
+                              </button>
+                              <div className="flex-1 flex flex-col gap-1">
+                                <span className={`text-[16px] font-bold ${isChecked ? 'text-[var(--app-success)]' : 'text-[#222]'}`}>
+                                  {label}
+                                </span>
+                                <span className={`text-[14px] leading-snug ${isChecked ? 'text-[#999]' : 'text-[#555]'}`}>
+                                  {pointText}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
+
               {/* 하단 요약 설명 박스 */}
-              <div className="w-full max-w-[800px] bg-white/70 rounded-xl p-4 border border-[#F0F0F0] mt-auto z-10 shrink-0">
-                 <div className="flex gap-2">
-                   <CheckCircle2 className="w-4 h-4 shrink-0 mt-[2px]" style={{ color: stageColors[selectedStageIdx] }} />
-                   <p className="text-[12px] text-[#555] leading-relaxed font-medium">
-                     {guide[selectedStageIdx].description}
-                   </p>
-                 </div>
+              <div className="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm p-3 border-t border-[#F0F0F0] z-10 shrink-0">
+                <div className="flex gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 mt-[2px]" style={{ color: stageColors[selectedStageIdx] }} />
+                  <p className="text-[12px] text-[#555] leading-relaxed font-medium">
+                    {guide[selectedStageIdx].description}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

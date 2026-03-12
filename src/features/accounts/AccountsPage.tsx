@@ -108,7 +108,7 @@ export default function AccountPage() {
   const currentStickerMap = getCatStickerMap(isCat);
 
   return (
-    <div className="pt-2 space-y-5">
+    <div className="space-y-5">
       {/* Pet Selector */}
       <div className="flex gap-2">
         <div
@@ -134,7 +134,7 @@ export default function AccountPage() {
       </div>
 
       {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch" style={{ minHeight: "calc(100vh - 170px)" }}>
         {/* Left Column: Account Cards */}
         <div className="lg:col-span-5 flex flex-col gap-2 lg:gap-4 h-full">
           <div className="px-1 pt-1 mb-2 flex items-center gap-3">

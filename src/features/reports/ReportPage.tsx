@@ -1,10 +1,5 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-import {
   Trophy,
   Dog,
   Cat,
@@ -22,6 +17,18 @@ import catThumbsup from "../../assets/cat_thumbsup.png";
 import catSad from "../../assets/cat_sad.png";
 
 const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
+
+// ─── SVG helpers for radar chart ───
+function radarVertex(cx: number, cy: number, r: number, i: number, total: number) {
+  const angle = ((2 * Math.PI) / total) * i - Math.PI / 2;
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+}
+function polygonPoints(cx: number, cy: number, r: number, sides: number) {
+  return Array.from({ length: sides }, (_, i) => {
+    const v = radarVertex(cx, cy, r, i, sides);
+    return `${v.x},${v.y}`;
+  }).join(" ");
+}
 
 // ─── Per-pet expense data ───
 const petExpenseData: Record<
@@ -233,50 +240,105 @@ export default function ReportPage() {
           예산 대비 {Math.round((totalExpense / budget) * 100)}% 사용
         </div>
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center pt-3 mt-2 border-t border-[var(--app-border)]">
-        <div className="relative w-full flex justify-center mt-2 overflow-visible">
-          <PieChart width={280} height={230}>
-            <Pie
-              data={donutData}
-              cx="50%"
-              cy="50%"
-              innerRadius={45}
-              outerRadius={70}
-              dataKey="value"
-              stroke="none"
-              labelLine={false}
-              label={({ cx, cy, midAngle, outerRadius, percent, name, fill }) => {
-                const RADIAN = Math.PI / 180;
-                const radius = outerRadius + 22; // push label outward
-                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                return percent > 0.05 ? (
-                  <text
-                    x={x}
-                    y={y}
-                    fill={fill} // use slice color
-                    textAnchor={x > cx ? 'start' : 'end'}
-                    dominantBaseline="central"
-                    fontSize="11"
-                    fontWeight="600"
-                  >
-                    {`${name} ${(percent * 100).toFixed(0)}%`}
-                  </text>
-                ) : null;
-              }}
-            >
-              {donutData.map((d, i) => (
-                <Cell key={i} fill={d.color} />
-              ))}
-            </Pie>
-          </PieChart>
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+      <div className="flex-1 flex items-center justify-center pt-4 mt-2 border-t border-[var(--app-border)]">
+        <div className="relative">
+          {/* Hexagonal Radar Chart */}
+          <svg width={380} height={340} viewBox="0 0 380 340">
+            {(() => {
+              const cx = 190, cy = 170;
+              const maxR = 120;
+              const n = donutData.length;
+              const maxVal = Math.max(...donutData.map(d => d.value));
+              const gridLevels = [0.25, 0.5, 0.75, 1.0];
+
+              // Scale values using sqrt for better visual spread
+              const scaledR = (val: number) => {
+                const ratio = val / maxVal;
+                const scaled = Math.sqrt(ratio);
+                return Math.max(scaled * maxR, maxR * 0.18);
+              };
+
+              return (
+                <>
+                  {/* Concentric grid polygons */}
+                  {gridLevels.map((lvl, li) => (
+                    <polygon
+                      key={li}
+                      points={polygonPoints(cx, cy, maxR * lvl, n)}
+                      fill="none"
+                      stroke="#E8DFD0"
+                      strokeWidth={li === gridLevels.length - 1 ? 1.5 : 0.8}
+                      opacity={0.7}
+                    />
+                  ))}
+
+                  {/* Axis lines from center to each vertex */}
+                  {donutData.map((_, i) => {
+                    const v = radarVertex(cx, cy, maxR, i, n);
+                    return (
+                      <line key={i} x1={cx} y1={cy} x2={v.x} y2={v.y}
+                        stroke="#E8DFD0" strokeWidth={0.8} opacity={0.5} />
+                    );
+                  })}
+
+                  {/* Data polygon (filled area) */}
+                  <polygon
+                    points={donutData.map((item, i) => {
+                      const r = scaledR(item.value);
+                      const v = radarVertex(cx, cy, r, i, n);
+                      return `${v.x},${v.y}`;
+                    }).join(" ")}
+                    fill="#C4A77D"
+                    fillOpacity={0.4}
+                    stroke="#9B7D4E"
+                    strokeWidth={3}
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Data points (dots) on each vertex */}
+                  {donutData.map((item, i) => {
+                    const r = scaledR(item.value);
+                    const v = radarVertex(cx, cy, r, i, n);
+                    return (
+                      <circle key={i} cx={v.x} cy={v.y} r={5}
+                        fill="var(--app-primary-dark)" stroke="white" strokeWidth={2}
+                        style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.15))" }}
+                      />
+                    );
+                  })}
+
+                  {/* Vertex labels (category name + percentage) */}
+                  {donutData.map((item, i) => {
+                    const labelR = maxR + 32;
+                    const v = radarVertex(cx, cy, labelR, i, n);
+                    const pct = Math.round((item.value / totalExpense) * 100);
+                    const anchor = v.x > cx + 5 ? "start" : v.x < cx - 5 ? "end" : "middle";
+                    return (
+                      <g key={i}>
+                        <text x={v.x} y={v.y - 6} textAnchor={anchor}
+                          fill="#6B4F3A" fontSize="13" fontWeight="700">
+                          {item.name}
+                        </text>
+                        <text x={v.x} y={v.y + 10} textAnchor={anchor}
+                          fill="#999" fontSize="12" fontWeight="600"
+                          style={{ fontFamily: "'Nunito', sans-serif" }}>
+                          {pct}%
+                        </text>
+                      </g>
+                    );
+                  })}
+                </>
+              );
+            })()}
+          </svg>
+          {/* Center pet image */}
+          <div className="absolute" style={{ left: 190, top: 170, transform: 'translate(-50%, -50%)' }}>
             {selectedPet === "전체" ? (
-              <PawPrint className="w-8 h-8 text-[var(--app-primary)]" strokeWidth={1.5} />
+              <PawPrint className="w-10 h-10 text-[var(--app-primary)]" strokeWidth={1.5} />
             ) : selectedPet === "초코" ? (
-              <img src={getImgSrc(pomeImg)} alt="초코" className="w-10 h-10 object-contain drop-shadow-sm" />
+              <img src={getImgSrc(pomeImg)} alt="초코" className="w-12 h-12 object-contain drop-shadow-sm" />
             ) : (
-              <img src={getImgSrc(catImg)} alt="나비" className="w-10 h-10 object-contain drop-shadow-sm" />
+              <img src={getImgSrc(catImg)} alt="나비" className="w-12 h-12 object-contain drop-shadow-sm" />
             )}
           </div>
         </div>
@@ -285,24 +347,24 @@ export default function ReportPage() {
   );
 
   const RankingCard = (
-    <div className="bg-white rounded-2xl border border-[var(--app-border)] p-3 flex-1 min-h-0 flex flex-col">
-      <h3 className="text-[13px] text-[var(--app-text-main)] mb-1" style={{ fontWeight: 600 }}>
-        <Trophy className="w-3.5 h-3.5 inline mr-1 text-[#FDCB6E]" strokeWidth={1.5} />
+    <div className="bg-white rounded-2xl border border-[var(--app-border)] p-4 flex-1 min-h-0 flex flex-col">
+      <h3 className="text-[15px] text-[var(--app-text-main)] mb-2" style={{ fontWeight: 600 }}>
+        <Trophy className="w-4.5 h-4.5 inline mr-1.5 text-[#FDCB6E]" strokeWidth={1.5} />
         랭킹
       </h3>
-      <div className="flex-1 flex justify-center items-end px-1 min-h-0">
+      <div className="flex-1 flex justify-center items-end px-2 min-h-0">
         {memberRank.length >= 2 && (
-          <div className="flex flex-col items-center z-10" style={{ marginRight: -6 }}>
-            <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
-            <span className="text-[10px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
-            <div className="w-[90px] h-[56px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
-              <img src={getImgSrc(rank2Img)} alt="평범" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
-              <div className="mt-2" />
-              <div className="flex items-center gap-1 text-[9px]">
+          <div className="flex flex-col items-center z-10" style={{ marginRight: -8 }}>
+            <span className="text-[14px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[1].name}</span>
+            <span className="text-[12px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[1].expense + memberRank[1].savings).toLocaleString()}원</span>
+            <div className="w-[110px] h-[80px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-1 relative mt-8">
+              <img src={getImgSrc(rank2Img)} alt="평범" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-sm z-10" />
+              <div className="mt-3" />
+              <div className="flex items-center gap-1 text-[11px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>{memberRank[1].expense.toLocaleString()}</span>
               </div>
-              <div className="flex items-center gap-1 text-[9px]">
+              <div className="flex items-center gap-1 text-[11px]">
                 <span className="text-[var(--app-success)]" style={{ fontWeight: 500 }}>저축</span>
                 <span className="text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>{memberRank[1].savings.toLocaleString()}</span>
               </div>
@@ -311,20 +373,20 @@ export default function ReportPage() {
         )}
         {memberRank.length >= 1 && (
           <div className="flex flex-col items-center z-20">
-            <span className="text-[13px] text-[#6B4F3A]" style={{ fontWeight: 700 }}>{memberRank[0].name}</span>
-            <span className="text-[10px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[0].expense + memberRank[0].savings).toLocaleString()}원</span>
+            <span className="text-[15px] text-[#6B4F3A]" style={{ fontWeight: 700 }}>{memberRank[0].name}</span>
+            <span className="text-[12px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[0].expense + memberRank[0].savings).toLocaleString()}원</span>
             <div
-              className="w-[110px] h-[95px] rounded-t-xl flex flex-col items-center justify-center relative mt-7"
+              className="w-[140px] h-[120px] rounded-t-xl flex flex-col items-center justify-center relative mt-9"
               style={{ background: "linear-gradient(to top, var(--app-primary), var(--app-primary-dark))" }}
             >
-              <img src={getImgSrc(rank1Img)} alt="최고" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-md z-10" />
-              <div className="mt-2" />
-              <span className="px-2 py-0.5 bg-white/20 text-white rounded-full text-[8px] mb-1" style={{ fontWeight: 600 }}>MASTER PAYER</span>
-              <div className="flex items-center gap-1 text-[9px] mb-0.5">
+              <img src={getImgSrc(rank1Img)} alt="최고" className="absolute -top-10 w-16 h-16 object-contain drop-shadow-md z-10" />
+              <div className="mt-3" />
+              <span className="px-2.5 py-0.5 bg-white/20 text-white rounded-full text-[10px] mb-1.5" style={{ fontWeight: 600 }}>MASTER PAYER</span>
+              <div className="flex items-center gap-1 text-[11px] mb-0.5">
                 <span className="text-white/80" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-white" style={{ fontWeight: 600 }}>{memberRank[0].expense.toLocaleString()}</span>
               </div>
-              <div className="flex items-center gap-1 text-[9px]">
+              <div className="flex items-center gap-1 text-[11px]">
                 <span className="text-white/80" style={{ fontWeight: 500 }}>저축</span>
                 <span className="text-white" style={{ fontWeight: 600 }}>{memberRank[0].savings.toLocaleString()}</span>
               </div>
@@ -332,17 +394,17 @@ export default function ReportPage() {
           </div>
         )}
         {memberRank.length >= 3 && (
-          <div className="flex flex-col items-center z-10" style={{ marginLeft: -6 }}>
-            <span className="text-[12px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
-            <span className="text-[10px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
-            <div className="w-[80px] h-[38px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-6">
-              <img src={getImgSrc(rank3Img)} alt="슬픔" className="absolute -top-6 w-9 h-9 object-contain drop-shadow-sm z-10" />
-              <div className="mt-2" />
-              <div className="flex items-center gap-1 text-[9px]">
+          <div className="flex flex-col items-center z-10" style={{ marginLeft: -8 }}>
+            <span className="text-[14px] text-[#6B4F3A]" style={{ fontWeight: 600 }}>{memberRank[2].name}</span>
+            <span className="text-[12px] text-[var(--app-text-tertiary)] mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{(memberRank[2].expense + memberRank[2].savings).toLocaleString()}원</span>
+            <div className="w-[100px] h-[55px] bg-[var(--app-primary-light)] rounded-t-xl flex flex-col items-center justify-center gap-0.5 relative mt-8">
+              <img src={getImgSrc(rank3Img)} alt="슬픔" className="absolute -top-8 w-12 h-12 object-contain drop-shadow-sm z-10" />
+              <div className="mt-3" />
+              <div className="flex items-center gap-1 text-[11px]">
                 <span className="text-[#EF4444]" style={{ fontWeight: 500 }}>지출</span>
                 <span className="text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>{memberRank[2].expense.toLocaleString()}</span>
               </div>
-              <div className="flex items-center gap-1 text-[9px]">
+              <div className="flex items-center gap-1 text-[11px]">
                 <span className="text-[var(--app-success)]" style={{ fontWeight: 500 }}>저축</span>
                 <span className="text-[var(--app-text-secondary)]" style={{ fontWeight: 600 }}>{memberRank[2].savings.toLocaleString()}</span>
               </div>
@@ -362,7 +424,7 @@ export default function ReportPage() {
   );
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {/* Pet Selector + Period */}
       <div className="flex items-center justify-between">
         <div className="flex gap-2 overflow-x-auto">
@@ -453,7 +515,7 @@ export default function ReportPage() {
       </div>
 
       {/* ═══════════ Desktop: 2-column grid ═══════════ */}
-      <div className="hidden md:grid md:grid-cols-[1fr_1fr] gap-3 md:items-stretch">
+      <div className="hidden md:grid md:grid-cols-[1fr_1fr] gap-5 md:items-stretch" style={{ minHeight: "calc(100vh - 170px)" }}>
         {ExpenseCard}
         <div className="flex flex-col gap-2.5 h-full">
           {RankingCard}
@@ -530,11 +592,11 @@ function BreedDistribution({
   const isAboveAvg = item.myExpense > item.avgExpense;
 
   return (
-    <div className="bg-white rounded-2xl border border-[var(--app-border)] p-3 flex-1 min-h-0 flex flex-col justify-between">
+    <div className="bg-white rounded-2xl border border-[var(--app-border)] p-4 flex-1 min-h-0 flex flex-col justify-between">
       {/* Percentile badge */}
-      <div className="flex items-center justify-end mb-1">
+      <div className="flex items-center justify-end mb-2">
         <span
-          className={`px-2.5 py-0.5 rounded-full text-[12px] ${isAboveAvg ? "bg-[#EF4444]/10 text-[#EF4444]" : "bg-[var(--app-success)]/10 text-[var(--app-success)]"
+          className={`px-3 py-1 rounded-full text-[14px] ${isAboveAvg ? "bg-[#EF4444]/10 text-[#EF4444]" : "bg-[var(--app-success)]/10 text-[var(--app-success)]"
             }`}
           style={{ fontWeight: 600 }}
         >
@@ -544,7 +606,7 @@ function BreedDistribution({
 
       {/* SVG curve */}
       <div className="relative flex-1 min-h-0 flex items-center justify-center">
-        <svg viewBox={`0 0 ${svgWidth} ${svgHeight + 25}`} className="w-full" style={{ maxHeight: 110 }}>
+        <svg viewBox={`0 0 ${svgWidth} ${svgHeight + 25}`} className="w-full" style={{ maxHeight: 180 }}>
           <path d={areaPath.join(" ")} fill="var(--app-bg-secondary)" />
           <path d={shadedPath.join(" ")} fill="var(--app-primary)" opacity="0.2" />
           <path d={curvePath.join(" ")} fill="none" stroke="var(--app-primary)" strokeWidth="2.5" />
@@ -557,37 +619,37 @@ function BreedDistribution({
             strokeDasharray="4 3"
             strokeWidth="1"
           />
-          <text x={padding + chartWidth / 2} y={svgHeight - 4} textAnchor="middle" fill="#D9C8B4" fontSize="11">
+          <text x={padding + chartWidth / 2} y={svgHeight - 4} textAnchor="middle" fill="#D9C8B4" fontSize="12">
             평균 ₩{(item.avgExpense / 10000).toFixed(0)}만
           </text>
           <line x1={myX} y1={10} x2={myX} y2={svgHeight - 20} stroke="var(--app-primary)" strokeWidth="2" />
-          <circle cx={myX} cy={18} r="5" fill="var(--app-primary)" />
-          <rect x={myX - 40} y={0} width="80" height="22" rx="11" fill="var(--app-primary)" />
-          <text x={myX} y={15} textAnchor="middle" fill="white" fontSize="11" fontWeight="600">
+          <circle cx={myX} cy={18} r="6" fill="var(--app-primary)" />
+          <rect x={myX - 45} y={0} width="90" height="24" rx="12" fill="var(--app-primary)" />
+          <text x={myX} y={16} textAnchor="middle" fill="white" fontSize="13" fontWeight="600">
             나 ₩{(item.myExpense / 10000).toFixed(1)}만
           </text>
-          <text x={padding} y={svgHeight + 16} textAnchor="middle" fill="#D9C8B4" fontSize="10">적음</text>
-          <text x={padding + chartWidth} y={svgHeight + 16} textAnchor="middle" fill="#D9C8B4" fontSize="10">많음</text>
+          <text x={padding} y={svgHeight + 16} textAnchor="middle" fill="#D9C8B4" fontSize="11">적음</text>
+          <text x={padding + chartWidth} y={svgHeight + 16} textAnchor="middle" fill="#D9C8B4" fontSize="11">많음</text>
         </svg>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-2 mt-2">
-        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl">
-          <div className="text-[10px] text-[var(--app-text-tertiary)]">내 지출</div>
-          <div className="text-[13px] text-[var(--app-primary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
+      <div className="grid grid-cols-3 gap-3 mt-3">
+        <div className="text-center py-2.5 px-2 bg-[var(--app-bg-main)] rounded-xl">
+          <div className="text-[12px] text-[var(--app-text-tertiary)]">내 지출</div>
+          <div className="text-[16px] text-[var(--app-primary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             ₩{item.myExpense.toLocaleString()}
           </div>
         </div>
-        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl">
-          <div className="text-[10px] text-[var(--app-text-tertiary)]">평균</div>
-          <div className="text-[13px] text-[var(--app-text-secondary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
+        <div className="text-center py-2.5 px-2 bg-[var(--app-bg-main)] rounded-xl">
+          <div className="text-[12px] text-[var(--app-text-tertiary)]">평균</div>
+          <div className="text-[16px] text-[var(--app-text-secondary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             ₩{item.avgExpense.toLocaleString()}
           </div>
         </div>
-        <div className="text-center py-1.5 px-1 bg-[var(--app-bg-main)] rounded-xl">
-          <div className="text-[10px] text-[var(--app-text-tertiary)]">비교 대상</div>
-          <div className="text-[13px] text-[var(--app-text-secondary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
+        <div className="text-center py-2.5 px-2 bg-[var(--app-bg-main)] rounded-xl">
+          <div className="text-[12px] text-[var(--app-text-tertiary)]">비교 대상</div>
+          <div className="text-[16px] text-[var(--app-text-secondary)] mt-0.5" style={{ fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             {item.totalUsers.toLocaleString()}명
           </div>
         </div>

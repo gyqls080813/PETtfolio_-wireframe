@@ -9,15 +9,11 @@ import {
     Cat,
     ChevronLeft,
     ChevronRight,
+    Package,
 } from "lucide-react";
 import { useSetAtom } from "jotai";
 import { showAddSupplyModalAtom } from "../store";
-import pomeBasic from "../../../assets/pome.png";
-import pomeHappy from "../../../assets/pome_eating.png";
-import catBasic from "../../../assets/cat.png";
-import catHappy from "../../../assets/cat_eating.png";
 
-const getImgSrc = (img: any): string => typeof img === 'string' ? img : (img?.src || (img as string));
 
 const supplies = [
     {
@@ -92,18 +88,22 @@ export function SuppliesTimeline() {
     const setShowAdd = useSetAtom(showAddSupplyModalAtom);
     const today = new Date(2026, 2, 5); // 2026-03-05
     const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+    const [supplyList, setSupplyList] = useState(supplies);
+
 
     const parseDate = (dateStr: string) => {
         const [y, m, d] = dateStr.split('-').map(Number);
         return new Date(y, m - 1, d);
     };
 
-    const getPetSticker = (pet: string, category: string) => {
-        const isHappy = category === "사료" || category === "간식";
-        if (pet === "나비") {
-            return getImgSrc(isHappy ? catHappy : catBasic);
+    const getCategoryColor = (category: string) => {
+        switch (category) {
+            case "사료": return { bg: "#FFF3E0", text: "#E65100", dot: "#FF9800" };
+            case "간식": return { bg: "#FFF8E1", text: "#F57F17", dot: "#FFC107" };
+            case "약/영양제": return { bg: "#E8F5E9", text: "#2E7D32", dot: "#4CAF50" };
+            case "위생/소모품": return { bg: "#E3F2FD", text: "#1565C0", dot: "#2196F3" };
+            default: return { bg: "#F5F5F5", text: "#616161", dot: "#9E9E9E" };
         }
-        return getImgSrc(isHappy ? pomeHappy : pomeBasic);
     };
 
     // Configure timeline for the current month window
@@ -120,7 +120,7 @@ export function SuppliesTimeline() {
         dateHeaders.push(d);
     }
 
-    const allTimelineItems = supplies.map(s => {
+    const allTimelineItems = supplyList.map(s => {
         const startDate = parseDate(s.lastPurchase);
         const endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + s.cycle);
@@ -157,7 +157,7 @@ export function SuppliesTimeline() {
     };
 
     return (
-        <div className="space-y-5">
+        <div className="flex flex-col gap-5" style={{ minHeight: 'calc(100vh - 170px)' }}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <button
@@ -176,144 +176,125 @@ export function SuppliesTimeline() {
                         <ChevronRight className="w-5 h-5" />
                     </button>
                 </div>
-                <button
-                    className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
-                    style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", fontWeight: 600 }}
-                    onClick={() => setShowAdd(true)}
-                >
-                    <Plus className="w-4 h-4" />
-                    품목 추가
-                </button>
             </div>
 
             {/* Supplies Timeline Container */}
-            <div className="border border-[var(--app-border)] rounded-2xl bg-[#FAFAFA] overflow-hidden shadow-sm flex flex-col" style={{ height: "460px" }}>
+            <div className="border border-[var(--app-border)] rounded-2xl bg-white overflow-hidden shadow-sm flex flex-col" style={{ height: "320px" }}>
 
-                {/* Month/Day Headers (Fixed width) */}
-                <div className="h-[48px] border-b border-[var(--app-border)] bg-[var(--app-bg-tertiary)] flex w-full">
+                {/* Month/Day Headers — Notion-style compact */}
+                <div className="h-[32px] border-b border-[var(--app-border)] bg-[#FAFAFA] flex w-full">
                     {dateHeaders.map((date, i) => {
-                        const isFirstDay = date.getDate() === 1 || i === 0;
                         const isToday = date.getTime() === today.getTime();
+                        const isSunday = date.getDay() === 0;
                         return (
-                            <div key={i} className="flex-1 flex flex-col items-center justify-end pb-1.5 border-r border-[var(--app-border)]/50 relative min-w-[20px]">
-                                {isFirstDay && (
-                                    <span className="absolute top-1 left-1.5 text-[10px] font-bold text-[var(--app-primary)] z-10 hidden sm:block">{date.getMonth() + 1}월</span>
-                                )}
-                                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] mt-auto font-medium transition-colors ${isToday ? 'bg-[var(--app-danger)] text-white shadow-sm font-bold' : 'text-[#888]'}`}>
+                            <div key={i} className="flex-1 flex flex-col items-center justify-center border-r border-[var(--app-border)]/30 relative min-w-[16px]">
+                                <span className={`text-[9px] leading-none font-medium ${
+                                    isToday ? 'bg-[var(--app-danger)] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold' 
+                                    : isSunday ? 'text-[var(--app-danger)]/60' 
+                                    : 'text-[#AAA]'
+                                }`}>
                                     {date.getDate()}
-                                </div>
+                                </span>
                             </div>
                         );
                     })}
                 </div>
 
                 {/* Scrollable Timeline Area */}
-                <div className="flex-1 w-full relative overflow-hidden bg-[#FAFAFA]">
-                    {/* Grid Lines (Background) */}
+                <div className="flex-1 w-full relative overflow-hidden bg-white">
+                    {/* Grid Lines — subtle Notion-style */}
                     <div className="absolute top-0 left-0 right-0 bottom-0 flex z-0 pointer-events-none">
-                        {dateHeaders.map((date, i) => {
-                            const isOdd = date.getDate() % 2 !== 0; // Alternating even/odd day styling
-                            return (
-                                <div key={i} className={`flex-1 border-r border-[var(--app-border)]/40 transition-colors ${isOdd ? 'bg-[var(--app-bg-tertiary)]/40' : 'bg-white'}`} />
-                            );
-                        })}
+                        {dateHeaders.map((_, i) => (
+                            <div key={i} className="flex-1 border-r border-[var(--app-border)]/20" />
+                        ))}
                     </div>
 
                     {/* Today Marker Line */}
                     {today >= minDate && today <= maxDate && (
                         <div
-                            className="absolute top-0 bottom-0 w-[2px] bg-[var(--app-danger)]/40 z-20 pointer-events-none"
+                            className="absolute top-0 bottom-0 w-[1.5px] bg-[var(--app-danger)] z-20 pointer-events-none"
                             style={{ left: `${getXPercent(today) + (100 / daysInMonth) / 2}%`, transform: 'translateX(-50%)' }}
                         >
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[var(--app-danger)]" />
+                            <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[var(--app-danger)]" />
                         </div>
                     )}
 
                     {/* Timeline Bars Area (Scrollable Y) */}
-                    <div className="absolute inset-0 overflow-y-auto custom-scrollbar z-10 w-full pt-3 pb-4">
+                    <div className="absolute inset-0 overflow-y-auto custom-scrollbar z-10 w-full pt-2 pb-3">
                         <div className="relative w-full min-h-full">
                             {timelineItems.map((item, i) => {
                                 const startX = getXPercent(item.startDate);
                                 const endX = getXPercent(item.endDate);
-                                const width = Math.max(endX - startX, 1);
+                                const width = Math.max(endX - startX, 2);
 
                                 const isCritical = item.daysLeft <= 7;
                                 const isLapsed = item.daysLeft <= 0;
 
-                                // Use pet-based colors
+                                const catColor = getCategoryColor(item.category);
                                 const petTheme = getPetTheme(item.pet);
-                                const barColor = petTheme.color;
-                                const barBg = petTheme.bg;
-                                const barBorder = petTheme.border;
-
-                                // Indicates if the bar is cut off at the ends based on real ranges
-                                const isCutStart = item.originalStart < item.startDate;
-                                const isCutEnd = item.originalEnd > item.endDate;
 
                                 return (
-                                    <div key={item.id} className="relative h-[68px] flex items-center pointer-events-auto group/bar mb-2.5 w-full">
+                                    <div key={item.id} className="relative h-[34px] flex items-center pointer-events-auto group/bar w-full">
                                         <div
-                                            className="absolute h-[52px] shadow-[0_2px_4px_rgba(0,0,0,0.02)] flex items-center relative transition-transform hover:-translate-y-[1px] cursor-pointer overflow-hidden rounded-full border"
+                                            className={`absolute h-[26px] flex items-center cursor-pointer overflow-hidden rounded-md border transition-all hover:shadow-md hover:-translate-y-[1px] ${
+                                                isLapsed ? 'border-[var(--app-danger)]/40 bg-[#FFF5F5]' : isCritical ? 'border-[var(--app-warning)]/40 bg-[#FFFCF5]' : 'border-[var(--app-border)]/60'
+                                            }`}
                                             style={{
                                                 left: `${startX}%`,
                                                 width: `${width}%`,
-                                                backgroundColor: barBg,
-                                                borderColor: barBorder,
+                                                backgroundColor: isLapsed ? undefined : isCritical ? undefined : petTheme.bg,
                                             }}
                                         >
-                                            {/* Status indicators for lapse/critical */}
-                                            {(isLapsed || isCritical) && (
-                                                <div className={`absolute inset-y-0 left-0 opacity-15 transition-all pointer-events-none w-full ${isLapsed ? 'bg-[var(--app-danger)]' : 'bg-[var(--app-warning)]'}`}></div>
+                                            {/* Progress fill */}
+                                            {!isLapsed && !isCritical && (
+                                                <div className="absolute inset-y-0 left-0 opacity-30 rounded-md" style={{ width: '100%', backgroundColor: petTheme.color }} />
                                             )}
 
-                                            {/* Content inside bar */}
-                                            <div
-                                                className="relative z-10 flex items-center gap-2 pl-2 w-full min-w-0 pr-24 h-full"
-                                            >
-                                                <img
-                                                    src={getPetSticker(item.pet, item.category)}
-                                                    alt={item.pet}
-                                                    className={`w-[38px] h-[38px] rounded-full object-cover bg-white/80 border shadow-sm flex-shrink-0 z-10 ${isLapsed ? 'border-[var(--app-danger)]/40' : 'border-black/5'}`}
-                                                />
-                                                <div className="flex flex-col truncate flex-1 min-w-0 pointer-events-none z-10">
-                                                    <span className="text-[12.5px] font-bold truncate drop-shadow-sm leading-tight text-[#333]">
-                                                        {item.name}
-                                                    </span>
-                                                    <div className="flex gap-1.5 items-center mt-0.5" style={{ color: barColor }}>
-                                                        <span className="text-[10px] font-semibold px-1.5 rounded-[4px] bg-black/5 mix-blend-multiply">
-                                                            {item.category}
-                                                        </span>
-                                                        {isLapsed && (
-                                                            <span className="text-[9.5px] font-bold text-[var(--app-danger)] flex items-center gap-0.5 bg-white/70 px-1 rounded">
-                                                                소진됨
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Tooltip on hover (shows original real dates) */}
-                                            <div className="absolute bottom-full left-[24px] mb-[4px] px-3 py-2 bg-[#4A3F35] text-white text-[11px] rounded-[10px] opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50 shadow-lg font-medium flex flex-col items-center gap-1 w-max">
-                                                <span>{item.originalStart.toLocaleDateString('ko-KR')} ~ {item.originalEnd.toLocaleDateString('ko-KR')}</span>
-                                                <div className="w-full h-[0.5px] bg-white/20 my-px"></div>
-                                                <span style={{ color: isLapsed ? '#FF8A8A' : isCritical ? '#FFB8A3' : 'var(--app-border)' }}>
-                                                    {item.daysLeft > 0 ? `${item.daysLeft}일 후 소진 (주기: ${item.cycle}일)` : `${Math.abs(item.daysLeft)}일 지남 (주기: ${item.cycle}일)`}
+                                            {/* Content: tags + name */}
+                                            <div className="relative z-10 flex items-center gap-1.5 px-2 w-full min-w-0 h-full">
+                                                {/* Category tag */}
+                                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded flex-shrink-0 leading-none" style={{ backgroundColor: catColor.bg, color: catColor.text }}>
+                                                    {item.category}
                                                 </span>
-                                                <div className="absolute top-full left-4 border-[5px] border-transparent border-t-[#4A3F35]"></div>
+                                                {/* Pet tag */}
+                                                <span className="text-[9px] font-semibold px-1 py-0.5 rounded flex-shrink-0 leading-none" style={{ backgroundColor: petTheme.bg, color: petTheme.color, border: `1px solid ${petTheme.border}` }}>
+                                                    {item.pet}
+                                                </span>
+                                                {/* Item name */}
+                                                <span className="text-[10px] font-medium truncate text-[#555] flex-1 min-w-0">
+                                                    {item.name}
+                                                </span>
+                                                {/* Status badge */}
+                                                {isLapsed && (
+                                                    <span className="text-[8px] font-bold text-[var(--app-danger)] bg-[var(--app-danger)]/10 px-1 py-0.5 rounded flex-shrink-0">소진</span>
+                                                )}
+                                                {isCritical && !isLapsed && (
+                                                    <span className="text-[8px] font-bold text-[var(--app-warning)] bg-[var(--app-warning)]/10 px-1 py-0.5 rounded flex-shrink-0">{item.daysLeft}일</span>
+                                                )}
                                             </div>
 
-                                            {/* Actions mapped directly on the bar (right-aligned) */}
-                                            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-white/80 backdrop-blur-[2px] rounded-full p-1.5 z-20 shadow-sm border border-black/5">
+                                            {/* Tooltip on hover */}
+                                            <div className="absolute bottom-full left-2 mb-1 px-2.5 py-1.5 bg-[#333] text-white text-[10px] rounded-lg opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50 shadow-lg font-medium flex flex-col gap-0.5">
+                                                <span className="font-bold">{item.name}</span>
+                                                <span className="text-white/70">{item.originalStart.toLocaleDateString('ko-KR')} ~ {item.originalEnd.toLocaleDateString('ko-KR')}</span>
+                                                <span style={{ color: isLapsed ? '#FF8A8A' : isCritical ? '#FFB8A3' : '#AAA' }}>
+                                                    {item.daysLeft > 0 ? `${item.daysLeft}일 후 소진 · 주기 ${item.cycle}일` : `${Math.abs(item.daysLeft)}일 지남 · 주기 ${item.cycle}일`}
+                                                </span>
+                                                <div className="absolute top-full left-3 border-[4px] border-transparent border-t-[#333]" />
+                                            </div>
+
+                                            {/* Actions on hover */}
+                                            <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm rounded-md px-1 py-0.5 z-20 shadow-sm border border-black/5">
                                                 {item.daysLeft <= 7 && (
-                                                    <button className="flex items-center justify-center w-[26px] h-[26px] bg-[#FFF0F0] hover:bg-[#FFE5E5] text-[var(--app-danger)] rounded-full transition-colors" title="바로 구매">
-                                                        <ShoppingCart className="w-3.5 h-3.5" />
+                                                    <button className="w-5 h-5 flex items-center justify-center text-[var(--app-danger)] hover:bg-[#FFF0F0] rounded transition-colors" title="구매">
+                                                        <ShoppingCart className="w-3 h-3" />
                                                     </button>
                                                 )}
-                                                <button className="flex items-center justify-center w-[26px] h-[26px] bg-white hover:bg-[#F5F0E6] text-[#A09080] rounded-full transition-colors border border-black/5" title="수정">
-                                                    <Edit3 className="w-3 h-3" />
+                                                <button className="w-5 h-5 flex items-center justify-center text-[#A09080] hover:bg-[#F5F0E6] rounded transition-colors" title="수정">
+                                                    <Edit3 className="w-2.5 h-2.5" />
                                                 </button>
-                                                <button className="flex items-center justify-center w-[26px] h-[26px] bg-white hover:bg-[#FFF0F0] text-[var(--app-danger)] rounded-full transition-colors border border-black/5" title="삭제">
-                                                    <Trash2 className="w-3 h-3" />
+                                                <button className="w-5 h-5 flex items-center justify-center text-[var(--app-danger)] hover:bg-[#FFF0F0] rounded transition-colors" title="삭제">
+                                                    <Trash2 className="w-2.5 h-2.5" />
                                                 </button>
                                             </div>
                                         </div>
@@ -321,6 +302,80 @@ export function SuppliesTimeline() {
                                 );
                             })}
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ═══ 소모품 관리 섹션 ═══ */}
+            <div className="bg-white rounded-2xl border border-[var(--app-border)] shadow-sm overflow-hidden flex flex-col flex-1">
+                <div className="px-5 py-4 border-b border-[var(--app-border)] flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-2">
+                        <Package className="w-5 h-5 text-[var(--app-primary)]" strokeWidth={1.5} />
+                        <h3 className="text-[16px] font-bold text-[var(--app-text-main)]">소모품 관리</h3>
+                        <span className="text-[11px] text-[var(--app-text-tertiary)] bg-[var(--app-bg-tertiary)] px-2 py-0.5 rounded-full font-medium">{supplyList.length}개</span>
+                    </div>
+                    <button
+                        className="flex items-center gap-1.5 px-3 py-2 text-white rounded-xl text-[13px] hover:opacity-90 transition-opacity active:scale-95"
+                        style={{ background: "linear-gradient(135deg, var(--app-primary), var(--app-primary-dark))", fontWeight: 600 }}
+                        onClick={() => setShowAdd(true)}
+                    >
+                        <Plus className="w-4 h-4" />
+                        품목 추가
+                    </button>
+                </div>
+
+                {/* 품목 리스트 (스크롤) */}
+                <div className="flex-1 overflow-y-auto min-h-0">
+                    <div className="divide-y divide-[var(--app-border)]/60">
+                        {supplyList.map((item) => {
+                            const daysLeft = Math.ceil((parseDate(item.lastPurchase).getTime() + item.cycle * 86400000 - today.getTime()) / 86400000);
+                            const isUrgent = daysLeft <= 7;
+                            const isExpired = daysLeft <= 0;
+                            const catColor = getCategoryColor(item.category);
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className="flex items-center justify-between px-5 py-3.5 hover:bg-[var(--app-bg-main)] transition-colors cursor-pointer group"
+                                    onClick={() => setShowAdd(true)}
+                                >
+                                    {/* 좌측: 반려동물 · 품목명 */}
+                                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded flex-shrink-0" style={{ backgroundColor: catColor.bg, color: catColor.text }}>
+                                            {item.category}
+                                        </span>
+                                        <span className="text-[13px] text-[var(--app-text-main)] font-medium truncate">
+                                            {item.pet} · {item.name}
+                                        </span>
+                                    </div>
+
+                                    {/* 우측: 남은 날짜 + 액션 */}
+                                    <div className="flex items-center gap-2 shrink-0 ml-3">
+                                        <span className={`text-[12px] font-bold whitespace-nowrap ${
+                                            isExpired ? 'text-[var(--app-danger)]' : isUrgent ? 'text-[var(--app-warning)]' : 'text-[var(--app-text-tertiary)]'
+                                        }`}>
+                                            {isExpired ? '소진됨' : `${daysLeft}일 남음`}
+                                        </span>
+                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                className="w-6 h-6 rounded-full bg-white border border-[var(--app-border)] flex items-center justify-center hover:bg-[#F5F0E6] transition-colors"
+                                                onClick={(e) => { e.stopPropagation(); setShowAdd(true); }}
+                                                title="수정"
+                                            >
+                                                <Edit3 className="w-3 h-3 text-[#A09080]" />
+                                            </button>
+                                            <button
+                                                className="w-6 h-6 rounded-full bg-white border border-[var(--app-border)] flex items-center justify-center hover:bg-[#FFF0F0] transition-colors"
+                                                onClick={(e) => { e.stopPropagation(); setSupplyList(prev => prev.filter(s => s.id !== item.id)); }}
+                                                title="삭제"
+                                            >
+                                                <Trash2 className="w-3 h-3 text-[var(--app-danger)]" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
